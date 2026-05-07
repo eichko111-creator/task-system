@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Үүрэг даалгаварын систем</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#F4F6F9;color:#1a1a2e;min-height:100vh}
+.topbar{background:#1a1a2e;color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{font-size:16px;font-weight:600;letter-spacing:0.5px}
+.topbar-right{display:flex;align-items:center;gap:12px;font-size:13px;color:#aab}
+.logout-btn{padding:5px 14px;border:1px solid rgba(255,255,255,0.2);border-radius:6px;font-size:12px;cursor:pointer;background:transparent;color:#ccd;transition:all 0.2s}
+.logout-btn:hover{background:rgba(255,255,255,0.1)}
+.container{max-width:900px;margin:0 auto;padding:24px 16px}
+
+/* Login */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%)}
+.login-card{background:#fff;border-radius:16px;padding:40px 36px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo-icon{width:56px;height:56px;background:#1a1a2e;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px}
+.login-title{font-size:20px;font-weight:700;color:#1a1a2e;text-align:center}
+.login-sub{font-size:13px;color:#888;text-align:center;margin-top:4px}
+.field{margin-bottom:16px}
+.field label{font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.field select,.field input{width:100%;padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:14px;color:#1a1a2e;background:#fff;transition:border-color 0.2s;outline:none}
+.field select:focus,.field input:focus{border-color:#1a1a2e}
+.login-btn{width:100%;padding:12px;background:#1a1a2e;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;margin-top:4px}
+.login-btn:hover{background:#0f3460}
+.login-err{font-size:12px;color:#e74c3c;margin-top:8px;text-align:center;display:none}
+
+/* Tabs */
+.tabs{display:flex;gap:0;background:#fff;border-radius:10px;padding:4px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.tab{flex:1;padding:9px;font-size:13px;color:#888;cursor:pointer;border-radius:7px;background:transparent;border:none;transition:all 0.2s;font-weight:500}
+.tab.active{background:#1a1a2e;color:#fff}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.stat-n{font-size:24px;font-weight:700;color:#1a1a2e}
+.stat-l{font-size:11px;color:#888;margin-top:3px}
+
+/* Task cards */
+.task-card{background:#fff;border-radius:10px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:4px solid #e0e0e0;transition:box-shadow 0.2s}
+.task-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.task-card.done{border-left-color:#27ae60}
+.task-card.inprog{border-left-color:#f39c12}
+.task-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.task-name{font-size:14px;font-weight:600;color:#1a1a2e;flex:1;line-height:1.4}
+.task-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:600}
+.badge-dept{background:#EEF2FF;color:#3730a3}
+.badge-date{background:#F0FDF4;color:#166534;font-size:11px;padding:3px 9px;border-radius:20px}
+.badge-dl{background:#FEF3C7;color:#92400e;font-size:11px;padding:3px 9px;border-radius:20px}
+.pct-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.pct-lbl{font-size:12px;color:#888;min-width:100px}
+.pbar{flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden}
+.pfill{height:100%;border-radius:4px;transition:width 0.4s}
+.pct-val{font-size:13px;font-weight:700;min-width:38px;text-align:right}
+.units-section{border-top:1px solid #f0f0f0;padding-top:10px}
+.units-label{font-size:11px;color:#aaa;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
+.units-grid{display:flex;flex-wrap:wrap;gap:6px}
+.unit-btn{padding:5px 12px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:12px;cursor:pointer;background:#fff;color:#555;transition:all 0.15s;font-weight:500}
+.unit-btn:hover:not(:disabled){border-color:#1a1a2e;color:#1a1a2e}
+.unit-btn.done{background:#27ae60;border-color:#27ae60;color:#fff}
+.unit-btn:disabled{opacity:0.35;cursor:not-allowed}
+.saved-msg{font-size:11px;color:#27ae60;opacity:0;transition:opacity 0.4s;margin-left:8px}
+
+/* Dashboard */
+.db-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.db-card{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.db-card-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px}
+.unit-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.uname{font-size:12px;color:#555;width:54px;flex-shrink:0}
+.ubw{flex:1;height:6px;background:#f0f0f0;border-radius:4px;overflow:hidden}
+.ubf{height:100%;border-radius:4px}
+.upct{font-size:11px;color:#888;min-width:32px;text-align:right}
+.dept-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f5f5f5}
+.dept-row:last-child{border-bottom:none}
+.dept-dot{width:8px;height:8px;border-radius:50%;margin-right:8px;flex-shrink:0}
+.dept-nm{font-size:13px;color:#1a1a2e;font-weight:500}
+.dept-cnt{font-size:11px;color:#aaa}
+
+/* Filters */
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.pill{padding:5px 14px;border:1.5px solid #e0e0e0;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#888;transition:all 0.15s;font-weight:500}
+.pill.active{border-color:#1a1a2e;color:#1a1a2e;background:#f8f8f8}
+.empty{text-align:center;padding:2rem;color:#aaa;font-size:14px}
+
+.view{display:none}.view.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-page" class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">⚡</div>
+      <div class="login-title">Даалгаварын систем</div>
+      <div class="login-sub">January 2026 — Нэгжийн биелэлт</div>
+    </div>
+    <div class="field">
+      <label>Нэгж сонгох</label>
+      <select id="login-unit">
+        <option value="">-- сонгоно уу --</option>
+        <option>ЖС</option><option>ХС</option><option>СС</option><option>ЗС</option>
+        <option>ХҮТ</option><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option>
+        <option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option>
+        <option>НАХ</option><option>ЗТТА</option><option>ДА</option><option>АЗА</option>
+        <option>АТА</option><option>ХТЛА</option>
+        <option value="ADMIN">Админ (бүгд харах)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Таны нэр</label>
+      <input type="text" id="login-name" placeholder="Нэрээ оруулна уу..." />
+    </div>
+    <div class="login-err" id="login-err">Нэгж болон нэрээ оруулна уу</div>
+    <button class="login-btn" onclick="doLogin()">Нэвтрэх →</button>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="main-app" style="display:none">
+  <div class="topbar">
+    <div class="topbar-title">⚡ Даалгаварын систем — January 2026</div>
+    <div class="topbar-right">
+      <span id="user-label"></span>
+      <button class="logout-btn" onclick="logout()">Гарах</button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="tabs" id="tabs">
+      <button class="tab active" onclick="showTab('mine',this)">📋 Миний даалгавар</button>
+      <button class="tab" onclick="showTab('dashboard',this)">📊 Дашбоард</button>
+    </div>
+
+    <div class="view active" id="view-mine">
+      <div class="filter-row">
+        <button class="pill active" onclick="setFilter('бүгд',this)">Бүгд</button>
+        <button class="pill" onclick="setFilter('биелээгүй',this)">Биелээгүй</button>
+        <button class="pill" onclick="setFilter('явцтай',this)">Явцтай</button>
+        <button class="pill" onclick="setFilter('дууссан',this)">✓ Дууссан</button>
+      </div>
+      <div id="my-tasks"></div>
+    </div>
+
+    <div class="view" id="view-dashboard">
+      <div class="stats" id="db-stats"></div>
+      <div class="db-grid">
+        <div class="db-card"><div class="db-card-title">Нэгжийн биелэлт</div><div id="unit-bars"></div></div>
+        <div class="db-card"><div class="db-card-title">Хэлтсийн хураангуй</div><div id="dept-list"></div></div>
+      </div>
+      <div class="db-card" style="margin-bottom:10px">
+        <div class="db-card-title">Бүх даалгавар</div>
+        <div id="all-tasks-db"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TASKS=[
+  {id:1,date:'1/5',dept:'ДХХ',person:'Э.Эрдэнэбат',name:'Мэдээ тайлан ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:2,date:'1/5',dept:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:3,date:'1/5',dept:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Тооцоо нийлсэн акт ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:4,date:'1/5',dept:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Дансны үлдэгдлийн баталгаа ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:5,date:'1/5',dept:'ХНХ',person:'Б.Соёлзул',name:'Календарчилсан төлөвлөгөө ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/31'},
+  {id:6,date:'1/5',dept:'ХНХ',person:'Б.Соёлзул',name:'Ээлжийн амралтын төлөвлөгөө ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/31'},
+  {id:7,date:'1/5',dept:'ХЭМАБА',person:'Ганхүү',name:'ГАУС мэдээлэл явуулсан салбарууд тайлан',units:['ЖС','ХС','СС','ЗС'],dl:'2026/01/31'},
+  {id:8,date:'1/5',dept:'ДХХ',person:'В.Болормаа',name:'ЕRP дээр бичиг хаагдахгүй байна засварлах',units:['МТХ'],dl:'2026/01/31'},
+  {id:9,date:'1/5',dept:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын гэрчилгээний тайлан',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:10,date:'1/6',dept:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Нэгжүүд Улаанбаатар явах ажлаа нийлүүлж нэг явах',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'тухай бүр'},
+  {id:11,date:'1/12',dept:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:12,date:'1/12',dept:'ХНХ',person:'Ч.Чинцогт',name:'Илүү цагийг амрааж дуусгах',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026.03.01'},
+  {id:13,date:'1/12',dept:'ХНХ',person:'Ч.Чинцогт',name:'Архивт материалаа өгөх',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/31'},
+  {id:14,date:'1/12',dept:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:15,date:'1/12',dept:'ББТХ',person:'С.Батбаатар',name:'Шөнийн тарифийн хөнгөлөлтөд өөрчлөлт орж байгаа анхаарах',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:16,date:'1/12',dept:'ББТХ',person:'С.Батбаатар',name:'Ухаалаг тоолуур суурилуулсан тохиолдолд бүртгэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ХТЛА'],dl:'тухай бүр'},
+  {id:17,date:'1/12',dept:'ББТХ',person:'С.Батбаатар',name:'ХТЛА ухаалаг тоолуур концентратор суурьлуулахдаа сим карт хийх',units:['ХТЛА'],dl:'тухай бүр'},
+  {id:18,date:'1/12',dept:'ХЭМАБА',person:'С.Одончимэг',name:'Ээлжит шалгалтанд бэлдэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/19'},
+  {id:19,date:'1/12',dept:'ХЭМАБА',person:'С.Одончимэг',name:'2026 оны материалын захиалга ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ЗТТА','ДА','АЗА','АТА','ХТЛА','НАХ'],dl:'2026/01/19'},
+  {id:20,date:'1/13',dept:'ДХХ',person:'В.Болормаа',name:'Цайны газрийн программ ажиллуулах эсэх шийдвэрлэх',units:['НАХ','МТХ'],dl:'2026/01/10'},
+  {id:21,date:'1/13',dept:'ТБТХ',person:'Э.Эрдэнэбат',name:'Сумдуудын техникч нартай холбогдож тень халаагууруудад анхаарах',units:['ЗТТА'],dl:'хүйтний улиралд'},
+  {id:22,date:'1/16',dept:'ДХХ',person:'В.Болормаа',name:'Шөнийн тарифийн хөнгөлөлт эдэлж байгаа станцуудад анхаарах',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:23,date:'1/19',dept:'ББТХ',person:'С.Батбаатар',name:'Гэрээний төлөвлөгөө ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:24,date:'1/19',dept:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:25,date:'1/19',dept:'ХНХ',person:'Ч.Чинцогт',name:'Захирлын зөвлөлийн хурлаар хэлэлцүүлэх асуудлаа ирүүлэх',units:['ЖС','ХНХ'],dl:'1/19/2026'},
+  {id:26,date:'1/19',dept:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын төлөвлөгөө ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','АЗА'],dl:'2026/01/31'},
+  {id:27,date:'1/19',dept:'ДХХ',person:'В.Болормаа',name:'АТП-108 тулгуур унах эрсдэлтэй буулгах',units:['ЖС'],dl:'2026/01/31'},
+  {id:28,date:'1/19',dept:'ТБТХ',person:'Р.Батням',name:'Цаг агаар хүйтэрч байгаа тул үзлэг хийх',units:['ЖС','ХС','СС','ЗС','АЗА','ЗТТА','ХҮТ'],dl:'тухай бүр'},
+  {id:29,date:'1/19',dept:'ТБТХ',person:'Р.Батням',name:'Машин механизмийн бэлэн байдал хангах',units:['АТА'],dl:'Байнга'},
+  {id:30,date:'1/19',dept:'ХЭМАБА',person:'С.Гандолгор',name:'Ээлжит шалгалтанд бэлдэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/31'},
+  {id:31,date:'1/19',dept:'ХЭМАБА',person:'С.Гандолгор',name:'Ээжит бус зааварчилгааны тайлан ирүүлэх',units:['ЖС','ХС','СС','ЗС','АЗА','ЗТТА','ХҮТ','ДА','АТА','ХТЛА'],dl:'2026/01/31'},
+  {id:32,date:'1/19',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Шугамын утас чангарч байгаа шугамуудыг танилцуулах',units:['ЖС','ХС','СС','ЗС','АЗА'],dl:'2026/01/31'},
+  {id:33,date:'1/21',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'6 кВ-ын РП-8 ХХБ-ын оролтын КШ гэмтэл тодорхойлох',units:['ТБТХ','ЗТТА'],dl:'яаралтай'},
+  {id:34,date:'1/21',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Захирлын зөвлөлийн хурлаар гэмтлүүдээ оруулах',units:['ТБТХ'],dl:''},
+  {id:35,date:'1/21',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Хязгаарлалт хийгдсэний дараа зарим тоноглол залгагдахгүй байна',units:['ТБТХ','ДА','ЖС','ХС','СС','ЗС'],dl:'тухай бүр'},
+  {id:36,date:'1/21',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'35 кВ-ын Ил хуваарилах байгууламжийн халаагуурын тайлан',units:['ТБТХ','ЗТТА'],dl:''},
+  {id:37,date:'1/21',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Цаг агаар хүйтэрч байгаа тул хөлдөхгүй байх дээр анхаарах',units:['ТБТХ','ЗТТА'],dl:'яаралтай'},
+  {id:38,date:'1/21',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Хязгаарлалт удаан хийгдэж байна албан бичиг явуулах',units:['ТБТХ'],dl:'2026/01/23'},
+  {id:39,date:'1/21',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Хязгаарлалт удаан хийгдвэл орон сууцны байруудыг залгах',units:['ТБТХ','ЗТТА'],dl:'2026/01/23'},
+  {id:40,date:'1/21',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'СЭХ-ий тоног төхөөрөмжийг айл өрхөд борлуулах тооцог танилцуулах',units:['ТБТХ'],dl:'2026/01/23'},
+  {id:41,date:'1/22',dept:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Машин механизмийн бэлэн байдал дизель шатахуун дүүргэх',units:['АТА'],dl:'2026/01/31'},
+  {id:42,date:'1/26',dept:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:43,date:'1/26',dept:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:44,date:'1/26',dept:'ХНХ',person:'Ч.Чинцогт',name:'2025 оны ирсэн бичигнүүдийг хаах',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ББТХ','МТХ','ХЭМАБА','НАХ','ХНХ','ХТЛА','АТА','ЗТТА','ДА','АЗА'],dl:'2026/01/31'},
+  {id:45,date:'1/26',dept:'ХЭМАБА',person:'С.Одончимэг',name:'Ээлжит шалгалтанд ажилтнуудаа бүрэн хамруулдах',units:['ЖС','ХС','СС','ЗС','ХҮТ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/31'},
+  {id:46,date:'1/26',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Хязгаарлалтын үед том хороолол байруудыг хөлдөөхгүй байх',units:['ТБТХ','ДА'],dl:'2026/01/31'},
+  {id:47,date:'1/26',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Машин механизмууд гадаа унтраагаад асахгүй тул асаалттай байлгах',units:['АТА'],dl:'2026/01/31'},
+  {id:48,date:'1/26',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Машин механизм шугам тоноглолын шуурхай бэлэн байдал хангах',units:['ТБТХ','АТА'],dl:'2026/01/31'},
+  {id:49,date:'1/26',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Дарга нарт тусгайлан зааварчилгаа өгөх',units:['ТБТХ','ХЭМАБА','ХНХ'],dl:'2026/01/26'},
+  {id:50,date:'1/26',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Ажилчдын автобусыг эрт явуулах шуурхайд цагтаа орох',units:['АТА','НАХ'],dl:'2026/01/26'},
+  {id:51,date:'1/26',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Хөтөл салбарт гэмтэл гарвал АТА-нд хариуцлага тооцох',units:['АТА'],dl:'2026/01/26'},
+  {id:52,date:'1/27',dept:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:53,date:'1/27',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Шалгалтанд сайн бэлдэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/31'},
+  {id:54,date:'1/28',dept:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын төлөвлөгөө оруулсан танилцах',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:55,date:'1/29',dept:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:56,date:'1/29',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'ДДС-ээс ирүүлсэн бичгийн хариу өгөх үзлэг зохион байгуулах',units:['ТБТХ','ЗТТА','АЗА'],dl:'1/30/2026'},
+  {id:57,date:'1/29',dept:'Ер.Инженер',person:'Б.Батжаргал',name:'Хязгаарлалт хийхэд бэлэн байх гомдол бүртгэж авах',units:['ДХХ','ДА'],dl:'1/30/2026'},
+];
+
+const DEPTS={'ДХХ':'#2563eb','ББТХ':'#7c3aed','СЭЗХ':'#dc2626','ХНХ':'#16a34a','ХЭМАБА':'#d97706','ТБТХ':'#db2777','Ер.Инженер':'#6b7280'};
+const UNIT_LIST=['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'];
+const UNIT_COLORS={'ЖС':'#2563eb','ХС':'#7c3aed','СС':'#16a34a','ЗС':'#dc2626','ХҮТ':'#d97706','СЭЗХ':'#db2777','ДХХ':'#6b7280','ТБТХ':'#65a30d','ХНХ':'#0891b2','ББТХ':'#4f46e5','МТХ':'#9f1239','ХЭМАБА':'#059669','НАХ':'#92400e','ЗТТА':'#831843','ДА':'#15803d','АЗА':'#1d4ed8','АТА':'#374151','ХТЛА':'#b45309'};
+
+const STORE_KEY='taskapp_jan2026_v2';
+let currentUser=null;
+let bFilter='бүгд';
+let data={};
+
+function saveData(){try{localStorage.setItem(STORE_KEY,JSON.stringify(data));}catch(e){}}
+function loadData(){try{const r=localStorage.getItem(STORE_KEY);if(r)data=JSON.parse(r);}catch(e){}}
+function getUnitDone(tid,u){return !!(data[tid]&&data[tid][u]);}
+function setUnitDone(tid,u,v){if(!data[tid])data[tid]={};data[tid][u]=v;saveData();}
+function calcPct(t){const d=t.units.filter(u=>getUnitDone(t.id,u)).length;return t.units.length?Math.round(d/t.units.length*100):0;}
+function pctColor(p){return p===100?'#27ae60':p>0?'#f39c12':'#e74c3c';}
+
+function doLogin(){
+  const u=document.getElementById('login-unit').value;
+  const n=document.getElementById('login-name').value.trim();
+  if(!u||!n){document.getElementById('login-err').style.display='block';return;}
+  currentUser={unit:u,name:n};
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  document.getElementById('user-label').textContent=u+' — '+n;
+  renderMyTasks();
+}
+
+function logout(){
+  currentUser=null;
+  document.getElementById('login-page').style.display='flex';
+  document.getElementById('main-app').style.display='none';
+}
+
+function showTab(name,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  if(name==='dashboard')renderDashboard();
+  else renderMyTasks();
+}
+
+function setFilter(f,btn){
+  bFilter=f;
+  document.querySelectorAll('.filter-row .pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMyTasks();
+}
+
+function renderMyTasks(){
+  if(!currentUser)return;
+  const isAdmin=currentUser.unit==='ADMIN';
+  let tasks=isAdmin?TASKS:TASKS.filter(t=>t.units.includes(currentUser.unit));
+  tasks=tasks.filter(t=>{
+    const p=calcPct(t);
+    if(bFilter==='биелээгүй')return p===0;
+    if(bFilter==='явцтай')return p>0&&p<100;
+    if(bFilter==='дууссан')return p===100;
+    return true;
+  });
+  if(!tasks.length){document.getElementById('my-tasks').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
+  document.getElementById('my-tasks').innerHTML=tasks.map(t=>{
+    const p=calcPct(t);
+    const cls=p===100?'done':p>0?'inprog':'';
+    return`<div class="task-card ${cls}" id="tc-${t.id}">
+      <div class="task-top">
+        <div class="task-name">${t.name}</div>
+        <span class="saved-msg" id="sm-${t.id}">✓ Хадгалагдлаа</span>
+      </div>
+      <div class="task-meta">
+        <span class="badge badge-dept">${t.dept}</span>
+        <span class="badge-date">📅 ${t.date}</span>
+        ${t.dl?`<span class="badge-dl">⏰ ${t.dl}</span>`:''}
+      </div>
+      <div class="pct-row">
+        <span class="pct-lbl">Нийт биелэлт</span>
+        <div class="pbar"><div class="pfill" id="pf-${t.id}" style="width:${p}%;background:${pctColor(p)}"></div></div>
+        <span class="pct-val" id="pv-${t.id}" style="color:${pctColor(p)}">${p}%</span>
+      </div>
+      <div class="units-section">
+        <div class="units-label">Нэгжийн биелэлт</div>
+        <div class="units-grid">
+          ${t.units.map(u=>`<button class="unit-btn${getUnitDone(t.id,u)?' done':''}" id="ub-${t.id}-${u}"
+            onclick="toggleUnit(${t.id},'${u}',this)"
+            ${(!isAdmin&&u!==currentUser.unit)?'disabled':''}>
+            ${getUnitDone(t.id,u)?'✓ ':''} ${u}
+          </button>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleUnit(tid,u,btn){
+  const cur=getUnitDone(tid,u);
+  setUnitDone(tid,u,!cur);
+  btn.className='unit-btn'+(!cur?' done':'');
+  btn.innerHTML=(!cur?'✓ ':'')+u;
+  const t=TASKS.find(x=>x.id===tid);
+  const p=calcPct(t);
+  const pf=document.getElementById('pf-'+tid);
+  const pv=document.getElementById('pv-'+tid);
+  if(pf){pf.style.width=p+'%';pf.style.background=pctColor(p);}
+  if(pv){pv.textContent=p+'%';pv.style.color=pctColor(p);}
+  const tc=document.getElementById('tc-'+tid);
+  if(tc){tc.className='task-card'+(p===100?' done':p>0?' inprog':'');}
+  const sm=document.getElementById('sm-'+tid);
+  if(sm){sm.style.opacity='1';setTimeout(()=>sm.style.opacity='0',1500);}
+}
+
+function renderDashboard(){
+  const done=TASKS.filter(t=>calcPct(t)===100).length;
+  const nd=TASKS.filter(t=>calcPct(t)===0).length;
+  const avg=Math.round(TASKS.reduce((s,t)=>s+calcPct(t),0)/TASKS.length);
+  document.getElementById('db-stats').innerHTML=`
+    <div class="stat"><div class="stat-n">${TASKS.length}</div><div class="stat-l">Нийт даалгавар</div></div>
+    <div class="stat"><div class="stat-n" style="color:#27ae60">${done}</div><div class="stat-l">100% биелсэн</div></div>
+    <div class="stat"><div class="stat-n" style="color:#e74c3c">${nd}</div><div class="stat-l">Биелээгүй</div></div>
+    <div class="stat"><div class="stat-n">${avg}%</div><div class="stat-l">Дундаж биелэлт</div></div>`;
+  document.getElementById('unit-bars').innerHTML=UNIT_LIST.map(u=>{
+    let tot=0,dn=0;
+    TASKS.forEach(t=>{if(t.units.includes(u)){tot++;if(getUnitDone(t.id,u))dn++;}});
+    const p=tot?Math.round(dn/tot*100):0;
+    return`<div class="unit-bar-row"><span class="uname">${u}</span><div class="ubw"><div class="ubf" style="width:${p}%;background:${UNIT_COLORS[u]||'#888'}"></div></div><span class="upct">${p}%</span></div>`;
+  }).join('');
+  const depts=[...new Set(TASKS.map(t=>t.dept))];
+  document.getElementById('dept-list').innerHTML=depts.map(d=>{
+    const dt=TASKS.filter(t=>t.dept===d);
+    const dn=dt.filter(t=>calcPct(t)===100).length;
+    const p=dt.length?Math.round(dn/dt.length*100):0;
+    return`<div class="dept-row"><div style="display:flex;align-items:center"><div class="dept-dot" style="background:${DEPTS[d]||'#888'}"></div><div><div class="dept-nm">${d}</div><div class="dept-cnt">${dt.length} даалгавар</div></div></div><span style="font-size:13px;font-weight:700;color:${pctColor(p)}">${p}%</span></div>`;
+  }).join('');
+  document.getElementById('all-tasks-db').innerHTML=TASKS.map(t=>{
+    const p=calcPct(t);
+    return`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f5f5f5">
+      <span style="font-size:11px;color:#aaa;width:20px">${t.id}</span>
+      <span style="font-size:13px;flex:1;color:#1a1a2e">${t.name}</span>
+      <span class="badge badge-dept" style="font-size:11px">${t.dept}</span>
+      <span style="font-size:13px;font-weight:700;min-width:36px;text-align:right;color:${pctColor(p)}">${p}%</span>
+    </div>`;
+  }).join('');
+}
+
+loadData();
+document.getElementById('login-name').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+</script>
+</body>
+</html>
