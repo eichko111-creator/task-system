@@ -9,7 +9,7 @@
 body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-height:100vh;display:flex;flex-direction:column}
 
 /* LOGIN */
-.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e,#0f3460)}
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a1628,#0d2137,#0a3352)}
 .login-card{background:#fff;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
 .login-icon{text-align:center;margin-bottom:20px}
 .logo-svg{width:64px;height:64px;margin:0 auto 12px;display:block}
@@ -27,24 +27,24 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .app-wrap{display:flex;flex:1;min-height:100vh}
 
 /* SIDEBAR */
-.sidebar{width:220px;background:#fff;flex-shrink:0;border-right:1px solid #eee;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
-.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:12px}
+.sidebar{width:220px;background:#0d1f33;flex-shrink:0;border-right:1px solid #eee;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:12px}
 .logo-mark{width:44px;height:44px;flex-shrink:0}
 .sidebar-logo-text{line-height:1.2}
-.sidebar-logo-title{font-size:14px;font-weight:700;color:#1a1a2e}
-.sidebar-logo-sub{font-size:11px;color:#aaa;margin-top:2px}
+.sidebar-logo-title{font-size:14px;font-weight:700;color:#fff}
+.sidebar-logo-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
 .sidebar-nav{flex:1;padding:16px 0}
-.nav-section{padding:6px 18px 4px;font-size:10px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.7px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:13px;color:#555;cursor:pointer;transition:all 0.15s;border-left:3px solid transparent;font-weight:500}
-.nav-item:hover{background:#fef9f9;color:#e74c3c}
-.nav-item.active{background:#fef0ef;color:#e74c3c;border-left-color:#e74c3c;font-weight:700}
+.nav-section{padding:6px 18px 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.7px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;border-left:3px solid transparent;font-weight:500}
+.nav-item:hover{background:rgba(231,76,60,0.12);color:#e74c3c}
+.nav-item.active{background:rgba(231,76,60,0.18);color:#e74c3c;border-left-color:#e74c3c;font-weight:700}
 .nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.sidebar-footer{padding:14px 18px;border-top:1px solid #f0f0f0}
+.sidebar-footer{padding:14px 18px;border-top:1px solid rgba(255,255,255,0.08)}
 .user-chip{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#e74c3c,#c0392b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
-.user-name{font-size:13px;font-weight:600;color:#1a1a2e}
-.user-unit{font-size:11px;color:#aaa}
-.logout-btn{width:100%;padding:7px;border:1px solid #eee;border-radius:7px;font-size:12px;cursor:pointer;background:transparent;color:#999;transition:all 0.15s}
+.user-name{font-size:13px;font-weight:600;color:#e0e8f0}
+.user-unit{font-size:11px;color:rgba(255,255,255,0.4)}
+.logout-btn{width:100%;padding:7px;border:1px solid rgba(255,255,255,0.15);border-radius:7px;font-size:12px;cursor:pointer;background:transparent;color:rgba(255,255,255,0.5);transition:all 0.15s}
 .logout-btn:hover{border-color:#e74c3c;color:#e74c3c}
 
 /* MAIN */
@@ -196,7 +196,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
     <div class="sidebar-logo">
       <img src="data:image/png;base64,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" style="width:44px;height:44px;object-fit:contain;border-radius:6px">
       <div class="sidebar-logo-text">
-        <div class="sidebar-logo-title">Хяналтын систем</div>
+        <div class="sidebar-logo-title">DSEDN</div>
         <div class="sidebar-logo-sub">2026 он</div>
       </div>
     </div>
@@ -209,7 +209,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
         <div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР
       </div>
       <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin',this)">
-        <div class="nav-dot" style="background:#f39c12"></div>УДИРДЛАГА
+        <div class="nav-dot" style="background:#f39c12"></div>АБМИН
       </div>
     </nav>
     <div class="sidebar-footer">
@@ -230,7 +230,10 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
       <div class="topbar-left">
         <div class="topbar-title" id="topbar-title">Дашбоард</div>
       </div>
-      <div class="month-pills" id="top-month-pills"></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap">Сар:</span>
+        <div class="month-pills" id="top-month-pills" style="display:flex;gap:5px;flex-wrap:wrap"></div>
+      </div>
     </div>
     <div class="container">
 
@@ -331,30 +334,34 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
           </div>
           <div class="form-row">
             <div class="form-field">
-              <label>Хэлтэс</label>
+              <label>Үүрэг даалгавар өгсөн хэлтэс/нэгж</label>
               <select id="a-dept">
                 <option>ДХХ</option><option>ББТХ</option><option>СЭЗХ</option>
                 <option>ХНХ</option><option>ХЭМАБА</option><option>ТБТХ</option>
                 <option>Ер.Инженер</option><option>Бусад</option>
               </select>
             </div>
-            <div class="form-field"><label>Хариуцагч</label><input type="text" id="a-person" placeholder="Нэр..."/></div>
-          </div>
-          <div class="form-field" style="margin-bottom:10px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
-          <div class="form-row">
-            <div class="form-field"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
             <div class="form-field">
-              <label>Өгч буй нэгж</label>
-              <select id="a-giver">
-                <option value="">-- сонгох --</option>
-                <option>ЖС</option><option>ХС</option><option>СС</option><option>ЗС</option>
-                <option>ХҮТ</option><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option>
-                <option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option>
-                <option>НАХ</option><option>ЗТТА</option><option>ДА</option><option>АЗА</option>
-                <option>АТА</option><option>ХТЛА</option><option>ADMIN</option>
+              <label>Хариуцагч</label>
+              <select id="a-person-sel" onchange="syncPerson(this.value)" style="margin-bottom:5px">
+                <option value="">-- жагсаалтаас сонгох --</option>
+                <option>Э.Эрдэнэбат</option>
+                <option>С.Батбаатар</option>
+                <option>Л.Эрдэнэсугар</option>
+                <option>Б.Соёлзул</option>
+                <option>Ч.Чинцогт</option>
+                <option>В.Болормаа</option>
+                <option>Ганхүү</option>
+                <option>С.Одончимэг</option>
+                <option>С.Гандолгор</option>
+                <option>Р.Батням</option>
+                <option>Б.Батжаргал</option>
               </select>
+              <input type="text" id="a-person" placeholder="Эсвэл гараар бичих..."/>
             </div>
           </div>
+          <div class="form-field" style="margin-bottom:10px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
+          <div class="form-field" style="margin-bottom:10px"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
           <div class="form-field" style="margin-bottom:12px">
             <label>Биелэх нэгжүүд</label>
             <div class="uchk-wrap" id="units-check"></div>
@@ -414,6 +421,8 @@ function load(){try{const r=localStorage.getItem(SK);if(r){app=JSON.parse(r);nid
 function getMonths(){const ms=new Set(app.tasks.map(t=>t.month));return MALL.filter(m=>ms.has(m));}
 function getPct(tid,u){const p=app.progress[tid];return(p&&p[u]!==undefined)?p[u]:0;}
 function setPct(tid,u,v){if(!app.progress[tid])app.progress[tid]={};app.progress[tid][u]=Math.max(0,Math.min(100,v));save();}
+function getNote(tid,u){const p=app.progress[tid];return(p&&p['n_'+u]!==undefined)?p['n_'+u]:'';}
+function setNote(tid,u,v){if(!app.progress[tid])app.progress[tid]={};app.progress[tid]['n_'+u]=v;save();}
 function calcAvg(t){if(!t.units.length)return 0;return Math.round(t.units.reduce((a,u)=>a+getPct(t.id,u),0)/t.units.length);}
 function pColor(p){return p>=100?'#27ae60':p>0?'#f39c12':'#e74c3c';}
 
@@ -444,7 +453,7 @@ function showTab(name,el){
   el.classList.add('active');
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  const t={dashboard:'Дашбоард',mine:'Үүрэг даалгавар',admin:'Удирдлага'};
+  const t={dashboard:'Дашбоард',mine:'Үүрэг даалгавар',admin:'Абмин'};
   document.getElementById('topbar-title').textContent=t[name];
   if(name==='dashboard'){updateKPI();renderDashboard();}
   else if(name==='mine'){updateKPI();renderMyTasks();}
@@ -543,16 +552,24 @@ function renderMyTasks(){
     const isAdmin=cu.unit==='ADMIN';
     const unitRows=t.units.map(u=>{
       const v=getPct(t.id,u);
+      const n=getNote(t.id,u);
       const ok=isAdmin||(u===cu.unit&&t.units.includes(cu.unit));
-      return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <span style="font-size:12px;font-weight:700;color:#555;min-width:46px">${u}</span>
-        <input type="range" min="0" max="100" step="5" value="${v}" id="sl-${t.id}-${u}" ${!ok?'disabled':''}
-          style="flex:1;height:5px" oninput="si(${t.id},'${u}',this.value)">
-        <input type="number" min="0" max="100" value="${v}" id="inp-${t.id}-${u}" ${!ok?'disabled':''}
-          style="width:52px;padding:4px 6px;border:1.5px solid ${pColor(v)};border-radius:6px;font-size:12px;font-weight:700;text-align:center;outline:none;color:#1a1a2e;background:#fff"
-          oninput="ss(${t.id},'${u}',this.value)">
-        <span style="font-size:11px;font-weight:700;color:${pColor(v)};min-width:16px">%</span>
-        ${ok?`<button onclick="saveU(${t.id},'${u}')" style="padding:4px 10px;background:#1a1a2e;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Хадгалах</button>`:''}
+      return`<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f5f5f5">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="font-size:12px;font-weight:700;color:#555;min-width:46px">${u}</span>
+          <input type="range" min="0" max="100" step="5" value="${v}" id="sl-${t.id}-${u}" ${!ok?'disabled':''}
+            style="flex:1;height:5px" oninput="si(${t.id},'${u}',this.value)">
+          <input type="number" min="0" max="100" value="${v}" id="inp-${t.id}-${u}" ${!ok?'disabled':''}
+            style="width:52px;padding:4px 6px;border:1.5px solid ${pColor(v)};border-radius:6px;font-size:12px;font-weight:700;text-align:center;outline:none;color:#1a1a2e;background:#fff"
+            oninput="ss(${t.id},'${u}',this.value)">
+          <span style="font-size:11px;font-weight:700;color:${pColor(v)};min-width:16px">%</span>
+        </div>
+        ${ok?`<div style="display:flex;gap:6px;align-items:flex-start">
+          <textarea id="note-${t.id}-${u}" placeholder="Тайлбар бичих..." rows="2"
+            style="flex:1;padding:6px 8px;border:1.5px solid #e2e2e2;border-radius:6px;font-size:12px;resize:none;font-family:inherit;outline:none;color:#333"
+            onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e2e2e2'">${n}</textarea>
+          <button onclick="saveU(${t.id},'${u}')" style="padding:7px 12px;background:#1a1a2e;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Хадгалах</button>
+        </div>`:n?`<div style="font-size:12px;color:#888;font-style:italic">${n}</div>`:''}
       </div>`;
     }).join('');
     return`<div class="task-card ${cls}" id="tc-${t.id}">
@@ -585,6 +602,8 @@ function saveU(tid,u){
   i.value=v;i.style.borderColor=pColor(v);
   const s=document.getElementById('sl-'+tid+'-'+u);if(s)s.value=v;
   setPct(tid,u,v);
+  const nt=document.getElementById('note-'+tid+'-'+u);
+  if(nt)setNote(tid,u,nt.value.trim());
   const t=app.tasks.find(x=>x.id===tid);
   const avg=calcAvg(t);
   const pf=document.getElementById('pf-'+tid);const pv=document.getElementById('pv-'+tid);
@@ -607,7 +626,7 @@ function addTask(){
   const month=document.getElementById('a-month').value;
   const date=document.getElementById('a-date').value.trim();
   const dept=document.getElementById('a-dept').value;
-  const giver=document.getElementById('a-giver').value||dept;
+  const giver=dept;
   const person=document.getElementById('a-person').value.trim();
   const name=document.getElementById('a-name').value.trim();
   const dl=document.getElementById('a-dl').value.trim();
@@ -661,6 +680,7 @@ function renderAdminList(){
     </div>`;
   }).join('');
 }
+function syncPerson(v){if(v){document.getElementById('a-person').value=v;}}
 load();
 document.getElementById('login-name').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 </script>
