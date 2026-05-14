@@ -139,7 +139,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .form-field textarea{resize:vertical;min-height:64px}
 .form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:#e74c3c}
 .uchk-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
-.uchk{padding:4px 10px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:11px;cursor:pointer;background:#fff;color:#555;font-weight:500;user-select:none;transition:all 0.15s}
+.uchk{padding:4px 10px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:11px;cursor:pointer;background:#fff;color:#555;font-weight:500;user-select:none;transition:all 0.15px}
 .uchk.sel{background:#1a1a2e;border-color:#1a1a2e;color:#fff}
 .btn-row{display:flex;gap:8px;margin-top:14px}
 .btn-primary{padding:9px 20px;background:#1a1a2e;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background 0.15s}
@@ -411,6 +411,9 @@ const INIT=[
 ];
 
 const SK='uurdeg_v7';
+// ===== НЭМЭГДСЭН: login state хадгалах key =====
+const LK='uurdeg_login_v1';
+
 let cu=null,bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[];
 let app={tasks:[...INIT],progress:{}};
 let nid=300;
@@ -426,28 +429,44 @@ function setNote(tid,u,v){if(!app.progress[tid])app.progress[tid]={};app.progres
 function calcAvg(t){if(!t.units.length)return 0;return Math.round(t.units.reduce((a,u)=>a+getPct(t.id,u),0)/t.units.length);}
 function pColor(p){return p>=100?'#27ae60':p>0?'#f39c12':'#e74c3c';}
 
+// ===== ӨӨРЧЛӨГДСӨН: localStorage-д хадгалах нэмэгдсэн =====
 function doLogin(){
   const u=document.getElementById('login-unit').value;
   const n=document.getElementById('login-name').value.trim();
   if(!u||!n){document.getElementById('login-err').style.display='block';return;}
   cu={unit:u,name:n};
+
+  // ✅ НЭМЭГДСЭН: нэвтэрсэн хэрэглэгчийг localStorage-д хадгална
+  try{localStorage.setItem(LK,JSON.stringify(cu));}catch(e){}
+
+  showApp();
+}
+
+// ===== НЭМЭГДСЭН: UI харуулах функц (doLogin болон auto-login хоёулаа дуудна) =====
+function showApp(){
   document.getElementById('login-page').style.display='none';
   document.getElementById('main-app').style.display='flex';
-  document.getElementById('user-name-lbl').textContent=n;
-  document.getElementById('user-unit-lbl').textContent=u;
-  document.getElementById('user-avatar').textContent=n.charAt(0).toUpperCase();
-  if(u==='ADMIN'){document.getElementById('nav-admin').style.display='flex';initUchk();}
-  document.getElementById('sub-tabs-wrap').style.display=(u!=='ADMIN')?'flex':'none';
+  document.getElementById('user-name-lbl').textContent=cu.name;
+  document.getElementById('user-unit-lbl').textContent=cu.unit;
+  document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
+  if(cu.unit==='ADMIN'){document.getElementById('nav-admin').style.display='flex';initUchk();}
+  document.getElementById('sub-tabs-wrap').style.display=(cu.unit!=='ADMIN')?'flex':'none';
   const ms=getMonths();
   actMonth=ms[ms.length-1]||'2026-01';
   renderTopPills();updateKPI();renderDashboard();
 }
+
+// ===== ӨӨРЧЛӨГДСӨН: localStorage-аас устгах нэмэгдсэн =====
 function logout(){
+  // ✅ НЭМЭГДСЭН: гарахад localStorage-аас устгана
+  try{localStorage.removeItem(LK);}catch(e){}
+
   cu=null;
   document.getElementById('login-page').style.display='flex';
   document.getElementById('main-app').style.display='none';
   document.getElementById('nav-admin').style.display='none';
 }
+
 function showTab(name,el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   el.classList.add('active');
@@ -491,7 +510,6 @@ function updateKPI(){
 
 function renderDashboard(){
   const tasks=app.tasks.filter(t=>t.month===actMonth);
-  // DONUT
   const done=tasks.filter(t=>calcAvg(t)>=100).length;
   const partial=tasks.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
   const none=tasks.filter(t=>calcAvg(t)===0).length;
@@ -504,7 +522,6 @@ function renderDashboard(){
     },
     options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>{const p=Math.round(c.parsed/(done+partial+none)*100);return` ${c.parsed} даалгавар (${p}%)`;}}}}}
   });
-  // UNIT COUNT BAR
   const unitCounts=ALL_UNITS.map(u=>tasks.filter(t=>t.units.includes(u)).length);
   if(unitCountInst)unitCountInst.destroy();
   unitCountInst=new Chart(document.getElementById('unitCountChart'),{
@@ -512,7 +529,6 @@ function renderDashboard(){
     data:{labels:ALL_UNITS,datasets:[{label:'Даалгаварын тоо',data:unitCounts,backgroundColor:'#1a1a2e',borderRadius:3,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.parsed.y} даалгавар`}}},scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},y:{ticks:{font:{size:10},color:'#aaa',stepSize:2},grid:{color:'rgba(0,0,0,0.05)'}}}}
   });
-  // UNIT PCT
   const unitPcts=ALL_UNITS.map(u=>{
     const ts=tasks.filter(t=>t.units.includes(u));
     if(!ts.length)return 0;
@@ -525,14 +541,12 @@ function renderDashboard(){
     data:{labels:ALL_UNITS,datasets:[{label:'Дундаж биелэлт %',data:unitPcts,backgroundColor:pctColors,borderRadius:3,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.parsed.y}%`}}},scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},y:{min:0,max:100,ticks:{font:{size:10},color:'#aaa',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}}}}
   });
-  // DEPT LIST
   const depts=[...new Set(tasks.map(t=>t.dept))];
   document.getElementById('dept-list').innerHTML=depts.map(d=>{
     const dt=tasks.filter(t=>t.dept===d);
     const p=Math.round(dt.reduce((s,t)=>s+calcAvg(t),0)/dt.length);
     return`<div class="dept-row"><div style="display:flex;align-items:center"><div class="ddot" style="background:${DEPTS[d]||'#607d8b'}"></div><div><div class="dnm">${d}</div><div class="dcnt">${dt.length} даалгавар</div></div></div><span style="font-size:13px;font-weight:700;color:${pColor(p)}">${p}%</span></div>`;
   }).join('');
-  // ALL TASKS
   document.getElementById('all-tasks-db').innerHTML=tasks.map(t=>{
     const p=calcAvg(t);
     return`<div class="all-task-row"><span style="font-size:11px;color:#bbb;width:18px">${t.id}</span><span style="font-size:12px;flex:1;color:#333">${t.name}</span><span class="badge bdept" style="font-size:10px">${t.dept}</span><span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:${pColor(p)}">${p}%</span></div>`;
@@ -681,7 +695,28 @@ function renderAdminList(){
   }).join('');
 }
 function syncPerson(v){if(v){document.getElementById('a-person').value=v;}}
+
+// ===== ЭХЛЭХ: өгөгдөл ачаалж, автоматаар нэвтрэх шалгалт =====
 load();
+
+// ✅ НЭМЭГДСЭН: хуудас нээгдэхэд localStorage-аас нэвтрэлт шалгана
+(function checkAutoLogin(){
+  try{
+    const saved=localStorage.getItem(LK);
+    if(saved){
+      const parsed=JSON.parse(saved);
+      if(parsed&&parsed.unit&&parsed.name){
+        cu=parsed;
+        showApp();
+        return;
+      }
+    }
+  }catch(e){
+    try{localStorage.removeItem(LK);}catch(e2){}
+  }
+  // Хадгалагдсан нэвтрэлт байхгүй бол login хуудас харуулна (анхны байдал)
+})();
+
 document.getElementById('login-name').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 </script>
 </body>
