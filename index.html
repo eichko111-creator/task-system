@@ -9,16 +9,16 @@
 body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-height:100vh;display:flex;flex-direction:column}
 .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a1628,#0d2137,#0a3352)}
 .login-card{background:#fff;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
-.login-icon{text-align:center;margin-bottom:20px}
 .login-title{font-size:20px;font-weight:700;color:#1a1a2e;text-align:center}
 .login-sub{font-size:13px;color:#888;text-align:center;margin-top:4px;margin-bottom:24px}
 .field{margin-bottom:14px}
 .field label{font-size:11px;font-weight:700;color:#666;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px}
-.field select,.field input{width:100%;padding:10px 12px;border:1.5px solid #e2e2e2;border-radius:8px;font-size:14px;color:#1a1a2e;background:#fff;outline:none;transition:border-color 0.2s}
-.field select:focus,.field input:focus{border-color:#e74c3c}
+.field input{width:100%;padding:10px 12px;border:1.5px solid #e2e2e2;border-radius:8px;font-size:14px;color:#1a1a2e;background:#fff;outline:none;transition:border-color 0.2s}
+.field input:focus{border-color:#e74c3c}
 .login-btn{width:100%;padding:12px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px}
 .login-btn:hover{opacity:0.9}
-.login-err{font-size:12px;color:#e74c3c;margin-top:8px;text-align:center;display:none}
+.login-btn:disabled{opacity:.6;cursor:not-allowed}
+.login-err{font-size:12px;color:#e74c3c;margin-top:8px;text-align:center;display:none;background:#fff0f0;padding:8px;border-radius:6px}
 .app-wrap{display:flex;flex:1;min-height:100vh}
 .sidebar{width:220px;background:#0d1f33;flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
 .sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:12px}
@@ -98,10 +98,10 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .section-title{font-size:12px;font-weight:700;color:#aaa;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #eee;text-transform:uppercase;letter-spacing:0.5px}
 .view{display:none}.view.active{display:block}
 .empty{text-align:center;padding:3rem;color:#bbb;font-size:14px}
-#loading-screen{position:fixed;inset:0;background:#0d1f33;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.4s}
+#loading-screen{position:fixed;inset:0;background:#0d1f33;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
 #loading-screen.hide{opacity:0;pointer-events:none}
-.loading-text{color:rgba(255,255,255,0.7);font-size:14px;margin-top:10px}
-.loading-bar{width:180px;height:3px;background:rgba(255,255,255,0.1);border-radius:999px;margin-top:14px;overflow:hidden}
+.loading-text{color:rgba(255,255,255,.7);font-size:14px;margin-top:10px}
+.loading-bar{width:180px;height:3px;background:rgba(255,255,255,.1);border-radius:999px;margin-top:14px;overflow:hidden}
 .loading-fill{height:100%;background:#e74c3c;border-radius:999px;animation:lb 1.4s ease-in-out infinite}
 @keyframes lb{0%{width:0;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0;margin-left:100%}}
 .sync{position:fixed;bottom:14px;right:14px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100}
@@ -116,41 +116,58 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 <div id="loading-screen">
   <div style="font-size:44px">📋</div>
   <div style="color:#fff;font-size:18px;font-weight:700;margin-top:10px">Үүрэг даалгавар</div>
-  <div class="loading-text" id="loading-msg">Firebase холбогдож байна...</div>
+  <div class="loading-text" id="loading-msg">Ачаалж байна...</div>
   <div class="loading-bar"><div class="loading-fill"></div></div>
 </div>
 
 <div class="sync" id="sync"></div>
 
+<!-- FIREBASE LOGIN -->
 <div id="login-page" class="login-page" style="display:none">
   <div class="login-card">
-    <div class="login-icon">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:40px;margin-bottom:8px">📋</div>
       <div class="login-title">Үүрэг даалгавар</div>
       <div class="login-sub">2026 оны хяналтын систем</div>
     </div>
     <div class="field">
-      <label>Нэгж / Хэрэглэгч</label>
-      <select id="login-unit">
-        <option value="">-- сонгоно уу --</option>
-        <optgroup label="Нэгжүүд">
-          <option>ЖС</option><option>ХС</option><option>СС</option><option>ЗС</option>
-          <option>ХҮТ</option><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option>
-          <option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option>
-          <option>НАХ</option><option>ЗТТА</option><option>ДА</option><option>АЗА</option>
-          <option>АТА</option><option>ХТЛА</option>
-        </optgroup>
-        <optgroup label="Удирдлага"><option value="ADMIN">Админ</option></optgroup>
-      </select>
+      <label>Имэйл хаяг</label>
+      <input type="email" id="auth-email" placeholder="dsedn2026@gmail.com" autocomplete="email">
     </div>
     <div class="field">
-      <label>Нэр</label>
-      <input type="text" id="login-name" placeholder="Нэрээ оруулна уу..."/>
+      <label>Нууц үг</label>
+      <input type="password" id="auth-password" placeholder="Нууц үгээ оруулна уу" autocomplete="current-password">
     </div>
-    <div class="login-err" id="login-err">Нэгж болон нэрээ оруулна уу</div>
-    <button class="login-btn" onclick="doLogin()">Нэвтрэх →</button>
+    <div class="login-err" id="auth-err">Имэйл эсвэл нууц үг буруу байна</div>
+
+    <!-- Нэгж/нэр сонголт (нэвтэрсний дараа харагдана) -->
+    <div id="unit-section" style="display:none;margin-bottom:14px">
+      <div class="field">
+        <label>Нэгж</label>
+        <select id="login-unit">
+          <option value="">-- сонгоно уу --</option>
+          <optgroup label="Нэгжүүд">
+            <option>ЖС</option><option>ХС</option><option>СС</option><option>ЗС</option>
+            <option>ХҮТ</option><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option>
+            <option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option>
+            <option>НАХ</option><option>ЗТТА</option><option>ДА</option><option>АЗА</option>
+            <option>АТА</option><option>ХТЛА</option>
+          </optgroup>
+          <optgroup label="Удирдлага"><option value="ADMIN">Админ</option></optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label>Нэр</label>
+        <input type="text" id="login-name" placeholder="Нэрээ оруулна уу...">
+      </div>
+      <button class="login-btn" onclick="doEnter()">Орох →</button>
+    </div>
+
+    <button class="login-btn" id="auth-btn" onclick="doAuthLogin()">Нэвтрэх →</button>
   </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="main-app" class="app-wrap" style="display:none">
   <div class="sidebar">
     <div class="sidebar-logo">
@@ -173,7 +190,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
           <div class="user-unit" id="user-unit-lbl">—</div>
         </div>
       </div>
-      <button class="logout-btn" onclick="logout()">Гарах</button>
+      <button class="logout-btn" onclick="doLogout()">Гарах</button>
     </div>
   </div>
 
@@ -245,7 +262,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
             <div class="form-field"><label>Огноо</label><input type="text" id="a-date" placeholder="1/5"/></div>
           </div>
           <div class="form-row">
-            <div class="form-field"><label>Үүрэг даалгавар өгсөн хэлтэс/нэгж</label>
+            <div class="form-field"><label>Хэлтэс/нэгж</label>
               <select id="a-dept"><option>ДХХ</option><option>ББТХ</option><option>СЭЗХ</option><option>ХНХ</option><option>ХЭМАБА</option><option>ТБТХ</option><option>Ер.Инженер</option><option>Бусад</option></select>
             </div>
             <div class="form-field"><label>Хариуцагч</label>
@@ -278,6 +295,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script>
 // ===== FIREBASE =====
 firebase.initializeApp({
@@ -289,15 +307,15 @@ firebase.initializeApp({
   appId:"1:934034525733:web:6ccf4b7f8c1cdca86839cc"
 });
 const db=firebase.firestore();
+const auth=firebase.auth();
 const TDOC=db.collection('app_data').doc('tasks');
 const PDOC=db.collection('app_data').doc('progress');
 
-// ===== CONSTANTS =====
 const AU=['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'];
 const DEPTS={'ДХХ':'#2196F3','ББТХ':'#9c27b0','СЭЗХ':'#f44336','ХНХ':'#4caf50','ХЭМАБА':'#ff9800','ТБТХ':'#e91e63','Ер.Инженер':'#607d8b','Бусад':'#455a64'};
 const ML={'2026-01':'1-р сар','2026-02':'2-р сар','2026-03':'3-р сар','2026-04':'4-р сар','2026-05':'5-р сар','2026-06':'6-р сар','2026-07':'7-р сар','2026-08':'8-р сар','2026-09':'9-р сар','2026-10':'10-р сар','2026-11':'11-р сар','2026-12':'12-р сар'};
 const MALL=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
-const LK='uurdeg_login_v1';
+const SK='uurdeg_session_v2';
 const INIT=[
   {id:1,month:'2026-01',date:'1/5',dept:'ДХХ',giver:'ДХХ',person:'Э.Эрдэнэбат',name:'Мэдээ тайлан ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
   {id:2,month:'2026-01',date:'1/5',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
@@ -321,50 +339,81 @@ const INIT=[
   {id:20,month:'2026-01',date:'1/26',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2025 оны ирсэн бичигнүүдийг хаах',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ББТХ','МТХ','ХЭМАБА','НАХ','ХНХ','ХТЛА','АТА','ЗТТА','ДА','АЗА'],dl:'2026/01/31'},
 ];
 
-// ===== STATE =====
-let cu=null,bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[];
-let tasks=[],prog={},nid=300;
+let cu=null,tasks=[],prog={},nid=300,bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[];
 let dC=null,uCC=null,uPC=null,saveT=null;
+let authDone=false;
 
-// ===== SYNC UI =====
-function sync(state,msg){
-  const el=document.getElementById('sync');
-  el.textContent=msg||'';el.className='sync show '+(state||'');
-  if(state!=='saving')setTimeout(()=>el.classList.remove('show'),2000);
+function syncUI(s,m){const el=document.getElementById('sync');el.textContent=m;el.className='sync show '+(s||'');if(s!=='saving')setTimeout(()=>el.classList.remove('show'),2200);}
+
+// ===== FIREBASE AUTH =====
+async function doAuthLogin(){
+  const email=document.getElementById('auth-email').value.trim();
+  const pw=document.getElementById('auth-password').value;
+  const btn=document.getElementById('auth-btn');
+  if(!email||!pw){showAuthErr('Имэйл болон нууц үгээ оруулна уу');return;}
+  btn.disabled=true;btn.textContent='Нэвтэрч байна...';
+  try{
+    await auth.signInWithEmailAndPassword(email,pw);
+    document.getElementById('auth-err').style.display='none';
+    btn.style.display='none';
+    document.getElementById('auth-email').disabled=true;
+    document.getElementById('auth-password').disabled=true;
+    document.getElementById('unit-section').style.display='block';
+  }catch(e){
+    showAuthErr('Имэйл эсвэл нууц үг буруу байна');
+    btn.disabled=false;btn.textContent='Нэвтрэх →';
+  }
 }
 
-// ===== FIREBASE LOAD =====
+function showAuthErr(msg){const el=document.getElementById('auth-err');el.textContent=msg;el.style.display='block';}
+
+async function doEnter(){
+  const unit=document.getElementById('login-unit').value;
+  const name=document.getElementById('login-name').value.trim();
+  if(!unit){alert('Нэгжээ сонгоно уу');return;}
+  if(!name){alert('Нэрээ оруулна уу');return;}
+  cu={unit,name,isAdmin:unit==='ADMIN'};
+  try{localStorage.setItem(SK,JSON.stringify(cu));}catch(e){}
+  await fbLoad();
+  showApp();
+}
+
+async function doLogout(){
+  try{localStorage.removeItem(SK);}catch(e){}
+  await auth.signOut();
+  cu=null;tasks=[];prog={};
+  document.getElementById('main-app').style.display='none';
+  document.getElementById('login-page').style.display='flex';
+  document.getElementById('auth-btn').style.display='block';
+  document.getElementById('auth-btn').disabled=false;
+  document.getElementById('auth-btn').textContent='Нэвтрэх →';
+  document.getElementById('auth-email').disabled=false;
+  document.getElementById('auth-password').disabled=false;
+  document.getElementById('auth-email').value='';
+  document.getElementById('auth-password').value='';
+  document.getElementById('unit-section').style.display='none';
+  document.getElementById('auth-err').style.display='none';
+  document.getElementById('nav-admin').style.display='none';
+}
+
+// ===== FIREBASE DATA =====
 async function fbLoad(){
   document.getElementById('loading-msg').textContent='Өгөгдөл ачаалж байна...';
   try{
     const[ts,ps]=await Promise.all([TDOC.get(),PDOC.get()]);
-    if(ts.exists&&ts.data().list){
-      tasks=ts.data().list;
-      nid=Math.max(...tasks.map(t=>t.id),299)+1;
-    }else{
-      tasks=[...INIT];
-      await TDOC.set({list:tasks});
-    }
+    if(ts.exists&&ts.data().list){tasks=ts.data().list;nid=Math.max(...tasks.map(t=>t.id),299)+1;}
+    else{tasks=[...INIT];await TDOC.set({list:tasks});}
     prog=ps.exists?ps.data().data||{}:{};
-  }catch(e){
-    console.error('Firebase error:',e);
-    tasks=[...INIT];prog={};
-  }
+  }catch(e){tasks=[...INIT];prog={};}
 }
-
-// ===== FIREBASE SAVE =====
 function saveTasks(){
-  sync('saving','Хадгалж байна...');
+  syncUI('saving','Хадгалж байна...');
   clearTimeout(saveT);
-  saveT=setTimeout(async()=>{
-    try{await TDOC.set({list:tasks});sync('ok','✓ Хадгалагдлаа');}
-    catch(e){sync('err','⚠ Алдаа гарлаа');}
-  },700);
+  saveT=setTimeout(async()=>{try{await TDOC.set({list:tasks});syncUI('ok','✓ Хадгалагдлаа');}catch(e){syncUI('err','⚠ Алдаа');}},700);
 }
 async function saveProgress(){
-  sync('saving','Хадгалж байна...');
-  try{await PDOC.set({data:prog});sync('ok','✓ Хадгалагдлаа');}
-  catch(e){sync('err','⚠ Алдаа гарлаа');}
+  syncUI('saving','Хадгалж байна...');
+  try{await PDOC.set({data:prog});syncUI('ok','✓ Хадгалагдлаа');}catch(e){syncUI('err','⚠ Алдаа');}
 }
 
 // ===== HELPERS =====
@@ -376,35 +425,18 @@ function setNote(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid]['n_'+u]=v;}
 function calcAvg(t){if(!t.units.length)return 0;return Math.round(t.units.reduce((a,u)=>a+getPct(t.id,u),0)/t.units.length);}
 function pColor(p){return p>=100?'#27ae60':p>0?'#f39c12':'#e74c3c';}
 
-// ===== LOGIN =====
-function doLogin(){
-  const u=document.getElementById('login-unit').value;
-  const n=document.getElementById('login-name').value.trim();
-  if(!u||!n){document.getElementById('login-err').style.display='block';return;}
-  cu={unit:u,name:n};
-  try{localStorage.setItem(LK,JSON.stringify(cu));}catch(e){}
-  showApp();
-}
 function showApp(){
   document.getElementById('login-page').style.display='none';
   document.getElementById('main-app').style.display='flex';
   document.getElementById('user-name-lbl').textContent=cu.name;
   document.getElementById('user-unit-lbl').textContent=cu.unit;
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
-  if(cu.unit==='ADMIN'){document.getElementById('nav-admin').style.display='flex';initUchk();}
-  document.getElementById('sub-tabs-wrap').style.display=cu.unit!=='ADMIN'?'flex':'none';
+  if(cu.isAdmin){document.getElementById('nav-admin').style.display='flex';initUchk();}
+  document.getElementById('sub-tabs-wrap').style.display=cu.isAdmin?'none':'flex';
   const ms=getMonths();actMonth=ms[ms.length-1]||'2026-01';
   renderTopPills();updateKPI();renderDashboard();
 }
-function logout(){
-  try{localStorage.removeItem(LK);}catch(e){}
-  cu=null;
-  document.getElementById('main-app').style.display='none';
-  document.getElementById('login-page').style.display='flex';
-  document.getElementById('nav-admin').style.display='none';
-}
 
-// ===== NAV =====
 function showTab(name,el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(el)el.classList.add('active');
@@ -441,7 +473,6 @@ function updateKPI(){
   document.getElementById('kpi-avg').textContent=avg+'%';
 }
 
-// ===== DASHBOARD =====
 function renderDashboard(){
   const ts=tasks.filter(t=>t.month===actMonth);
   const done=ts.filter(t=>calcAvg(t)>=100).length;
@@ -460,19 +491,17 @@ function renderDashboard(){
   document.getElementById('all-tasks-db').innerHTML=ts.map(t=>{const p=calcAvg(t);return`<div class="all-task-row"><span style="font-size:11px;color:#bbb;width:18px">${t.id}</span><span style="font-size:12px;flex:1;color:#333">${t.name}</span><span class="badge bdept" style="font-size:10px">${t.dept}</span><span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:${pColor(p)}">${p}%</span></div>`;}).join('');
 }
 
-// ===== MY TASKS =====
 function renderMyTasks(){
   if(!cu)return;
-  const isA=cu.unit==='ADMIN';
   let ts=tasks.filter(t=>t.month===actMonth);
-  if(!isA){ts=subTab==='received'?ts.filter(t=>t.units.includes(cu.unit)):ts.filter(t=>t.giver===cu.unit);}
+  if(!cu.isAdmin){ts=subTab==='received'?ts.filter(t=>t.units.includes(cu.unit)):ts.filter(t=>t.giver===cu.unit);}
   ts=ts.filter(t=>{const p=calcAvg(t);if(bFilter==='биелээгүй')return p===0;if(bFilter==='явцтай')return p>0&&p<100;if(bFilter==='дууссан')return p>=100;return true;});
   if(!ts.length){document.getElementById('my-tasks').innerHTML='<div class="empty">Энэ сард үүрэг даалгавар байхгүй байна</div>';return;}
   document.getElementById('my-tasks').innerHTML=ts.map(t=>{
     const avg=calcAvg(t);const cls=avg>=100?'done':avg>0?'inprog':'notdone';
     const rows=t.units.map(u=>{
       const v=getPct(t.id,u);const n=getNote(t.id,u);
-      const ok=isA||(u===cu.unit&&t.units.includes(cu.unit));
+      const ok=cu.isAdmin||(u===cu.unit&&t.units.includes(cu.unit));
       return`<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f5f5f5">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
           <span style="font-size:12px;font-weight:700;color:#555;min-width:46px">${u}</span>
@@ -521,7 +550,6 @@ async function saveU(tid,u){
   updateKPI();
 }
 
-// ===== ADMIN =====
 function initUchk(){document.getElementById('units-check').innerHTML=AU.map(u=>`<div class="uchk" onclick="tu('${u}',this)">${u}</div>`).join('');selUnits=[];}
 function tu(u,el){el.classList.toggle('sel');selUnits=selUnits.includes(u)?selUnits.filter(x=>x!==u):[...selUnits,u];}
 function selectAllUnits(){selUnits=[...AU];document.querySelectorAll('.uchk').forEach(el=>el.classList.add('sel'));}
@@ -560,20 +588,44 @@ function renderAdminList(){
 }
 function syncPerson(v){if(v){document.getElementById('a-person').value=v;}}
 
-// ===== INIT =====
-(async function init(){
-  await fbLoad();
-  const ls=document.getElementById('loading-screen');
-  ls.classList.add('hide');
-  setTimeout(()=>ls.style.display='none',400);
-  try{
-    const saved=localStorage.getItem(LK);
-    if(saved){const p=JSON.parse(saved);if(p&&p.unit&&p.name){cu=p;showApp();return;}}
-  }catch(e){}
-  document.getElementById('login-page').style.display='flex';
-})();
+document.getElementById('auth-password').addEventListener('keydown',e=>{if(e.key==='Enter')doAuthLogin();});
+document.getElementById('login-name')&&document.getElementById('login-name').addEventListener('keydown',e=>{if(e.key==='Enter')doEnter();});
 
-document.getElementById('login-name').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+// ===== INIT: Firebase Auth state listener =====
+(async function init(){
+  auth.onAuthStateChanged(async function(user){
+    const ls=document.getElementById('loading-screen');
+    if(user){
+      // Нэвтэрсэн — session шалгана
+      try{
+        const saved=localStorage.getItem(SK);
+        if(saved){
+          const p=JSON.parse(saved);
+          if(p&&p.unit&&p.name){
+            cu=p;cu.isAdmin=cu.unit==='ADMIN';
+            await fbLoad();
+            ls.classList.add('hide');
+            setTimeout(()=>ls.style.display='none',400);
+            showApp();return;
+          }
+        }
+      }catch(e){}
+      // Firebase-д нэвтэрсэн ч нэгж/нэр байхгүй
+      ls.classList.add('hide');
+      setTimeout(()=>{ls.style.display='none';
+        document.getElementById('login-page').style.display='flex';
+        document.getElementById('auth-btn').style.display='none';
+        document.getElementById('auth-email').disabled=true;
+        document.getElementById('auth-password').disabled=true;
+        document.getElementById('unit-section').style.display='block';
+      },400);
+    }else{
+      // Нэвтрээгүй
+      ls.classList.add('hide');
+      setTimeout(()=>{ls.style.display='none';document.getElementById('login-page').style.display='flex';},400);
+    }
+  });
+})();
 </script>
 </body>
 </html>
