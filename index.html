@@ -7,12 +7,9 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-height:100vh;display:flex;flex-direction:column}
-
-/* LOGIN */
 .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a1628,#0d2137,#0a3352)}
 .login-card{background:#fff;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
 .login-icon{text-align:center;margin-bottom:20px}
-.logo-svg{width:64px;height:64px;margin:0 auto 12px;display:block}
 .login-title{font-size:20px;font-weight:700;color:#1a1a2e;text-align:center}
 .login-sub{font-size:13px;color:#888;text-align:center;margin-top:4px;margin-bottom:24px}
 .field{margin-bottom:14px}
@@ -22,14 +19,9 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .login-btn{width:100%;padding:12px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px}
 .login-btn:hover{opacity:0.9}
 .login-err{font-size:12px;color:#e74c3c;margin-top:8px;text-align:center;display:none}
-
-/* APP LAYOUT */
 .app-wrap{display:flex;flex:1;min-height:100vh}
-
-/* SIDEBAR */
-.sidebar{width:220px;background:#0d1f33;flex-shrink:0;border-right:1px solid #eee;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sidebar{width:220px;background:#0d1f33;flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
 .sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:12px}
-.logo-mark{width:44px;height:44px;flex-shrink:0}
 .sidebar-logo-text{line-height:1.2}
 .sidebar-logo-title{font-size:14px;font-weight:700;color:#fff}
 .sidebar-logo-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
@@ -46,37 +38,26 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .user-unit{font-size:11px;color:rgba(255,255,255,0.4)}
 .logout-btn{width:100%;padding:7px;border:1px solid rgba(255,255,255,0.15);border-radius:7px;font-size:12px;cursor:pointer;background:transparent;color:rgba(255,255,255,0.5);transition:all 0.15s}
 .logout-btn:hover{border-color:#e74c3c;color:#e74c3c}
-
-/* MAIN */
 .main-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .topbar{background:#fff;border-bottom:1px solid #eee;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
-.topbar-left{display:flex;align-items:center;gap:8px}
 .topbar-title{font-size:16px;font-weight:700;color:#1a1a2e}
 .month-pills{display:flex;gap:6px;flex-wrap:wrap}
 .mpill{padding:5px 14px;border:1.5px solid #e0e0e0;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#888;font-weight:500;transition:all 0.15s;white-space:nowrap}
 .mpill.active{background:#e74c3c;border-color:#e74c3c;color:#fff;font-weight:700}
 .mpill.has{border-color:#e74c3c;color:#e74c3c}
 .container{padding:20px 24px;flex:1;overflow-y:auto}
-
-/* KPI ROW */
-.kpi-row{display:flex;gap:0;background:#fff;border-radius:12px;border:1px solid #eee;overflow:hidden;margin-bottom:20px}
+.kpi-row{display:flex;background:#fff;border-radius:12px;border:1px solid #eee;overflow:hidden;margin-bottom:20px}
 .kpi-item{flex:1;padding:16px 20px;border-right:1px solid #eee;position:relative}
 .kpi-item:last-child{border-right:none}
 .kpi-val{font-size:28px;font-weight:700;color:#1a1a2e;line-height:1}
 .kpi-lbl{font-size:12px;color:#aaa;margin-top:6px;line-height:1.3}
 .kpi-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:28px;opacity:0.15}
-
-/* FILTER PILLS */
 .filter-row{display:flex;gap:6px;margin-bottom:16px}
 .fpill{padding:6px 18px;border:1.5px solid #e0e0e0;border-radius:20px;font-size:13px;cursor:pointer;background:#fff;color:#888;font-weight:500;transition:all 0.15s}
 .fpill.active{background:#1a1a2e;border-color:#1a1a2e;color:#fff;font-weight:700}
-
-/* SUB TABS */
 .sub-tabs{display:flex;gap:6px;margin-bottom:14px}
 .stab{padding:6px 16px;border:1.5px solid #eee;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#888;font-weight:500;transition:all 0.15s}
 .stab.active{background:#1a1a2e;border-color:#1a1a2e;color:#fff;font-weight:700}
-
-/* TASK CARD */
 .task-card{background:#fff;border-radius:10px;padding:14px 16px;margin-bottom:10px;border:1px solid #eee;transition:box-shadow 0.2s}
 .task-card:hover{box-shadow:0 3px 12px rgba(0,0,0,0.08)}
 .task-card.done{border-left:4px solid #27ae60}
@@ -84,53 +65,19 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .task-card.notdone{border-left:4px solid #e74c3c}
 .task-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;display:inline-flex;align-items:center;gap:4px}
-.bdept{background:#1a1a2e;color:#fff}
-.bdate{background:#2d7a27;color:#fff}
-.bdl{background:#e74c3c;color:#fff}
-.bgiver{background:#7c3aed;color:#fff}
-.task-body{display:grid;grid-template-columns:1fr auto auto 1fr;gap:12px;align-items:start}
-.task-name{font-size:14px;font-weight:600;color:#1a1a2e;line-height:1.45;grid-column:1}
-.unit-col{display:flex;flex-direction:column;gap:4px;min-width:44px}
-.unit-nm{font-size:12px;font-weight:700;color:#555}
-.pct-col{display:flex;flex-direction:column;gap:4px;min-width:52px}
-.pct-nm{font-size:12px;font-weight:700;text-align:right}
-.note-col{font-size:12px;color:#aaa;line-height:1.5}
-.input-col{display:flex;flex-direction:column;gap:6px;min-width:110px}
-.save-row{display:flex;align-items:center;gap:6px}
-.pct-input{width:58px;padding:4px 7px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:12px;font-weight:700;text-align:center;outline:none;color:#1a1a2e;transition:border-color 0.2s}
-.pct-input:focus{border-color:#e74c3c}
-.pct-input:disabled{opacity:0.35;background:#f8f8f8;cursor:not-allowed}
-.save-btn{padding:5px 12px;background:#1a1a2e;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background 0.15s}
-.save-btn:hover{background:#e74c3c}
-.saved-tag{font-size:11px;color:#27ae60;opacity:0;transition:opacity 0.4s;white-space:nowrap}
-.overall-bar-wrap{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #f5f5f5}
-.overall-lbl{font-size:11px;color:#aaa;min-width:80px}
+.bdept{background:#1a1a2e;color:#fff}.bdate{background:#2d7a27;color:#fff}
+.bdl{background:#e74c3c;color:#fff}.bgiver{background:#7c3aed;color:#fff}
 .pbar{flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden}
 .pfill{height:100%;border-radius:4px;transition:width 0.4s}
-.overall-val{font-size:13px;font-weight:700;min-width:36px;text-align:right}
-
-/* DASHBOARD */
-.db-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.db-stat{background:#fff;border:1px solid #eee;border-radius:10px;padding:12px 14px}
-.db-stat-n{font-size:22px;font-weight:700;color:#1a1a2e}
-.db-stat-l{font-size:11px;color:#aaa;margin-top:2px}
 .db-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 .db-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:14px 16px}
 .db-card-title{font-size:11px;font-weight:700;color:#aaa;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px}
-.ubar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.ubar-nm{font-size:12px;color:#555;width:52px;flex-shrink:0;font-weight:600}
-.ubar-w{flex:1;height:6px;background:#f0f0f0;border-radius:4px;overflow:hidden}
-.ubar-f{height:100%;border-radius:4px}
-.ubar-p{font-size:11px;min-width:32px;text-align:right;font-weight:600}
 .dept-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f5f5f5}
 .dept-row:last-child{border-bottom:none}
 .ddot{width:8px;height:8px;border-radius:50%;margin-right:7px;flex-shrink:0}
-.dnm{font-size:13px;color:#1a1a2e;font-weight:500}
-.dcnt{font-size:11px;color:#aaa}
+.dnm{font-size:13px;color:#1a1a2e;font-weight:500}.dcnt{font-size:11px;color:#aaa}
 .all-task-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5}
 .all-task-row:last-child{border-bottom:none}
-
-/* ADMIN FORM */
 .admin-form{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px;margin-bottom:18px}
 .form-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:14px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
@@ -139,7 +86,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .form-field textarea{resize:vertical;min-height:64px}
 .form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:#e74c3c}
 .uchk-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
-.uchk{padding:4px 10px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:11px;cursor:pointer;background:#fff;color:#555;font-weight:500;user-select:none;transition:all 0.15px}
+.uchk{padding:4px 10px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:11px;cursor:pointer;background:#fff;color:#555;font-weight:500;user-select:none;transition:all 0.15s}
 .uchk.sel{background:#1a1a2e;border-color:#1a1a2e;color:#fff}
 .btn-row{display:flex;gap:8px;margin-top:14px}
 .btn-primary{padding:9px 20px;background:#1a1a2e;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background 0.15s}
@@ -148,19 +95,36 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .btn-outline:hover{background:#1a1a2e;color:#fff}
 .del-btn{padding:3px 9px;background:transparent;border:1px solid #eee;border-radius:5px;font-size:11px;cursor:pointer;color:#bbb;transition:all 0.15s}
 .del-btn:hover{border-color:#e74c3c;color:#e74c3c}
-
 .section-title{font-size:12px;font-weight:700;color:#aaa;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #eee;text-transform:uppercase;letter-spacing:0.5px}
 .view{display:none}.view.active{display:block}
 .empty{text-align:center;padding:3rem;color:#bbb;font-size:14px}
+#loading-screen{position:fixed;inset:0;background:#0d1f33;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.4s}
+#loading-screen.hide{opacity:0;pointer-events:none}
+.loading-text{color:rgba(255,255,255,0.7);font-size:14px;margin-top:10px}
+.loading-bar{width:180px;height:3px;background:rgba(255,255,255,0.1);border-radius:999px;margin-top:14px;overflow:hidden}
+.loading-fill{height:100%;background:#e74c3c;border-radius:999px;animation:lb 1.4s ease-in-out infinite}
+@keyframes lb{0%{width:0;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0;margin-left:100%}}
+.sync{position:fixed;bottom:14px;right:14px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100}
+.sync.show{opacity:1}
+.sync.saving{background:#faeeda;color:#633806}
+.sync.ok{background:#e1f5ee;color:#085041}
+.sync.err{background:#fcebeb;color:#791f1f}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-page" class="login-page">
+<div id="loading-screen">
+  <div style="font-size:44px">📋</div>
+  <div style="color:#fff;font-size:18px;font-weight:700;margin-top:10px">Үүрэг даалгавар</div>
+  <div class="loading-text" id="loading-msg">Firebase холбогдож байна...</div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+</div>
+
+<div class="sync" id="sync"></div>
+
+<div id="login-page" class="login-page" style="display:none">
   <div class="login-card">
     <div class="login-icon">
-      <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABPAFgDASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAYIBQcBAwQJAv/EAD0QAAEDAgMEBggFAQkAAAAAAAECAwQABQYHERIhMVETI0FhcYEIFBUiMkKRoRZSYqLBJSQ0Q1RygrLR4f/EABwBAAICAwEBAAAAAAAAAAAAAAAHBQYCAwQIAf/EADMRAAECBAMHAgUDBQAAAAAAAAECAwAEBREhMWEGEkFRcYGRIjIHExSh8BUjsTNCYsHR/9oADAMBAAIRAxEAPwCmVKUoghSlKIIDedBW6MwclZGFcnMPYneS8LzM2nZjB4IQRtIQB+YI1J8DXT6J+XX46zHamT2duzWYplSgpOqXV69W35kanuB51c3OGzqvWXl0YabSt+O360yk7gVN+8UnuIBGnbwpe7SbXinVaWkmzhcFzorADtfePaOgSy1y61pzAw1Ix++UfNClSPMGxJsl9Pq4Jgy09PFVp8p+XxHD6VHKYINxcRwsPofbS4jIwpSlfY3QpSlEEKUpRBCuyOy7JkNx2G1OvOrCG0JGpUonQADmTXXVhfQqy7GIcZO4yuTG1bbIoCOFDc7KI1HjsD3vEpqMrFTapUk5Nu5JGXM8B3MbGmy4sJEWZyCwC1l3lxBsykJ9ovgSbg4B8TyhvTrySNEjwPOp/u7QCO0HtryXu6QLLaZd3uspuLBiNF195w6BCRxP/nbUFySzZsmaEO5rt7ZiSoEhSVRnFarUyT1bvn2jsNeYphueqQeqSklQv6lcAVZfnDCLAkobs3FdM5MGFTl+w0hv+02qWp6Ae1TKxtoHmklPimq5qSUqKVAhQOhBG8Vej0jrZ7PxXYcStoIauCFWyUoA7lp1cZUeX+InzqqucuHBbLyLtFb0izSSsAbkO9v14/WvROylU/UKay6o4kWPUYHza/eF+hz9Pqrsiv2r9aO+Y83iAUpSrPE5ClKUQQpSlEEe6wWqdfb3Cs1tZU/MmvJZZQO1SjoK+lWV+EIOBMC2zDMHZIiNde6Bp0rp3rWfE6+WlVv9BvLrpZMnMW5sdWyVRbWFDivg44PAe6PFVTT0oMzZLBVlthKSBdZbf9VlIV/c2D8gPYtQ8wPGk7tnNPV+qIo8qfS3is8AeJOiR9zbOJmmyy1W3E7ylYADMxrX0os0V45ukrCtgl7GFrOrbnykHdMeB0AHNIO5PM7+VabykxzcMvcdQsSW/aUhtWxJY2tzzKviQfLeO8A1zjtyLbYkfDtvADbfWvntUrs17+J+lRCmHSaPKMU36NKP2yLWPEHMnU56YWyjKtsCSmvpwq60e4jLe4gaJy1Nzyj6MZlsQcx8kZc7D7yJIeipuVtc0J0da6xI0Hzbikjmarrc4kXF+D+jVoEzGEuNq/IvTUHyNfv0L80xY73+Ab3J0tlxc2retxXusyDxR3JX/wAtOdZKXa14Xx9ifCK0FDUSYZcIH/LPnbSB3AkjyqqbMybtEnZilLN0/wBRB5pOB7jC/eKNtoyp2WaqDWC2zj+dYrHcIj8Ca9DlI2HmVlC08iK6K2vnjh7VLOIoze/c1K0/ar+PpWqKY7a99N47qXPon5ZLyeOeh4/nKFKUrOJCFZ7L/C9wxnjG24atidZE54N7Wm5tPFSz3BIJ8qwNWr9GOz2vLTLSfm1iZhSpc9Jj2mOB1rqNdyUA9rihx7EpJ4VCbQVU02SU42N5xXpQOajl4zOgjdLtF1wJja+Z2LLZk7l3bcLYXjtu3hyP6raYuo90JGipDncDqTzUdKrGdizwJt0nyHJUt0mRMkuK1W+6d5JJ5k/esxdbhdL/AIhm4kv7weuk0+8EnVDDY+FlHJKfudTWvc0rqCWbQyrh1j2n7R/P0qobO0USw+STvLWd5xXM52vyHDmcejnlKcjZWlLqs0P3yLIB/tJyHXirQWHG8JnSXZkx2U8racdWVKPjXTSlMkAAWEJRa1LUVKNycTH6acW06l1pakOIIUlSToUkcCD2GrAScdN4whYUxlJUkXiF/Qr9oBq6FjWO+e4kKB5EHmKr+lClfCknwFeyIzdksuojMTOjdADgQ2ohWhBGu7mAa4puSQ+427kpBNjoRYjoR9wDwjnmUIeYWy57VCxiy9wiMToL8KUjbYfQULTzBqt2KrO/Yb7Jtr4PVq1bV2LQfhUPKrB4SnO3HDkGXIbW2+poB1K0lJChuO4/Wo1nDhz2tY/aUZsGZBBUdBvW32jy4/WsWF7it0wt9nKgadOqlXT6VG3QjAHvl4jRtKUqQhnRLMqMKJxfjGPAlviJao6TKuktR0THjI3rUTzPwjmSK3XjzEzmKryw6yyYdktzXq1ngAaBhkDQLI/OoAa8hoOdQDL5bFuwcYqSErnuJflK0JLiUnq0f6RvVp2k9wrNeuRtCek4cfdNUqqFUxOfMI9lwnS/uPU5dBqYdOwGzLEuhNRnSN44pSSMOSjry5Z52t6Kht3wSuZcHZ6LltOuL29l1oEeHh5VKvXY20E9JvP6TXHr0XQnpOH6TWqXeflyS3h2hh1im0qsNhucsoDEeoi3giI9FttyhKAdw3hq5pHzBnolf9fas3AxHDhtbM7A7kRAO9UdpDqB/NdxnRQkHpNx/Sa49fi6A9LuJ0+E13JqUwfci/kQs6p8INl50EoeUg6LuPEZaDivCLy0tpkRorh4NyI/RH7ipDEkR3m9qI+y4jmysEfaoK9Lt7m0l0oXoN4U2T/FY9cXDqjtJYQ0rXXaZSps6/7dK3Jnwfcgj7/8hd1L4BMm5kqik6LH+wT/ABGzzr21woBSSlQBBGhB4GteM3ByKlQiX6ejfwd60fuBP0Ne9nFU1ooSt6FK3e8VNLbP21remZbVzHYxQqj8GdopS5ZLbo/xcSD4VuxrHMzDpw/iNxDKNIcnV2PoNwB4p8j9tKVO8eXG2Yjw89GeZcYkM9ZGc+IFenDuB4UqXYfStF7xNSMpUmWEtz7KkODA3GeoIuDf+Y//2Q==" style="width:64px;height:64px;object-fit:contain;border-radius:8px">
       <div class="login-title">Үүрэг даалгавар</div>
       <div class="login-sub">2026 оны хяналтын систем</div>
     </div>
@@ -175,9 +139,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
           <option>НАХ</option><option>ЗТТА</option><option>ДА</option><option>АЗА</option>
           <option>АТА</option><option>ХТЛА</option>
         </optgroup>
-        <optgroup label="Удирдлага">
-          <option value="ADMIN">Админ</option>
-        </optgroup>
+        <optgroup label="Удирдлага"><option value="ADMIN">Админ</option></optgroup>
       </select>
     </div>
     <div class="field">
@@ -189,28 +151,19 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="main-app" class="app-wrap" style="display:none">
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-logo">
-      <img src="data:image/png;base64,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" style="width:44px;height:44px;object-fit:contain;border-radius:6px">
       <div class="sidebar-logo-text">
         <div class="sidebar-logo-title">DSEDN</div>
-        <div class="sidebar-logo-sub">2026 он</div>
+        <div class="sidebar-logo-sub">2026 он · Firebase</div>
       </div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section">Үндсэн цэс</div>
-      <div class="nav-item active" id="nav-dashboard" onclick="showTab('dashboard',this)">
-        <div class="nav-dot" style="background:#e74c3c"></div>ДАШБОАРД
-      </div>
-      <div class="nav-item" id="nav-mine" onclick="showTab('mine',this)">
-        <div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР
-      </div>
-      <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin',this)">
-        <div class="nav-dot" style="background:#f39c12"></div>АБМИН
-      </div>
+      <div class="nav-item active" onclick="showTab('dashboard',this)"><div class="nav-dot" style="background:#e74c3c"></div>ДАШБОАРД</div>
+      <div class="nav-item" onclick="showTab('mine',this)"><div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР</div>
+      <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin',this)"><div class="nav-dot" style="background:#f39c12"></div>АБМИН</div>
     </nav>
     <div class="sidebar-footer">
       <div class="user-chip">
@@ -224,103 +177,62 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main-content">
     <div class="topbar">
-      <div class="topbar-left">
-        <div class="topbar-title" id="topbar-title">Дашбоард</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;">
+      <div class="topbar-title" id="topbar-title">Дашбоард</div>
+      <div style="display:flex;align-items:center;gap:8px">
         <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap">Сар:</span>
-        <div class="month-pills" id="top-month-pills" style="display:flex;gap:5px;flex-wrap:wrap"></div>
+        <div class="month-pills" id="top-month-pills"></div>
       </div>
     </div>
     <div class="container">
-
-      <!-- KPI ROW -->
-      <div class="kpi-row" id="kpi-row">
-        <div class="kpi-item">
-          <div class="kpi-icon">📋</div>
-          <div class="kpi-val" id="kpi-total">0</div>
-          <div class="kpi-lbl">Нийт үүрэг<br>даалгавар</div>
-        </div>
-        <div class="kpi-item">
-          <div class="kpi-icon">✅</div>
-          <div class="kpi-val" id="kpi-done" style="color:#27ae60">0</div>
-          <div class="kpi-lbl">Хийгдсэн</div>
-        </div>
-        <div class="kpi-item">
-          <div class="kpi-icon">⏳</div>
-          <div class="kpi-val" id="kpi-partial" style="color:#f39c12">0</div>
-          <div class="kpi-lbl">Дутуу хийгдсэн</div>
-        </div>
-        <div class="kpi-item">
-          <div class="kpi-icon">📌</div>
-          <div class="kpi-val" id="kpi-none" style="color:#e74c3c">0</div>
-          <div class="kpi-lbl">Хугацаа<br>болоогүй</div>
-        </div>
-        <div class="kpi-item">
-          <div class="kpi-icon">📊</div>
-          <div class="kpi-val" id="kpi-avg" style="color:#3498db">0%</div>
-          <div class="kpi-lbl">Дундаж хувь</div>
-        </div>
+      <div class="kpi-row">
+        <div class="kpi-item"><div class="kpi-icon">📋</div><div class="kpi-val" id="kpi-total">0</div><div class="kpi-lbl">Нийт үүрэг<br>даалгавар</div></div>
+        <div class="kpi-item"><div class="kpi-icon">✅</div><div class="kpi-val" id="kpi-done" style="color:#27ae60">0</div><div class="kpi-lbl">Хийгдсэн</div></div>
+        <div class="kpi-item"><div class="kpi-icon">⏳</div><div class="kpi-val" id="kpi-partial" style="color:#f39c12">0</div><div class="kpi-lbl">Дутуу хийгдсэн</div></div>
+        <div class="kpi-item"><div class="kpi-icon">📌</div><div class="kpi-val" id="kpi-none" style="color:#e74c3c">0</div><div class="kpi-lbl">Хугацаа<br>болоогүй</div></div>
+        <div class="kpi-item"><div class="kpi-icon">📊</div><div class="kpi-val" id="kpi-avg" style="color:#3498db">0%</div><div class="kpi-lbl">Дундаж хувь</div></div>
       </div>
 
-      <!-- DASHBOARD VIEW -->
       <div class="view active" id="view-dashboard">
-        <div class="db-grid" style="margin-bottom:14px">
-          <div class="db-card">
-            <div class="db-card-title">Нэгжид өгсөн даалгаварын тоо</div>
-            <div style="position:relative;width:100%;height:220px"><canvas id="unitCountChart" role="img" aria-label="Нэгжид өгсөн даалгаварын тоо">Нэгжийн даалгавар чарт.</canvas></div>
-          </div>
+        <div class="db-grid">
+          <div class="db-card"><div class="db-card-title">Нэгжид өгсөн даалгаварын тоо</div><div style="position:relative;width:100%;height:220px"><canvas id="unitCountChart"></canvas></div></div>
           <div class="db-card">
             <div class="db-card-title">Биелэлтийн байдал</div>
-            <div style="position:relative;width:100%;height:180px"><canvas id="donutChart" role="img" aria-label="Биелэлтийн байдал">Биелэлтийн доnut чарт.</canvas></div>
+            <div style="position:relative;width:100%;height:180px"><canvas id="donutChart"></canvas></div>
             <div style="display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:12px;color:#888">
-              <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#27ae60;display:inline-block"></span>Хийгдсэн</span>
-              <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#f39c12;display:inline-block"></span>Дутуу</span>
-              <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#e74c3c;display:inline-block"></span>Хийгдээгүй</span>
+              <span><span style="width:10px;height:10px;border-radius:2px;background:#27ae60;display:inline-block;margin-right:4px"></span>Хийгдсэн</span>
+              <span><span style="width:10px;height:10px;border-radius:2px;background:#f39c12;display:inline-block;margin-right:4px"></span>Дутуу</span>
+              <span><span style="width:10px;height:10px;border-radius:2px;background:#e74c3c;display:inline-block;margin-right:4px"></span>Хийгдээгүй</span>
             </div>
           </div>
         </div>
-        <div class="db-card" style="margin-bottom:14px">
-          <div class="db-card-title">Нэгж бүрийн дундаж биелэлт (%)</div>
-          <div style="position:relative;width:100%;height:200px"><canvas id="unitPctChart" role="img" aria-label="Нэгж бүрийн биелэлтийн хувь">Нэгжийн биелэлт чарт.</canvas></div>
-        </div>
+        <div class="db-card" style="margin-bottom:14px"><div class="db-card-title">Нэгж бүрийн дундаж биелэлт (%)</div><div style="position:relative;width:100%;height:200px"><canvas id="unitPctChart"></canvas></div></div>
         <div class="db-grid">
-          <div class="db-card">
-            <div class="db-card-title">Хэлтсийн хураангуй</div>
-            <div id="dept-list"></div>
-          </div>
-          <div class="db-card">
-            <div class="db-card-title">Бүх үүрэг даалгавар</div>
-            <div id="all-tasks-db"></div>
-          </div>
+          <div class="db-card"><div class="db-card-title">Хэлтсийн хураангуй</div><div id="dept-list"></div></div>
+          <div class="db-card"><div class="db-card-title">Бүх үүрэг даалгавар</div><div id="all-tasks-db"></div></div>
         </div>
       </div>
 
-      <!-- MINE VIEW -->
       <div class="view" id="view-mine">
         <div class="sub-tabs" id="sub-tabs-wrap" style="display:none">
-          <button class="stab active" id="stab-received" onclick="setSubTab('received',this)">📥 Надад өгсөн</button>
-          <button class="stab" id="stab-given" onclick="setSubTab('given',this)">📤 Миний өгсөн</button>
+          <button class="stab active" onclick="setSubTab('received',this)">📥 Надад өгсөн</button>
+          <button class="stab" onclick="setSubTab('given',this)">📤 Миний өгсөн</button>
         </div>
         <div class="filter-row">
           <button class="fpill active" onclick="setFilter('бүгд',this)">Бүгд</button>
           <button class="fpill" onclick="setFilter('биелээгүй',this)">Биелэлгүй</button>
           <button class="fpill" onclick="setFilter('явцтай',this)">Явцтай</button>
-          <button class="fpill" onclick="setFilter('дууссан',this)">✓ Дуусссан</button>
+          <button class="fpill" onclick="setFilter('дууссан',this)">✓ Дууссан</button>
         </div>
         <div id="my-tasks"></div>
       </div>
 
-      <!-- ADMIN VIEW -->
       <div class="view" id="view-admin">
         <div class="admin-form">
           <div class="form-title">➕ Шинэ үүрэг даалгавар нэмэх</div>
           <div class="form-row">
-            <div class="form-field">
-              <label>Сар</label>
+            <div class="form-field"><label>Сар</label>
               <select id="a-month">
                 <option value="2026-01">1-р сар</option><option value="2026-02">2-р сар</option>
                 <option value="2026-03">3-р сар</option><option value="2026-04">4-р сар</option>
@@ -333,39 +245,23 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
             <div class="form-field"><label>Огноо</label><input type="text" id="a-date" placeholder="1/5"/></div>
           </div>
           <div class="form-row">
-            <div class="form-field">
-              <label>Үүрэг даалгавар өгсөн хэлтэс/нэгж</label>
-              <select id="a-dept">
-                <option>ДХХ</option><option>ББТХ</option><option>СЭЗХ</option>
-                <option>ХНХ</option><option>ХЭМАБА</option><option>ТБТХ</option>
-                <option>Ер.Инженер</option><option>Бусад</option>
-              </select>
+            <div class="form-field"><label>Үүрэг даалгавар өгсөн хэлтэс/нэгж</label>
+              <select id="a-dept"><option>ДХХ</option><option>ББТХ</option><option>СЭЗХ</option><option>ХНХ</option><option>ХЭМАБА</option><option>ТБТХ</option><option>Ер.Инженер</option><option>Бусад</option></select>
             </div>
-            <div class="form-field">
-              <label>Хариуцагч</label>
+            <div class="form-field"><label>Хариуцагч</label>
               <select id="a-person-sel" onchange="syncPerson(this.value)" style="margin-bottom:5px">
                 <option value="">-- жагсаалтаас сонгох --</option>
-                <option>Э.Эрдэнэбат</option>
-                <option>С.Батбаатар</option>
-                <option>Л.Эрдэнэсугар</option>
-                <option>Б.Соёлзул</option>
-                <option>Ч.Чинцогт</option>
-                <option>В.Болормаа</option>
-                <option>Ганхүү</option>
-                <option>С.Одончимэг</option>
-                <option>С.Гандолгор</option>
-                <option>Р.Батням</option>
-                <option>Б.Батжаргал</option>
+                <option>Э.Эрдэнэбат</option><option>С.Батбаатар</option><option>Л.Эрдэнэсугар</option>
+                <option>Б.Соёлзул</option><option>Ч.Чинцогт</option><option>В.Болормаа</option>
+                <option>Ганхүү</option><option>С.Одончимэг</option><option>С.Гандолгор</option>
+                <option>Р.Батням</option><option>Б.Батжаргал</option>
               </select>
               <input type="text" id="a-person" placeholder="Эсвэл гараар бичих..."/>
             </div>
           </div>
           <div class="form-field" style="margin-bottom:10px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
           <div class="form-field" style="margin-bottom:10px"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
-          <div class="form-field" style="margin-bottom:12px">
-            <label>Биелэх нэгжүүд</label>
-            <div class="uchk-wrap" id="units-check"></div>
-          </div>
+          <div class="form-field" style="margin-bottom:12px"><label>Биелэх нэгжүүд</label><div class="uchk-wrap" id="units-check"></div></div>
           <div class="btn-row">
             <button class="btn-outline" onclick="selectAllUnits()">Бүгд сонгох</button>
             <button class="btn-primary" onclick="addTask()">✓ Нэмэх</button>
@@ -375,32 +271,47 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
         <div class="filter-row" id="admin-month-pills" style="margin-bottom:12px"></div>
         <div id="admin-task-list"></div>
       </div>
-
     </div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
-const ALL_UNITS=['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'];
+// ===== FIREBASE =====
+firebase.initializeApp({
+  apiKey:"AIzaSyCDBVVt_rEY7tb96ZBDY4a_FZEa_-q4cUw",
+  authDomain:"ichko-1ac04.firebaseapp.com",
+  projectId:"ichko-1ac04",
+  storageBucket:"ichko-1ac04.firebasestorage.app",
+  messagingSenderId:"934034525733",
+  appId:"1:934034525733:web:6ccf4b7f8c1cdca86839cc"
+});
+const db=firebase.firestore();
+const TDOC=db.collection('app_data').doc('tasks');
+const PDOC=db.collection('app_data').doc('progress');
+
+// ===== CONSTANTS =====
+const AU=['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'];
 const DEPTS={'ДХХ':'#2196F3','ББТХ':'#9c27b0','СЭЗХ':'#f44336','ХНХ':'#4caf50','ХЭМАБА':'#ff9800','ТБТХ':'#e91e63','Ер.Инженер':'#607d8b','Бусад':'#455a64'};
-const UC={'ЖС':'#e74c3c','ХС':'#9c27b0','СС':'#2196f3','ЗС':'#f44336','ХҮТ':'#ff9800','СЭЗХ':'#e91e63','ДХХ':'#607d8b','ТБТХ':'#8bc34a','ХНХ':'#00bcd4','ББТХ':'#3f51b5','МТХ':'#e53935','ХЭМАБА':'#00897b','НАХ':'#f57c00','ЗТТА':'#ad1457','ДА':'#2e7d32','АЗА':'#1565c0','АТА':'#37474f','ХТЛА':'#e65100'};
 const ML={'2026-01':'1-р сар','2026-02':'2-р сар','2026-03':'3-р сар','2026-04':'4-р сар','2026-05':'5-р сар','2026-06':'6-р сар','2026-07':'7-р сар','2026-08':'8-р сар','2026-09':'9-р сар','2026-10':'10-р сар','2026-11':'11-р сар','2026-12':'12-р сар'};
 const MALL=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+const LK='uurdeg_login_v1';
 const INIT=[
   {id:1,month:'2026-01',date:'1/5',dept:'ДХХ',giver:'ДХХ',person:'Э.Эрдэнэбат',name:'Мэдээ тайлан ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
   {id:2,month:'2026-01',date:'1/5',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
   {id:3,month:'2026-01',date:'1/5',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Тооцоо нийлсэн акт ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
   {id:4,month:'2026-01',date:'1/5',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Дансны үлдэгдлийн баталгаа ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:5,month:'2026-01',date:'1/5',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Календарчилсан төлөвлөгөө ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/31'},
-  {id:6,month:'2026-01',date:'1/5',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Ээлжийн амралтын төлөвлөгөө ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/31'},
+  {id:5,month:'2026-01',date:'1/5',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Календарчилсан төлөвлөгөө ирүүлэх',units:AU,dl:'2026/01/31'},
+  {id:6,month:'2026-01',date:'1/5',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Ээлжийн амралтын төлөвлөгөө ирүүлэх',units:AU,dl:'2026/01/31'},
   {id:7,month:'2026-01',date:'1/5',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'Ганхүү',name:'ГАУС мэдээлэл явуулсан салбарууд тайлан',units:['ЖС','ХС','СС','ЗС'],dl:'2026/01/31'},
   {id:8,month:'2026-01',date:'1/5',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'ERP дээр бичиг хаагдахгүй байна засварлах',units:['МТХ'],dl:'2026/01/31'},
   {id:9,month:'2026-01',date:'1/5',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын гэрчилгээний тайлан',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:10,month:'2026-01',date:'1/6',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Нэгжүүд Улаанбаатар явах ажлаа нийлүүлж нэг явах',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'тухай бүр'},
+  {id:10,month:'2026-01',date:'1/6',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Нэгжүүд Улаанбаатар явах ажлаа нийлүүлж нэг явах',units:AU,dl:'тухай бүр'},
   {id:11,month:'2026-01',date:'1/12',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:12,month:'2026-01',date:'1/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Илүү цагийг амрааж дуусгах',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026.03.01'},
-  {id:13,month:'2026-01',date:'1/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Архивт материалаа өгөх',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/31'},
+  {id:12,month:'2026-01',date:'1/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Илүү цагийг амрааж дуусгах',units:AU,dl:'2026.03.01'},
+  {id:13,month:'2026-01',date:'1/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Архивт материалаа өгөх',units:AU,dl:'2026/01/31'},
   {id:14,month:'2026-01',date:'1/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
   {id:15,month:'2026-01',date:'1/12',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Ээлжит шалгалтанд бэлдэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/19'},
   {id:16,month:'2026-01',date:'1/19',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'2026 оны материалын захиалга ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ЗТТА','ДА','АЗА','АТА','ХТЛА','НАХ'],dl:'2026/01/19'},
@@ -410,39 +321,70 @@ const INIT=[
   {id:20,month:'2026-01',date:'1/26',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2025 оны ирсэн бичигнүүдийг хаах',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ББТХ','МТХ','ХЭМАБА','НАХ','ХНХ','ХТЛА','АТА','ЗТТА','ДА','АЗА'],dl:'2026/01/31'},
 ];
 
-const SK='uurdeg_v7';
-// ===== НЭМЭГДСЭН: login state хадгалах key =====
-const LK='uurdeg_login_v1';
-
+// ===== STATE =====
 let cu=null,bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[];
-let app={tasks:[...INIT],progress:{}};
-let nid=300;
-let donutInst=null,unitCountInst=null,unitPctInst=null;
+let tasks=[],prog={},nid=300;
+let dC=null,uCC=null,uPC=null,saveT=null;
 
-function save(){try{localStorage.setItem(SK,JSON.stringify(app));}catch(e){}}
-function load(){try{const r=localStorage.getItem(SK);if(r){app=JSON.parse(r);nid=Math.max(...app.tasks.map(t=>t.id),299)+1;}}catch(e){}}
-function getMonths(){const ms=new Set(app.tasks.map(t=>t.month));return MALL.filter(m=>ms.has(m));}
-function getPct(tid,u){const p=app.progress[tid];return(p&&p[u]!==undefined)?p[u]:0;}
-function setPct(tid,u,v){if(!app.progress[tid])app.progress[tid]={};app.progress[tid][u]=Math.max(0,Math.min(100,v));save();}
-function getNote(tid,u){const p=app.progress[tid];return(p&&p['n_'+u]!==undefined)?p['n_'+u]:'';}
-function setNote(tid,u,v){if(!app.progress[tid])app.progress[tid]={};app.progress[tid]['n_'+u]=v;save();}
+// ===== SYNC UI =====
+function sync(state,msg){
+  const el=document.getElementById('sync');
+  el.textContent=msg||'';el.className='sync show '+(state||'');
+  if(state!=='saving')setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+// ===== FIREBASE LOAD =====
+async function fbLoad(){
+  document.getElementById('loading-msg').textContent='Өгөгдөл ачаалж байна...';
+  try{
+    const[ts,ps]=await Promise.all([TDOC.get(),PDOC.get()]);
+    if(ts.exists&&ts.data().list){
+      tasks=ts.data().list;
+      nid=Math.max(...tasks.map(t=>t.id),299)+1;
+    }else{
+      tasks=[...INIT];
+      await TDOC.set({list:tasks});
+    }
+    prog=ps.exists?ps.data().data||{}:{};
+  }catch(e){
+    console.error('Firebase error:',e);
+    tasks=[...INIT];prog={};
+  }
+}
+
+// ===== FIREBASE SAVE =====
+function saveTasks(){
+  sync('saving','Хадгалж байна...');
+  clearTimeout(saveT);
+  saveT=setTimeout(async()=>{
+    try{await TDOC.set({list:tasks});sync('ok','✓ Хадгалагдлаа');}
+    catch(e){sync('err','⚠ Алдаа гарлаа');}
+  },700);
+}
+async function saveProgress(){
+  sync('saving','Хадгалж байна...');
+  try{await PDOC.set({data:prog});sync('ok','✓ Хадгалагдлаа');}
+  catch(e){sync('err','⚠ Алдаа гарлаа');}
+}
+
+// ===== HELPERS =====
+function getMonths(){const ms=new Set(tasks.map(t=>t.month));return MALL.filter(m=>ms.has(m));}
+function getPct(tid,u){const p=prog[tid];return(p&&p[u]!==undefined)?p[u]:0;}
+function setPct(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid][u]=Math.max(0,Math.min(100,v));}
+function getNote(tid,u){const p=prog[tid];return(p&&p['n_'+u]!==undefined)?p['n_'+u]:'';}
+function setNote(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid]['n_'+u]=v;}
 function calcAvg(t){if(!t.units.length)return 0;return Math.round(t.units.reduce((a,u)=>a+getPct(t.id,u),0)/t.units.length);}
 function pColor(p){return p>=100?'#27ae60':p>0?'#f39c12':'#e74c3c';}
 
-// ===== ӨӨРЧЛӨГДСӨН: localStorage-д хадгалах нэмэгдсэн =====
+// ===== LOGIN =====
 function doLogin(){
   const u=document.getElementById('login-unit').value;
   const n=document.getElementById('login-name').value.trim();
   if(!u||!n){document.getElementById('login-err').style.display='block';return;}
   cu={unit:u,name:n};
-
-  // ✅ НЭМЭГДСЭН: нэвтэрсэн хэрэглэгчийг localStorage-д хадгална
   try{localStorage.setItem(LK,JSON.stringify(cu));}catch(e){}
-
   showApp();
 }
-
-// ===== НЭМЭГДСЭН: UI харуулах функц (doLogin болон auto-login хоёулаа дуудна) =====
 function showApp(){
   document.getElementById('login-page').style.display='none';
   document.getElementById('main-app').style.display='flex';
@@ -450,26 +392,22 @@ function showApp(){
   document.getElementById('user-unit-lbl').textContent=cu.unit;
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
   if(cu.unit==='ADMIN'){document.getElementById('nav-admin').style.display='flex';initUchk();}
-  document.getElementById('sub-tabs-wrap').style.display=(cu.unit!=='ADMIN')?'flex':'none';
-  const ms=getMonths();
-  actMonth=ms[ms.length-1]||'2026-01';
+  document.getElementById('sub-tabs-wrap').style.display=cu.unit!=='ADMIN'?'flex':'none';
+  const ms=getMonths();actMonth=ms[ms.length-1]||'2026-01';
   renderTopPills();updateKPI();renderDashboard();
 }
-
-// ===== ӨӨРЧЛӨГДСӨН: localStorage-аас устгах нэмэгдсэн =====
 function logout(){
-  // ✅ НЭМЭГДСЭН: гарахад localStorage-аас устгана
   try{localStorage.removeItem(LK);}catch(e){}
-
   cu=null;
-  document.getElementById('login-page').style.display='flex';
   document.getElementById('main-app').style.display='none';
+  document.getElementById('login-page').style.display='flex';
   document.getElementById('nav-admin').style.display='none';
 }
 
+// ===== NAV =====
 function showTab(name,el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
+  if(el)el.classList.add('active');
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
   const t={dashboard:'Дашбоард',mine:'Үүрэг даалгавар',admin:'Абмин'};
@@ -480,124 +418,80 @@ function showTab(name,el){
 }
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
 function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
-
 function renderTopPills(){
   const ms=getMonths();
-  document.getElementById('top-month-pills').innerHTML=ms.map(m=>
-    `<button class="mpill has${m===actMonth?' active':''}" onclick="setMonth('${m}',this)">${ML[m]}</button>`
-  ).join('');
+  document.getElementById('top-month-pills').innerHTML=ms.map(m=>`<button class="mpill has${m===actMonth?' active':''}" onclick="setMonth('${m}',this)">${ML[m]}</button>`).join('');
 }
 function setMonth(m,btn){
-  actMonth=m;
-  document.querySelectorAll('#top-month-pills .mpill').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  actMonth=m;document.querySelectorAll('#top-month-pills .mpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   updateKPI();
   if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
   else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
 }
 function updateKPI(){
-  const tasks=app.tasks.filter(t=>t.month===actMonth);
-  const done=tasks.filter(t=>calcAvg(t)>=100).length;
-  const partial=tasks.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
-  const none=tasks.filter(t=>calcAvg(t)===0).length;
-  const avg=tasks.length?Math.round(tasks.reduce((s,t)=>s+calcAvg(t),0)/tasks.length):0;
-  document.getElementById('kpi-total').textContent=tasks.length;
+  const ts=tasks.filter(t=>t.month===actMonth);
+  const done=ts.filter(t=>calcAvg(t)>=100).length;
+  const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
+  const none=ts.filter(t=>calcAvg(t)===0).length;
+  const avg=ts.length?Math.round(ts.reduce((s,t)=>s+calcAvg(t),0)/ts.length):0;
+  document.getElementById('kpi-total').textContent=ts.length;
   document.getElementById('kpi-done').textContent=done;
-  document.getElementById('kpi-partial').textContent=partial;
+  document.getElementById('kpi-partial').textContent=par;
   document.getElementById('kpi-none').textContent=none;
   document.getElementById('kpi-avg').textContent=avg+'%';
 }
 
+// ===== DASHBOARD =====
 function renderDashboard(){
-  const tasks=app.tasks.filter(t=>t.month===actMonth);
-  const done=tasks.filter(t=>calcAvg(t)>=100).length;
-  const partial=tasks.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
-  const none=tasks.filter(t=>calcAvg(t)===0).length;
-  if(donutInst)donutInst.destroy();
-  donutInst=new Chart(document.getElementById('donutChart'),{
-    type:'doughnut',
-    data:{
-      labels:['Хийгдсэн (100%)','Дутуу (1-99%)','Хийгдээгүй (0%)'],
-      datasets:[{data:[done,partial,none],backgroundColor:['#27ae60','#f39c12','#e74c3c'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]
-    },
-    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>{const p=Math.round(c.parsed/(done+partial+none)*100);return` ${c.parsed} даалгавар (${p}%)`;}}}}}
-  });
-  const unitCounts=ALL_UNITS.map(u=>tasks.filter(t=>t.units.includes(u)).length);
-  if(unitCountInst)unitCountInst.destroy();
-  unitCountInst=new Chart(document.getElementById('unitCountChart'),{
-    type:'bar',
-    data:{labels:ALL_UNITS,datasets:[{label:'Даалгаварын тоо',data:unitCounts,backgroundColor:'#1a1a2e',borderRadius:3,borderSkipped:false}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.parsed.y} даалгавар`}}},scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},y:{ticks:{font:{size:10},color:'#aaa',stepSize:2},grid:{color:'rgba(0,0,0,0.05)'}}}}
-  });
-  const unitPcts=ALL_UNITS.map(u=>{
-    const ts=tasks.filter(t=>t.units.includes(u));
-    if(!ts.length)return 0;
-    return Math.round(ts.reduce((s,t)=>s+getPct(t.id,u),0)/ts.length);
-  });
-  const pctColors=unitPcts.map(p=>p>=100?'#27ae60':p>0?'#f39c12':'#e74c3c');
-  if(unitPctInst)unitPctInst.destroy();
-  unitPctInst=new Chart(document.getElementById('unitPctChart'),{
-    type:'bar',
-    data:{labels:ALL_UNITS,datasets:[{label:'Дундаж биелэлт %',data:unitPcts,backgroundColor:pctColors,borderRadius:3,borderSkipped:false}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.parsed.y}%`}}},scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},y:{min:0,max:100,ticks:{font:{size:10},color:'#aaa',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}}}}
-  });
-  const depts=[...new Set(tasks.map(t=>t.dept))];
-  document.getElementById('dept-list').innerHTML=depts.map(d=>{
-    const dt=tasks.filter(t=>t.dept===d);
-    const p=Math.round(dt.reduce((s,t)=>s+calcAvg(t),0)/dt.length);
-    return`<div class="dept-row"><div style="display:flex;align-items:center"><div class="ddot" style="background:${DEPTS[d]||'#607d8b'}"></div><div><div class="dnm">${d}</div><div class="dcnt">${dt.length} даалгавар</div></div></div><span style="font-size:13px;font-weight:700;color:${pColor(p)}">${p}%</span></div>`;
-  }).join('');
-  document.getElementById('all-tasks-db').innerHTML=tasks.map(t=>{
-    const p=calcAvg(t);
-    return`<div class="all-task-row"><span style="font-size:11px;color:#bbb;width:18px">${t.id}</span><span style="font-size:12px;flex:1;color:#333">${t.name}</span><span class="badge bdept" style="font-size:10px">${t.dept}</span><span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:${pColor(p)}">${p}%</span></div>`;
-  }).join('');
+  const ts=tasks.filter(t=>t.month===actMonth);
+  const done=ts.filter(t=>calcAvg(t)>=100).length;
+  const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
+  const none=ts.filter(t=>calcAvg(t)===0).length;
+  if(dC)dC.destroy();
+  dC=new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['Хийгдсэн','Дутуу','Хийгдээгүй'],datasets:[{data:[done,par,none],backgroundColor:['#27ae60','#f39c12','#e74c3c'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>{const p=Math.round(c.parsed/(done+par+none||1)*100);return` ${c.parsed} даалгавар (${p}%)`;}}}}}});
+  const uc=AU.map(u=>ts.filter(t=>t.units.includes(u)).length);
+  if(uCC)uCC.destroy();
+  uCC=new Chart(document.getElementById('unitCountChart'),{type:'bar',data:{labels:AU,datasets:[{label:'Тоо',data:uc,backgroundColor:'#1a1a2e',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},y:{ticks:{font:{size:10},color:'#aaa',stepSize:2},grid:{color:'rgba(0,0,0,0.05)'}}}}});
+  const up=AU.map(u=>{const ut=ts.filter(t=>t.units.includes(u));return ut.length?Math.round(ut.reduce((s,t)=>s+getPct(t.id,u),0)/ut.length):0;});
+  if(uPC)uPC.destroy();
+  uPC=new Chart(document.getElementById('unitPctChart'),{type:'bar',data:{labels:AU,datasets:[{label:'%',data:up,backgroundColor:up.map(p=>p>=100?'#27ae60':p>0?'#f39c12':'#e74c3c'),borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},y:{min:0,max:100,ticks:{font:{size:10},color:'#aaa',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}}}}});
+  const depts=[...new Set(ts.map(t=>t.dept))];
+  document.getElementById('dept-list').innerHTML=depts.map(d=>{const dt=ts.filter(t=>t.dept===d);const p=Math.round(dt.reduce((s,t)=>s+calcAvg(t),0)/dt.length);return`<div class="dept-row"><div style="display:flex;align-items:center"><div class="ddot" style="background:${DEPTS[d]||'#607d8b'}"></div><div><div class="dnm">${d}</div><div class="dcnt">${dt.length} даалгавар</div></div></div><span style="font-size:13px;font-weight:700;color:${pColor(p)}">${p}%</span></div>`;}).join('');
+  document.getElementById('all-tasks-db').innerHTML=ts.map(t=>{const p=calcAvg(t);return`<div class="all-task-row"><span style="font-size:11px;color:#bbb;width:18px">${t.id}</span><span style="font-size:12px;flex:1;color:#333">${t.name}</span><span class="badge bdept" style="font-size:10px">${t.dept}</span><span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:${pColor(p)}">${p}%</span></div>`;}).join('');
 }
 
+// ===== MY TASKS =====
 function renderMyTasks(){
   if(!cu)return;
-  const isAdmin=cu.unit==='ADMIN';
-  let tasks=app.tasks.filter(t=>t.month===actMonth);
-  if(!isAdmin){tasks=subTab==='received'?tasks.filter(t=>t.units.includes(cu.unit)):tasks.filter(t=>t.giver===cu.unit);}
-  tasks=tasks.filter(t=>{const p=calcAvg(t);if(bFilter==='биелээгүй')return p===0;if(bFilter==='явцтай')return p>0&&p<100;if(bFilter==='дууссан')return p>=100;return true;});
-  if(!tasks.length){document.getElementById('my-tasks').innerHTML='<div class="empty">Энэ сард үүрэг даалгавар байхгүй байна</div>';return;}
-  document.getElementById('my-tasks').innerHTML=tasks.map(t=>{
-    const avg=calcAvg(t);
-    const cls=avg>=100?'done':avg>0?'inprog':'notdone';
-    const isAdmin=cu.unit==='ADMIN';
-    const unitRows=t.units.map(u=>{
-      const v=getPct(t.id,u);
-      const n=getNote(t.id,u);
-      const ok=isAdmin||(u===cu.unit&&t.units.includes(cu.unit));
+  const isA=cu.unit==='ADMIN';
+  let ts=tasks.filter(t=>t.month===actMonth);
+  if(!isA){ts=subTab==='received'?ts.filter(t=>t.units.includes(cu.unit)):ts.filter(t=>t.giver===cu.unit);}
+  ts=ts.filter(t=>{const p=calcAvg(t);if(bFilter==='биелээгүй')return p===0;if(bFilter==='явцтай')return p>0&&p<100;if(bFilter==='дууссан')return p>=100;return true;});
+  if(!ts.length){document.getElementById('my-tasks').innerHTML='<div class="empty">Энэ сард үүрэг даалгавар байхгүй байна</div>';return;}
+  document.getElementById('my-tasks').innerHTML=ts.map(t=>{
+    const avg=calcAvg(t);const cls=avg>=100?'done':avg>0?'inprog':'notdone';
+    const rows=t.units.map(u=>{
+      const v=getPct(t.id,u);const n=getNote(t.id,u);
+      const ok=isA||(u===cu.unit&&t.units.includes(cu.unit));
       return`<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f5f5f5">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
           <span style="font-size:12px;font-weight:700;color:#555;min-width:46px">${u}</span>
-          <input type="range" min="0" max="100" step="5" value="${v}" id="sl-${t.id}-${u}" ${!ok?'disabled':''}
-            style="flex:1;height:5px" oninput="si(${t.id},'${u}',this.value)">
-          <input type="number" min="0" max="100" value="${v}" id="inp-${t.id}-${u}" ${!ok?'disabled':''}
-            style="width:52px;padding:4px 6px;border:1.5px solid ${pColor(v)};border-radius:6px;font-size:12px;font-weight:700;text-align:center;outline:none;color:#1a1a2e;background:#fff"
-            oninput="ss(${t.id},'${u}',this.value)">
+          <input type="range" min="0" max="100" step="5" value="${v}" id="sl-${t.id}-${u}" ${!ok?'disabled':''} style="flex:1;height:5px" oninput="si(${t.id},'${u}',this.value)">
+          <input type="number" min="0" max="100" value="${v}" id="inp-${t.id}-${u}" ${!ok?'disabled':''} style="width:52px;padding:4px 6px;border:1.5px solid ${pColor(v)};border-radius:6px;font-size:12px;font-weight:700;text-align:center;outline:none;color:#1a1a2e;background:#fff" oninput="ss(${t.id},'${u}',this.value)">
           <span style="font-size:11px;font-weight:700;color:${pColor(v)};min-width:16px">%</span>
         </div>
-        ${ok?`<div style="display:flex;gap:6px;align-items:flex-start">
-          <textarea id="note-${t.id}-${u}" placeholder="Тайлбар бичих..." rows="2"
-            style="flex:1;padding:6px 8px;border:1.5px solid #e2e2e2;border-radius:6px;font-size:12px;resize:none;font-family:inherit;outline:none;color:#333"
-            onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e2e2e2'">${n}</textarea>
-          <button onclick="saveU(${t.id},'${u}')" style="padding:7px 12px;background:#1a1a2e;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Хадгалах</button>
-        </div>`:n?`<div style="font-size:12px;color:#888;font-style:italic">${n}</div>`:''}
+        ${ok?`<div style="display:flex;gap:6px;align-items:flex-start"><textarea id="note-${t.id}-${u}" placeholder="Тайлбар бичих..." rows="2" style="flex:1;padding:6px 8px;border:1.5px solid #e2e2e2;border-radius:6px;font-size:12px;resize:none;font-family:inherit;outline:none;color:#333" onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e2e2e2'">${n}</textarea><button onclick="saveU(${t.id},'${u}')" style="padding:7px 12px;background:#1a1a2e;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">Хадгалах</button></div>`:n?`<div style="font-size:12px;color:#888;font-style:italic">${n}</div>`:''}
       </div>`;
     }).join('');
     return`<div class="task-card ${cls}" id="tc-${t.id}">
       <div class="task-header">
-        <span class="badge bdept">🏢 ${t.dept}</span>
-        <span class="badge bdate">📅 ${t.date}</span>
-        ${t.dl?`<span class="badge bdl">🕐 ${t.dl}</span>`:''}
-        ${t.giver?`<span class="badge bgiver">📤 ${t.giver}</span>`:''}
+        <span class="badge bdept">🏢 ${t.dept}</span><span class="badge bdate">📅 ${t.date}</span>
+        ${t.dl?`<span class="badge bdl">🕐 ${t.dl}</span>`:''} ${t.giver?`<span class="badge bgiver">📤 ${t.giver}</span>`:''}
         <span style="margin-left:auto;font-size:11px;color:#27ae60;opacity:0;transition:opacity 0.4s" id="st-${t.id}">✓ Хадгалагдлаа</span>
       </div>
       <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:12px;line-height:1.4">${t.name}</div>
       <div style="border-top:1px solid #f5f5f5;padding-top:10px">
-        <div style="font-size:10px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Нэгж тус бүрийн биелэлт</div>
-        ${unitRows}
+        <div style="font-size:10px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Нэгж тус бүрийн биелэлт</div>${rows}
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #f5f5f5">
         <span style="font-size:11px;color:#aaa;min-width:80px">Нийт дундаж</span>
@@ -610,111 +504,73 @@ function renderMyTasks(){
 
 function si(tid,u,v){const i=document.getElementById('inp-'+tid+'-'+u);if(i){i.value=v;i.style.borderColor=pColor(v);}}
 function ss(tid,u,v){const s=document.getElementById('sl-'+tid+'-'+u);if(s)s.value=v;}
-function saveU(tid,u){
+async function saveU(tid,u){
   const i=document.getElementById('inp-'+tid+'-'+u);
   const v=Math.max(0,Math.min(100,parseInt(i.value)||0));
   i.value=v;i.style.borderColor=pColor(v);
   const s=document.getElementById('sl-'+tid+'-'+u);if(s)s.value=v;
   setPct(tid,u,v);
-  const nt=document.getElementById('note-'+tid+'-'+u);
-  if(nt)setNote(tid,u,nt.value.trim());
-  const t=app.tasks.find(x=>x.id===tid);
-  const avg=calcAvg(t);
+  const nt=document.getElementById('note-'+tid+'-'+u);if(nt)setNote(tid,u,nt.value.trim());
+  await saveProgress();
+  const t=tasks.find(x=>x.id===tid);const avg=calcAvg(t);
   const pf=document.getElementById('pf-'+tid);const pv=document.getElementById('pv-'+tid);
   if(pf){pf.style.width=avg+'%';pf.style.background=pColor(avg);}
   if(pv){pv.textContent=avg+'%';pv.style.color=pColor(avg);}
-  const tc=document.getElementById('tc-'+tid);
-  if(tc)tc.className='task-card '+(avg>=100?'done':avg>0?'inprog':'notdone');
-  const st=document.getElementById('st-'+tid);
-  if(st){st.style.opacity='1';setTimeout(()=>st.style.opacity='0',1600);}
+  const tc=document.getElementById('tc-'+tid);if(tc)tc.className='task-card '+(avg>=100?'done':avg>0?'inprog':'notdone');
+  const st=document.getElementById('st-'+tid);if(st){st.style.opacity='1';setTimeout(()=>st.style.opacity='0',1600);}
   updateKPI();
 }
 
-function initUchk(){
-  document.getElementById('units-check').innerHTML=ALL_UNITS.map(u=>`<div class="uchk" onclick="tu('${u}',this)">${u}</div>`).join('');
-  selUnits=[];
-}
+// ===== ADMIN =====
+function initUchk(){document.getElementById('units-check').innerHTML=AU.map(u=>`<div class="uchk" onclick="tu('${u}',this)">${u}</div>`).join('');selUnits=[];}
 function tu(u,el){el.classList.toggle('sel');selUnits=selUnits.includes(u)?selUnits.filter(x=>x!==u):[...selUnits,u];}
-function selectAllUnits(){selUnits=[...ALL_UNITS];document.querySelectorAll('.uchk').forEach(el=>el.classList.add('sel'));}
-function addTask(){
-  const month=document.getElementById('a-month').value;
-  const date=document.getElementById('a-date').value.trim();
-  const dept=document.getElementById('a-dept').value;
-  const giver=dept;
-  const person=document.getElementById('a-person').value.trim();
-  const name=document.getElementById('a-name').value.trim();
-  const dl=document.getElementById('a-dl').value.trim();
+function selectAllUnits(){selUnits=[...AU];document.querySelectorAll('.uchk').forEach(el=>el.classList.add('sel'));}
+async function addTask(){
+  const month=document.getElementById('a-month').value;const date=document.getElementById('a-date').value.trim();
+  const dept=document.getElementById('a-dept').value;const person=document.getElementById('a-person').value.trim();
+  const name=document.getElementById('a-name').value.trim();const dl=document.getElementById('a-dl').value.trim();
   if(!name||!person||!selUnits.length){alert('Даалгавар, хариуцагч, нэгжүүдийг оруулна уу!');return;}
-  app.tasks.push({id:nid++,month,date,dept,giver,person,name,units:[...selUnits],dl});
-  save();
+  tasks.push({id:nid++,month,date,dept,giver:dept,person,name,units:[...selUnits],dl});
+  saveTasks();
   ['a-name','a-date','a-person','a-dl'].forEach(id=>document.getElementById(id).value='');
   selUnits=[];document.querySelectorAll('.uchk').forEach(el=>el.classList.remove('sel'));
   renderAdminPills();renderAdminList();renderTopPills();
   alert('✓ Үүрэг даалгавар амжилттай нэмэгдлээ!');
 }
-function deleteTask(id){
+async function deleteTask(id){
   if(!confirm('Устгах уу?'))return;
-  app.tasks=app.tasks.filter(t=>t.id!==id);delete app.progress[id];
-  save();renderAdminList();renderAdminPills();renderTopPills();
+  tasks=tasks.filter(t=>t.id!==id);delete prog[id];
+  saveTasks();await saveProgress();
+  renderAdminList();renderAdminPills();renderTopPills();
 }
 function renderAdminPills(){
   const ms=getMonths();
-  document.getElementById('admin-month-pills').innerHTML=ms.map(m=>
-    `<button class="fpill${m===actMonth?' active':''}" onclick="setAdminM('${m}',this)">${ML[m]}</button>`
-  ).join('');
+  document.getElementById('admin-month-pills').innerHTML=ms.map(m=>`<button class="fpill${m===actMonth?' active':''}" onclick="setAdminM('${m}',this)">${ML[m]}</button>`).join('');
   document.getElementById('admin-list-title').textContent=`${ML[actMonth]||actMonth} — даалгаварын жагсаалт`;
 }
 function setAdminM(m,btn){
   actMonth=m;document.getElementById('a-month').value=m;
-  document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;
-  renderAdminList();
+  document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
 }
 function renderAdminList(){
-  const tasks=app.tasks.filter(t=>t.month===actMonth);
-  if(!tasks.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
-  document.getElementById('admin-task-list').innerHTML=tasks.map(t=>{
-    const p=calcAvg(t);
-    return`<div class="task-card ${p>=100?'done':p>0?'inprog':'notdone'}">
-      <div class="task-header">
-        <span class="badge bdept">${t.dept}</span>
-        <span class="badge bgiver">📤 ${t.giver||t.dept}</span>
-        <span class="badge bdate">${t.person}</span>
-        ${t.dl?`<span class="badge bdl">🕐 ${t.dl}</span>`:''}
-        <button class="del-btn" style="margin-left:auto" onclick="deleteTask(${t.id})">🗑 Устгах</button>
-      </div>
-      <div style="font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:8px">${t.name}</div>
-      <div style="font-size:11px;color:#bbb;margin-bottom:8px">Нэгжүүд: ${t.units.join(', ')}</div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:11px;color:#aaa;min-width:80px">Дундаж биелэлт</span>
-        <div class="pbar" style="flex:1"><div class="pfill" style="width:${p}%;background:${pColor(p)}"></div></div>
-        <span style="font-size:13px;font-weight:700;min-width:36px;text-align:right;color:${pColor(p)}">${p}%</span>
-      </div>
-    </div>`;
-  }).join('');
+  const ts=tasks.filter(t=>t.month===actMonth);
+  if(!ts.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
+  document.getElementById('admin-task-list').innerHTML=ts.map(t=>{const p=calcAvg(t);return`<div class="task-card ${p>=100?'done':p>0?'inprog':'notdone'}"><div class="task-header"><span class="badge bdept">${t.dept}</span><span class="badge bgiver">📤 ${t.giver||t.dept}</span><span class="badge bdate">${t.person}</span>${t.dl?`<span class="badge bdl">🕐 ${t.dl}</span>`:''}<button class="del-btn" style="margin-left:auto" onclick="deleteTask(${t.id})">🗑 Устгах</button></div><div style="font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:8px">${t.name}</div><div style="font-size:11px;color:#bbb;margin-bottom:8px">Нэгжүүд: ${t.units.join(', ')}</div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;color:#aaa;min-width:80px">Дундаж биелэлт</span><div class="pbar" style="flex:1"><div class="pfill" style="width:${p}%;background:${pColor(p)}"></div></div><span style="font-size:13px;font-weight:700;min-width:36px;text-align:right;color:${pColor(p)}">${p}%</span></div></div>`;}).join('');
 }
 function syncPerson(v){if(v){document.getElementById('a-person').value=v;}}
 
-// ===== ЭХЛЭХ: өгөгдөл ачаалж, автоматаар нэвтрэх шалгалт =====
-load();
-
-// ✅ НЭМЭГДСЭН: хуудас нээгдэхэд localStorage-аас нэвтрэлт шалгана
-(function checkAutoLogin(){
+// ===== INIT =====
+(async function init(){
+  await fbLoad();
+  const ls=document.getElementById('loading-screen');
+  ls.classList.add('hide');
+  setTimeout(()=>ls.style.display='none',400);
   try{
     const saved=localStorage.getItem(LK);
-    if(saved){
-      const parsed=JSON.parse(saved);
-      if(parsed&&parsed.unit&&parsed.name){
-        cu=parsed;
-        showApp();
-        return;
-      }
-    }
-  }catch(e){
-    try{localStorage.removeItem(LK);}catch(e2){}
-  }
-  // Хадгалагдсан нэвтрэлт байхгүй бол login хуудас харуулна (анхны байдал)
+    if(saved){const p=JSON.parse(saved);if(p&&p.unit&&p.name){cu=p;showApp();return;}}
+  }catch(e){}
+  document.getElementById('login-page').style.display='flex';
 })();
 
 document.getElementById('login-name').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
