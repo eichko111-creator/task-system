@@ -43,7 +43,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .mpill.active{background:#e74c3c;border-color:#e74c3c;color:#fff;font-weight:700}
 .mpill.has{border-color:#e74c3c;color:#e74c3c}
 .container{padding:20px 24px;flex:1;overflow-y:auto}
-.kpi-row{display:grid;grid-template-columns:repeat(7,1fr);background:#fff;border-radius:12px;border:1px solid #eee;overflow:hidden;margin-bottom:16px}
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);background:#fff;border-radius:12px;border:1px solid #eee;overflow:hidden;margin-bottom:16px}
 .kpi-item{padding:14px 12px;border-right:1px solid #eee;position:relative}
 .kpi-item:last-child{border-right:none}
 .kpi-val{font-size:24px;font-weight:700;color:#1a1a2e;line-height:1}
@@ -209,11 +209,11 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
         <select id="login-unit">
           <option value="">-- сонгоно уу --</option>
           <optgroup label="Нэгжүүд">
-            <option>ЖС</option><option>ХС</option><option>СС</option><option>ЗС</option>
-            <option>ХҮТ</option><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option>
-            <option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option>
-            <option>НАХ</option><option>ЗТТА</option><option>ДА</option><option>АЗА</option>
-            <option>АТА</option><option>ХТЛА</option>
+            <option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option><option>ХНХ</option>
+            <option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option><option>ДА</option>
+            <option>ХТЛА</option><option>ЗТТА</option><option>АТА</option><option>НҮА</option>
+            <option>ХҮТ</option><option>АЗА</option><option>ЗС</option><option>ЖС</option>
+            <option>ХС</option><option>СС</option>
           </optgroup>
           <optgroup label="Удирдлага"><option value="ADMIN">Админ</option></optgroup>
         </select>
@@ -256,8 +256,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
       <div class="topbar-right">
         <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
         <div class="month-pills" id="top-month-pills"></div>
-        <button class="btn-green" onclick="exportExcel()" title="Excel татах">📊 Excel</button>
-        <button class="btn-blue" onclick="exportPDF()" title="PDF тайлан">🖨 PDF</button>
+
       </div>
     </div>
     <div class="container">
@@ -271,24 +270,30 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
         <div class="kpi-item"><div class="kpi-icon">📋</div><div class="kpi-val" id="kpi-total">0</div><div class="kpi-lbl">Нийт<br>даалгавар</div></div>
         <div class="kpi-item"><div class="kpi-icon">✅</div><div class="kpi-val" id="kpi-done" style="color:#27ae60">0</div><div class="kpi-lbl">Хийгдсэн</div></div>
         <div class="kpi-item"><div class="kpi-icon">⏳</div><div class="kpi-val" id="kpi-partial" style="color:#f39c12">0</div><div class="kpi-lbl">Дутуу<br>хийгдсэн</div></div>
-        <div class="kpi-item"><div class="kpi-icon">📌</div><div class="kpi-val" id="kpi-none" style="color:#e74c3c">0</div><div class="kpi-lbl">Эхлээгүй</div></div>
+        <div class="kpi-item"><div class="kpi-icon">📌</div><div class="kpi-val" id="kpi-none" style="color:#e74c3c">0</div><div class="kpi-lbl">Хийгдээгүй</div></div>
         <div class="kpi-item"><div class="kpi-icon">📊</div><div class="kpi-val" id="kpi-avg" style="color:#3498db">0%</div><div class="kpi-lbl">Дундаж<br>биелэлт</div></div>
         <div class="kpi-item" style="background:#fdf2f8"><div class="kpi-icon">🚨</div><div class="kpi-val" id="kpi-overdue" style="color:#8e44ad">0</div><div class="kpi-lbl">Хугацаа<br>хэтэрсэн</div></div>
-        <div class="kpi-item" style="background:#fffde7"><div class="kpi-icon">⚡</div><div class="kpi-val" id="kpi-soon" style="color:#f39c12">0</div><div class="kpi-lbl">7 хоногт<br>дуусах</div></div>
       </div>
 
       <!-- НҮҮ Р -->
       <div class="view active" id="view-dashboard">
-        <!-- Combined chart full width -->
+        <!-- Grouped bar chart: нийт / хийгдсэн / дутуу -->
         <div class="db-card" style="margin-bottom:12px">
           <div class="db-card-title">
-            Нэгжид өгсөн даалгаварын тоо ба биелэлт
+            Нэгжид өгсөн даалгаварын тоо
             <div style="display:flex;gap:12px;font-size:11px;color:#888;font-weight:400;text-transform:none;letter-spacing:0">
-              <span><span style="width:10px;height:10px;background:#1a1a2e;display:inline-block;border-radius:2px;margin-right:3px"></span>Тоо</span>
-              <span><span style="width:16px;height:2px;background:#e74c3c;display:inline-block;margin-right:3px;vertical-align:middle"></span>Биелэлт %</span>
+              <span><span style="width:10px;height:10px;background:#1a1a2e;display:inline-block;border-radius:2px;margin-right:3px"></span>Нийт</span>
+              <span><span style="width:10px;height:10px;background:#27ae60;display:inline-block;border-radius:2px;margin-right:3px"></span>Хийж дууссан</span>
+              <span><span style="width:10px;height:10px;background:#f39c12;display:inline-block;border-radius:2px;margin-right:3px"></span>Дутуу хийгдсэн</span>
             </div>
           </div>
-          <div style="position:relative;width:100%;height:230px"><canvas id="unitComboChart"></canvas></div>
+          <div style="position:relative;width:100%;height:240px"><canvas id="unitComboChart"></canvas></div>
+        </div>
+
+        <!-- Биелэлтийн хувь тусдаа график -->
+        <div class="db-card" style="margin-bottom:12px">
+          <div class="db-card-title">Нэгж бүрийн биелэлтийн хувь (%)</div>
+          <div style="position:relative;width:100%;height:360px"><canvas id="unitPctChart"></canvas></div>
         </div>
 
         <div class="db-grid">
@@ -302,29 +307,26 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
               <span><span style="width:9px;height:9px;border-radius:2px;background:#e74c3c;display:inline-block;margin-right:3px"></span>Хийгдээгүй</span>
             </div>
           </div>
-          <!-- Trend chart -->
-          <div class="db-card">
-            <div class="db-card-title">Сарын биелэлтийн динамик</div>
-            <div style="position:relative;width:100%;height:190px"><canvas id="trendChart"></canvas></div>
-          </div>
-        </div>
-
-        <div class="db-grid">
-          <!-- Unit ranking -->
+          <!-- Ranking -->
           <div class="db-card">
             <div class="db-card-title">🏆 Нэгжийн рейтинг</div>
             <div id="unit-ranking"></div>
           </div>
+        </div>
+
+        <div class="db-grid">
           <!-- Overdue table -->
           <div class="db-card">
             <div class="db-card-title">🚨 Хугацаа хэтэрсэн нэгжүүд</div>
             <div id="overdue-table"></div>
           </div>
+          <div class="db-card"><div class="db-card-title">Хэлтсийн хураангуй</div><div id="dept-list"></div></div>
         </div>
 
-        <div class="db-grid">
-          <div class="db-card"><div class="db-card-title">Хэлтсийн хураангуй</div><div id="dept-list"></div></div>
-          <div class="db-card"><div class="db-card-title">Бүх үүрэг даалгавар</div><div id="all-tasks-db"></div></div>
+        <!-- Хийгдээгүй даалгаварын жагсаалт -->
+        <div class="db-card" style="margin-bottom:12px">
+          <div class="db-card-title">📌 Хийгдээгүй даалгаварууд (0%)</div>
+          <div id="notdone-list"></div>
         </div>
       </div>
 
@@ -336,10 +338,9 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
         </div>
         <div class="filter-row">
           <button class="fpill active" onclick="setFilter('бүгд',this)">Бүгд</button>
-          <button class="fpill" onclick="setFilter('биелээгүй',this)">Биелэлгүй</button>
+          <button class="fpill" onclick="setFilter('биелээгүй',this)">Хийгдээгүй</button>
           <button class="fpill" onclick="setFilter('явцтай',this)">Явцтай</button>
           <button class="fpill" onclick="setFilter('дууссан',this)">✓ Дууссан</button>
-          <button class="fpill" onclick="setFilter('яаралтай',this)">⚡ Яаралтай</button>
           <button class="fpill" onclick="setFilter('хэтэрсэн',this)">🚨 Хэтэрсэн</button>
         </div>
         <div id="my-tasks"></div>
@@ -364,7 +365,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
           </div>
           <div class="form-row">
             <div class="form-field"><label>Хэлтэс/нэгж</label>
-              <select id="a-dept"><option>ДХХ</option><option>ББТХ</option><option>СЭЗХ</option><option>ХНХ</option><option>ХЭМАБА</option><option>ТБТХ</option><option>Ер.Инженер</option><option>Бусад</option></select>
+              <select id="a-dept"><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option><option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option><option>ДА</option><option>ХТЛА</option><option>ЗТТА</option><option>АТА</option><option>НҮА</option><option>ХҮТ</option><option>АЗА</option><option>ЗС</option><option>ЖС</option><option>ХС</option><option>СС</option><option>Бусад</option></select>
             </div>
             <div class="form-field"><label>Ажилтны нэр</label>
               <input type="text" id="a-person" placeholder="Нэр бичих..." list="emp-list" autocomplete="off">
@@ -396,7 +397,6 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -415,37 +415,37 @@ const TDOC=db.collection('app_data').doc('tasks');
 const PDOC=db.collection('app_data').doc('progress');
 const EDOC=db.collection('app_data').doc('employees');
 
-const AU=['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'];
+const AU=['СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ДА','ХТЛА','ЗТТА','АТА','НҮА','ХҮТ','АЗА','ЗС','ЖС','ХС','СС'];
 const DEPTS={'ДХХ':'#2196F3','ББТХ':'#9c27b0','СЭЗХ':'#f44336','ХНХ':'#4caf50','ХЭМАБА':'#ff9800','ТБТХ':'#e91e63','Ер.Инженер':'#607d8b','Бусад':'#455a64'};
 const ML={'2026-01':'1-р сар','2026-02':'2-р сар','2026-03':'3-р сар','2026-04':'4-р сар','2026-05':'5-р сар','2026-06':'6-р сар','2026-07':'7-р сар','2026-08':'8-р сар','2026-09':'9-р сар','2026-10':'10-р сар','2026-11':'11-р сар','2026-12':'12-р сар'};
 const MALL=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
 const SK='uurdeg_session_v2';
 const INIT=[
-  {id:1,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'Э.Эрдэнэбат',name:'Мэдээ тайлан ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:2,month:'2026-01',date:'2026/01/05',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:3,month:'2026-01',date:'2026/01/05',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Тооцоо нийлсэн акт ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:4,month:'2026-01',date:'2026/01/05',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Дансны үлдэгдлийн баталгаа ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:1,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'Э.Эрдэнэбат',name:'Мэдээ тайлан ирүүлэх',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС'],dl:'2026/01/31'},
+  {id:2,month:'2026-01',date:'2026/01/05',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС'],dl:'2026/01/31'},
+  {id:3,month:'2026-01',date:'2026/01/05',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Тооцоо нийлсэн акт ирүүлэх',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС'],dl:'2026/01/31'},
+  {id:4,month:'2026-01',date:'2026/01/05',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Дансны үлдэгдлийн баталгаа ирүүлэх',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС'],dl:'2026/01/31'},
   {id:5,month:'2026-01',date:'2026/01/05',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Календарчилсан төлөвлөгөө ирүүлэх',units:AU,dl:'2026/01/31'},
   {id:6,month:'2026-01',date:'2026/01/05',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Ээлжийн амралтын төлөвлөгөө ирүүлэх',units:AU,dl:'2026/01/31'},
-  {id:7,month:'2026-01',date:'2026/01/05',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'Ганхүү',name:'ГАУС мэдээлэл явуулсан салбарууд тайлан',units:['ЖС','ХС','СС','ЗС'],dl:'2026/01/31'},
+  {id:7,month:'2026-01',date:'2026/01/05',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'Ганхүү',name:'ГАУС мэдээлэл явуулсан салбарууд тайлан',units:['ХС','СС','Зүүнхараа салбар'],dl:'2026/01/31'},
   {id:8,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'ERP дээр бичиг хаагдахгүй байна засварлах',units:['МТХ'],dl:'2026/01/31'},
-  {id:9,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын гэрчилгээний тайлан',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:9,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын гэрчилгээний тайлан',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС'],dl:'2026/01/31'},
   {id:10,month:'2026-01',date:'2026/01/06',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Нэгжүүд Улаанбаатар явах ажлаа нийлүүлж нэг явах',units:AU,dl:'тухай бүр'},
-  {id:11,month:'2026-01',date:'2026/01/12',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
+  {id:11,month:'2026-01',date:'2026/01/12',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС'],dl:'2026/01/31'},
   {id:12,month:'2026-01',date:'2026/01/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Илүү цагийг амрааж дуусгах',units:AU,dl:'2026.03.01'},
   {id:13,month:'2026-01',date:'2026/01/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Архивт материалаа өгөх',units:AU,dl:'2026/01/31'},
-  {id:14,month:'2026-01',date:'2026/01/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:15,month:'2026-01',date:'2026/01/12',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Ээлжит шалгалтанд бэлдэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/19'},
-  {id:16,month:'2026-01',date:'2026/01/19',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'2026 оны материалын захиалга ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ЗТТА','ДА','АЗА','АТА','ХТЛА','НАХ'],dl:'2026/01/19'},
+  {id:14,month:'2026-01',date:'2026/01/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС'],dl:'2026/01/31'},
+  {id:15,month:'2026-01',date:'2026/01/12',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Ээлжит шалгалтанд бэлдэх',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/19'},
+  {id:16,month:'2026-01',date:'2026/01/19',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'2026 оны материалын захиалга ирүүлэх',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС','ЗТТА','ДА','АЗА','АТА','ХТЛА','НҮА'],dl:'2026/01/19'},
   {id:17,month:'2026-01',date:'2026/01/19',dept:'ТБТХ',giver:'ТБТХ',person:'Р.Батням',name:'Машин механизмийн бэлэн байдал хангах',units:['АТА'],dl:'Байнга'},
-  {id:18,month:'2026-01',date:'2026/01/19',dept:'ТБТХ',giver:'ТБТХ',person:'Р.Батням',name:'Цаг агаар хүйтэрч байгаа тул үзлэг хийх',units:['ЖС','ХС','СС','ЗС','АЗА','ЗТТА','ХҮТ'],dl:'тухай бүр'},
-  {id:19,month:'2026-01',date:'2026/01/19',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын төлөвлөгөө ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','АЗА'],dl:'2026/01/31'},
-  {id:20,month:'2026-01',date:'2026/01/26',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2025 оны ирсэн бичигнүүдийг хаах',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ББТХ','МТХ','ХЭМАБА','НАХ','ХНХ','ХТЛА','АТА','ЗТТА','ДА','АЗА'],dl:'2026/01/31'},
+  {id:18,month:'2026-01',date:'2026/01/19',dept:'ТБТХ',giver:'ТБТХ',person:'Р.Батням',name:'Цаг агаар хүйтэрч байгаа тул үзлэг хийх',units:['ХС','СС','Зүүнхараа салбар','АЗА','ЗТТА','ХҮТ'],dl:'тухай бүр'},
+  {id:19,month:'2026-01',date:'2026/01/19',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын төлөвлөгөө ирүүлэх',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС','АЗА'],dl:'2026/01/31'},
+  {id:20,month:'2026-01',date:'2026/01/26',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2025 оны ирсэн бичигнүүдийг хаах',units:['СЭЗХ','ДХХ','ХНХ','ХС','СС','СЭЗХ','ДХХ','ТБТХ','ББТХ','МТХ','ХЭМАБА','НҮА','ХНХ','ХТЛА','АТА','ЗТТА','ДА','АЗА'],dl:'2026/01/31'},
 ];
 
 let cu=null,tasks=[],prog={},empList=[],nid=300;
 let bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[];
-let dC=null,uCC=null,trendC=null,saveT=null;
+let dC=null,uCC=null,saveT=null;
 
 // ===== UTILS =====
 function syncUI(s,m){const el=document.getElementById('sync');el.textContent=m;el.className='sync show '+(s||'');if(s!=='saving')setTimeout(()=>el.classList.remove('show'),2200);}
@@ -601,14 +601,12 @@ function updateKPI(){
   const none=ts.filter(t=>calcAvg(t)===0).length;
   const avg=ts.length?Math.round(ts.reduce((s,t)=>s+calcAvg(t),0)/ts.length):0;
   const ovd=ts.filter(t=>isOverdue(t)).length;
-  const soon=ts.filter(t=>isDueSoon(t,7)).length;
   document.getElementById('kpi-total').textContent=ts.length;
   document.getElementById('kpi-done').textContent=done;
   document.getElementById('kpi-partial').textContent=par;
   document.getElementById('kpi-none').textContent=none;
   document.getElementById('kpi-avg').textContent=avg+'%';
   document.getElementById('kpi-overdue').textContent=ovd;
-  document.getElementById('kpi-soon').textContent=soon;
   document.getElementById('print-month-label').textContent=(ML[actMonth]||actMonth)+' | Бэлтгэсэн: '+new Date().toLocaleDateString('mn-MN');
 }
 
@@ -623,28 +621,44 @@ function renderDashboard(){
   if(dC)dC.destroy();
   dC=new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['Хийгдсэн','Дутуу','Хийгдээгүй'],datasets:[{data:[done,par,none],backgroundColor:['#27ae60','#f39c12','#e74c3c'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>{const p=Math.round(c.parsed/(done+par+none||1)*100);return` ${c.parsed} даалгавар (${p}%)`;}}}}}});
 
-  // Combined combo chart
-  const uc=AU.map(u=>ts.filter(t=>t.units.includes(u)).length);
-  const up=AU.map(u=>{const ut=ts.filter(t=>t.units.includes(u));return ut.length?Math.round(ut.reduce((s,t)=>s+getPct(t.id,u),0)/ut.length):0;});
+  // 3-bar grouped chart: нийт / хийж дууссан / дутуу хийгдсэн
+  const ucTotal=AU.map(u=>ts.filter(t=>t.units.includes(u)).length);
+  const ucDone=AU.map(u=>ts.filter(t=>t.units.includes(u)&&getPct(t.id,u)>=100).length);
+  const ucPart=AU.map(u=>ts.filter(t=>t.units.includes(u)&&getPct(t.id,u)>0&&getPct(t.id,u)<100).length);
   if(uCC)uCC.destroy();
   uCC=new Chart(document.getElementById('unitComboChart'),{
     type:'bar',
     data:{labels:AU,datasets:[
-      {type:'bar',label:'Даалгаварын тоо',data:uc,backgroundColor:'#1a1a2e',borderRadius:3,borderSkipped:false,yAxisID:'y',order:2},
-      {type:'line',label:'Биелэлт %',data:up,borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.08)',borderWidth:2.5,pointRadius:4,pointBackgroundColor:up.map(p=>p>=100?'#27ae60':p>0?'#f39c12':'#e74c3c'),pointBorderColor:'#fff',pointBorderWidth:1.5,fill:true,yAxisID:'y1',order:1,tension:0.3}
+      {label:'Нийт',data:ucTotal,backgroundColor:'#1a1a2e',borderRadius:3,borderSkipped:false},
+      {label:'Хийж дууссан',data:ucDone,backgroundColor:'#27ae60',borderRadius:3,borderSkipped:false},
+      {label:'Дутуу хийгдсэн',data:ucPart,backgroundColor:'#f39c12',borderRadius:3,borderSkipped:false}
     ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>c.datasetIndex===0?` ${c.parsed.y} даалгавар`:` ${c.parsed.y}% биелэлт`}}},scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},y:{type:'linear',position:'left',ticks:{font:{size:10},color:'#555',stepSize:2},grid:{color:'rgba(0,0,0,0.05)'},title:{display:true,text:'Тоо',color:'#555',font:{size:10}}},y1:{type:'linear',position:'right',min:0,max:100,ticks:{font:{size:10},color:'#e74c3c',callback:v=>v+'%'},grid:{drawOnChartArea:false},title:{display:true,text:'%',color:'#e74c3c',font:{size:10}}}}}
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.dataset.label}: ${c.parsed.y}`}}},
+      scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},
+        y:{ticks:{font:{size:10},color:'#aaa',stepSize:1},grid:{color:'rgba(0,0,0,0.05)'}}}
+    }
   });
 
-  // Monthly trend line chart
-  const months=getMonths();
-  const trendData=months.map(m=>{const mt=tasks.filter(t=>t.month===m);return mt.length?Math.round(mt.reduce((s,t)=>s+calcAvg(t),0)/mt.length):0;});
-  if(trendC)trendC.destroy();
-  trendC=new Chart(document.getElementById('trendChart'),{
-    type:'line',
-    data:{labels:months.map(m=>ML[m]),datasets:[{label:'Дундаж биелэлт %',data:trendData,borderColor:'#3498db',backgroundColor:'rgba(52,152,219,0.1)',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#3498db',pointBorderColor:'#fff',pointBorderWidth:2,fill:true,tension:0.3}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.parsed.y}% дундаж биелэлт`}}},scales:{x:{ticks:{font:{size:10},color:'#aaa'},grid:{display:false}},y:{min:0,max:100,ticks:{font:{size:10},color:'#aaa',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}}}}
+  // Тусдаа биелэлтийн хувийн график (horizontal bar)
+  const up=AU.map(u=>{const ut=ts.filter(t=>t.units.includes(u));return ut.length?Math.round(ut.reduce((s,t)=>s+getPct(t.id,u),0)/ut.length):0;});
+  const pctC=document.getElementById('unitPctChart');
+  if(pctC._chartInstance)pctC._chartInstance.destroy();
+  const pctChart=new Chart(pctC,{
+    type:'bar',
+    data:{labels:AU,datasets:[{
+      label:'Биелэлт %',data:up,
+      backgroundColor:'rgba(52,152,219,0.8)',
+      borderRadius:4,borderSkipped:false
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.parsed.x}%`}},
+        datalabels:{display:false}},
+      scales:{x:{min:0,max:100,ticks:{font:{size:10},color:'#aaa',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}},
+        y:{ticks:{font:{size:10},color:'#444',font:{weight:'600'}},grid:{display:false}}}
+    }
   });
+  pctC._chartInstance=pctChart;
 
   // Unit ranking
   const ranking=AU.map(u=>{
@@ -669,15 +683,26 @@ function renderDashboard(){
   document.getElementById('overdue-table').innerHTML=ovdUnits.length?ovdUnits.map(x=>`
     <div class="ovd-row">
       <span style="font-size:15px">🚨</span>
-      <span style="font-weight:700;min-width:44px;color:#8e44ad">${x.unit}</span>
-      <span style="flex:1;color:#555">${x.tasks.map(t=>t.name).join(', ').slice(0,50)}${x.tasks.map(t=>t.name).join(', ').length>50?'...':''}</span>
-      <span style="font-size:11px;font-weight:700;color:#8e44ad;white-space:nowrap">${x.count} даалгавар</span>
+      <span style="font-weight:500;min-width:50px;color:#8e44ad">${x.unit}</span>
+      <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin:0 8px"><div style="height:100%;background:#8e44ad;border-radius:4px;width:${Math.min(100,x.count*20)}%"></div></div>
+      <span style="font-size:12px;font-weight:700;color:#8e44ad;white-space:nowrap">${x.count} даалгавар</span>
     </div>`).join(''):'<div style="text-align:center;padding:12px;color:#27ae60;font-size:13px">✅ Хугацаа хэтэрсэн даалгавар байхгүй</div>';
 
   // Dept & all tasks
   const depts=[...new Set(ts.map(t=>t.dept))];
   document.getElementById('dept-list').innerHTML=depts.map(d=>{const dt=ts.filter(t=>t.dept===d);const p=Math.round(dt.reduce((s,t)=>s+calcAvg(t),0)/dt.length);return`<div class="dept-row"><div style="display:flex;align-items:center"><div class="ddot" style="background:${DEPTS[d]||'#607d8b'}"></div><div><div class="dnm">${d}</div><div class="dcnt">${dt.length} даалгавар</div></div></div><span style="font-size:13px;font-weight:700;color:${pColor(p)}">${p}%</span></div>`;}).join('');
-  document.getElementById('all-tasks-db').innerHTML=ts.map(t=>{const p=calcAvg(t);const ovd=isOverdue(t);return`<div class="all-task-row"><span style="font-size:11px;color:#bbb;width:18px">${t.id}</span><span style="font-size:12px;flex:1;color:#333">${ovd?'🚨 ':''}<b>${t.name}</b></span><span class="badge bdept" style="font-size:10px">${t.dept}</span><span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:${pColor(p)}">${p}%</span></div>`;}).join('');
+  // Хийгдээгүй (0%) даалгаварын жагсаалт
+  const notDone=ts.filter(t=>calcAvg(t)===0);
+  document.getElementById('notdone-list').innerHTML=notDone.length
+    ?notDone.map(t=>`<div class="all-task-row">
+        <span style="font-size:11px;color:#bbb;width:18px">${t.id}</span>
+        <span style="font-size:12px;flex:1;color:#1a1a2e;font-weight:500">${t.name}</span>
+        <span class="badge bdept" style="font-size:10px">${t.dept}</span>
+        <span style="font-size:11px;color:#555;margin-left:4px">👤 ${t.person||'—'}</span>
+        ${t.dl?`<span class="badge bdl" style="font-size:10px;margin-left:4px">🕐 ${t.dl}</span>`:''}
+        <span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:#e74c3c">0%</span>
+      </div>`).join('')
+    :'<div style="text-align:center;padding:12px;color:#27ae60;font-size:13px">✅ Хийгдээгүй даалгавар байхгүй байна</div>';
 }
 
 // ===== MY TASKS =====
@@ -690,8 +715,7 @@ function renderMyTasks(){
     if(bFilter==='биелээгүй')return p===0;
     if(bFilter==='явцтай')return p>0&&p<100;
     if(bFilter==='дууссан')return p>=100;
-    if(bFilter==='яаралтай')return isDueSoon(t,7);
-    if(bFilter==='хэтэрсэн')return isOverdue(t);
+    if(bFilter==='яаралтай')return isDueSoon(t,7);    if(bFilter==='хэтэрсэн')return isOverdue(t);
     return true;
   });
   if(!ts.length){document.getElementById('my-tasks').innerHTML='<div class="empty">Энэ сард үүрэг даалгавар байхгүй байна</div>';return;}
@@ -726,7 +750,6 @@ function renderMyTasks(){
     const rows=visibleUnits.map(u=>{
       const v=getPct(t.id,u);const n=getNote(t.id,u);const delay=getDelay(t.id,u);
       const ok=true;
-      const unitOvd=isOverdue(t)&&v<100;
       return`<div class="unit-row">
         <span class="unit-nm">${u}</span>
         <input type="number" min="0" max="100" value="${v}" id="inp-${t.id}-${u}" class="pct-inp" style="border-color:${pColor(v)}" oninput="this.style.borderColor=pColor(parseInt(this.value)||0)">
@@ -734,9 +757,7 @@ function renderMyTasks(){
         <input type="text" value="${n}" id="note-${t.id}-${u}" class="note-inp" placeholder="Тайлбар...">
         <button class="save-btn" onclick="saveU(${t.id},'${u}')">Хадгалах</button>
         <span class="saved-ok" id="sok-${t.id}-${u}">✓</span>
-      </div>
-      ${unitOvd?`<input type="text" value="${delay}" id="delay-${t.id}-${u}" class="delay-inp" placeholder="🚨 Хоцрогдлын шалтгаан бичнэ үү...">`:''}`;
-    }).join('');
+      </div>`;    }).join('');
 
     const myPct=cu.isAdmin?avg:getPct(t.id,cu.unit);
     return`<div class="task-card ${ovd?'overdue-card':cls}" id="tc-${t.id}">
@@ -764,7 +785,6 @@ async function saveU(tid,u){
   i.value=v;i.style.borderColor=pColor(v);
   setPct(tid,u,v);
   const nt=document.getElementById('note-'+tid+'-'+u);if(nt)setNote(tid,u,nt.value.trim());
-  const dt=document.getElementById('delay-'+tid+'-'+u);if(dt)setDelay(tid,u,dt.value.trim());
   await saveProgress();
   const t=tasks.find(x=>x.id===tid);const avg=calcAvg(t);
   const myPct=cu&&!cu.isAdmin?getPct(tid,cu.unit):avg;
@@ -775,31 +795,6 @@ async function saveU(tid,u){
   const sok=document.getElementById('sok-'+tid+'-'+u);
   if(sok){sok.classList.add('show');setTimeout(()=>sok.classList.remove('show'),2000);}
   updateKPI();
-}
-
-// ===== EXPORT EXCEL =====
-function exportExcel(){
-  const ts=tasks.filter(t=>t.month===actMonth);
-  const rows=[['#','Нэр','Хэлтэс','Хариуцагч','Огноо','Дуусах','Нэгжүүд','Дундаж %']];
-  ts.forEach(t=>{
-    rows.push([t.id,t.name,t.dept,t.person||'',t.date||'',t.dl||'',t.units.join(', '),calcAvg(t)+'%']);
-    // Detail rows per unit
-    t.units.forEach(u=>{
-      rows.push(['',`  └ ${u}`,t.dept,'','','','',getPct(t.id,u)+'%']);
-    });
-  });
-  const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:4},{wch:50},{wch:10},{wch:16},{wch:12},{wch:12},{wch:40},{wch:10}];
-  XLSX.utils.book_append_sheet(wb,ws,(ML[actMonth]||actMonth)+' тайлан');
-  XLSX.writeFile(wb,'DSEDN_'+actMonth+'_tайлан.xlsx');
-}
-
-// ===== EXPORT PDF (print) =====
-function exportPDF(){
-  const monthLabel=ML[actMonth]||actMonth;
-  document.getElementById('print-month-label').textContent=monthLabel+' | Бэлтгэсэн: '+new Date().toLocaleDateString('mn-MN');
-  window.print();
 }
 
 // ===== ADMIN =====
@@ -843,7 +838,7 @@ function openEditTask(id){
       <div class="form-field"><label>Огноо</label><input type="date" id="edit-date" value="${(t.date||'').replace(/\//g,'-')}"></div>
     </div>
     <div class="form-row" style="margin-bottom:10px">
-      <div class="form-field"><label>Хэлтэс</label><select id="edit-dept">${['ДХХ','ББТХ','СЭЗХ','ХНХ','ХЭМАБА','ТБТХ','Ер.Инженер','Бусад'].map(d=>`<option ${d===t.dept?'selected':''}>${d}</option>`).join('')}</select></div>
+      <div class="form-field"><label>Хэлтэс</label><select id="edit-dept">${['СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ДА','ХТЛА','ЗТТА','АТА','НҮА','ХҮТ','АЗА','ЗС','ЖС','ХС','СС','Бусад'].map(d=>`<option ${d===t.dept?'selected':''}>${d}</option>`).join('')}</select></div>
       <div class="form-field"><label>Ажилтны нэр</label><input type="text" id="edit-person" value="${t.person||''}" list="emp-list2"><datalist id="emp-list2">${empList.map(e=>`<option value="${e}">`).join('')}</datalist></div>
     </div>
     <div class="form-field" style="margin-bottom:10px"><label>Даалгаварын нэр</label><textarea id="edit-name">${t.name||''}</textarea></div>
