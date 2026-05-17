@@ -641,12 +641,18 @@ function setDelay(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid]['d_'+u]=v;}
 // ===== FIREBASE =====
 async function fbLoad(){
   try{
-    const[ts,ps,es]=await Promise.all([TDOC.get(),PDOC.get(),EDOC.get()]);
+    // 8 секундын timeout
+    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),8000));
+    const load=Promise.all([TDOC.get(),PDOC.get(),EDOC.get()]);
+    const[ts,ps,es]=await Promise.race([load,timeout.then(()=>{throw new Error('timeout')})]);
     if(ts.exists&&ts.data().list){tasks=ts.data().list;nid=Math.max(...tasks.map(t=>t.id),299)+1;}
     else{tasks=[...INIT];await TDOC.set({list:tasks});}
     prog=ps.exists?ps.data().data||{}:{};
     empList=es.exists?es.data().list||[]:[...new Set(INIT.map(t=>t.person))];
-  }catch(e){tasks=[...INIT];prog={};empList=[];}
+  }catch(e){
+    console.error('fbLoad error:',e.message);
+    tasks=[...INIT];prog={};empList=[...new Set(INIT.map(t=>t.person))];
+  }
 }
 function saveTasks(){syncUI('saving','Хадгалж байна...');clearTimeout(saveT);saveT=setTimeout(async()=>{try{await TDOC.set({list:tasks});syncUI('ok','✓ Хадгалагдлаа');}catch(e){syncUI('err','⚠ Алдаа');}},700);}
 async function saveProgress(){syncUI('saving','Хадгалж байна...');try{await PDOC.set({data:prog});syncUI('ok','✓ Хадгалагдлаа');}catch(e){syncUI('err','⚠ Алдаа');}}
@@ -662,7 +668,11 @@ async function doEnter(){
   if(!name){alert('Нэрээ оруулна уу');return;}
   cu={unit,name,isAdmin:unit==='ADMIN'};
   try{localStorage.setItem(SK,JSON.stringify(cu));}catch(e){}
-  await fbLoad();showApp();
+  const btn=document.querySelector('#unit-section .login-btn');
+  if(btn){btn.disabled=true;btn.textContent='Ачаалж байна...';}
+  await fbLoad();
+  if(btn){btn.disabled=false;btn.textContent='Орох →';}
+  showApp();
 }
 function doLogout(){
   try{localStorage.removeItem(SK);}catch(e){}
@@ -1082,6 +1092,9 @@ function renderAdminList(){
 // ===== INIT =====
 (async function init(){
   const ls=document.getElementById('loading-screen');
+  // 5 секундын дараа loading дуусгах timeout
+  const hideLS=()=>{ls.classList.add('hide');setTimeout(()=>ls.style.display='none',400);}
+  const timer=setTimeout(()=>{hideLS();document.getElementById('login-page').style.display='flex';},5000);
   try{
     const saved=localStorage.getItem(SK);
     if(saved){
@@ -1089,14 +1102,12 @@ function renderAdminList(){
       if(p&&p.unit&&p.name){
         cu=p;cu.isAdmin=cu.unit==='ADMIN';
         await fbLoad();
-        ls.classList.add('hide');
-        setTimeout(()=>ls.style.display='none',400);
-        showApp();return;
+        clearTimeout(timer);hideLS();showApp();return;
       }
     }
-  }catch(e){}
-  ls.classList.add('hide');
-  setTimeout(()=>{ls.style.display='none';document.getElementById('login-page').style.display='flex';},400);
+  }catch(e){console.error('Init error:',e);}
+  clearTimeout(timer);hideLS();
+  document.getElementById('login-page').style.display='flex';
 })();
 </script>
 </body>
