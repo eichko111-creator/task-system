@@ -201,10 +201,7 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
       <div style="font-size:20px;font-weight:700;color:#1a1a2e">Үүрэг даалгавар</div>
       <div style="font-size:13px;color:#888;margin-top:4px">2026 оны хяналтын систем</div>
     </div>
-    <div class="field"><label>Имэйл хаяг</label><input type="email" id="auth-email" placeholder="dsedn2026@gmail.com" autocomplete="email"></div>
-    <div class="field"><label>Нууц үг</label><input type="password" id="auth-password" placeholder="Нууц үгээ оруулна уу" autocomplete="current-password"></div>
-    <div class="login-err" id="auth-err">Имэйл эсвэл нууц үг буруу байна</div>
-    <div id="unit-section" style="display:none;margin-bottom:0">
+    <div id="unit-section" style="margin-bottom:0">
       <div class="field"><label>Нэгж</label>
         <select id="login-unit">
           <option value="">-- сонгоно уу --</option>
@@ -221,7 +218,7 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
       <div class="field"><label>Нэр</label><input type="text" id="login-name" placeholder="Нэрээ оруулна уу..."></div>
       <button class="login-btn" onclick="doEnter()">Орох →</button>
     </div>
-    <button class="login-btn" id="auth-btn" onclick="doAuthLogin()">Нэвтрэх →</button>
+    
   </div>
 </div>
 
@@ -404,7 +401,6 @@ Chart.defaults.backgroundColor='rgba(14,21,32,0.8)';
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script>
 firebase.initializeApp({
   apiKey:"AIzaSyCDBVVt_rEY7tb96ZBDY4a_FZEa_-q4cUw",
@@ -415,7 +411,6 @@ firebase.initializeApp({
   appId:"1:934034525733:web:6ccf4b7f8c1cdca86839cc"
 });
 const db=firebase.firestore();
-const auth=firebase.auth();
 const TDOC=db.collection('app_data').doc('tasks');
 const PDOC=db.collection('app_data').doc('progress');
 const EDOC=db.collection('app_data').doc('employees');
@@ -659,22 +654,7 @@ async function saveEmpList(){try{await EDOC.set({list:empList});}catch(e){}}
 function updateEmpDatalist(){const dl=document.getElementById('emp-list');if(dl)dl.innerHTML=empList.map(e=>`<option value="${e}">`).join('');}
 
 // ===== AUTH =====
-async function doAuthLogin(){
-  const email=document.getElementById('auth-email').value.trim();
-  const pw=document.getElementById('auth-password').value;
-  const btn=document.getElementById('auth-btn');
-  if(!email||!pw){showAuthErr('Имэйл болон нууц үгээ оруулна уу');return;}
-  btn.disabled=true;btn.textContent='Нэвтэрч байна...';
-  try{
-    await auth.signInWithEmailAndPassword(email,pw);
-    document.getElementById('auth-err').style.display='none';
-    btn.style.display='none';
-    document.getElementById('auth-email').disabled=true;
-    document.getElementById('auth-password').disabled=true;
-    document.getElementById('unit-section').style.display='block';
-  }catch(e){showAuthErr('Имэйл эсвэл нууц үг буруу байна');btn.disabled=false;btn.textContent='Нэвтрэх →';}
-}
-function showAuthErr(msg){const el=document.getElementById('auth-err');el.textContent=msg;el.style.display='block';}
+
 async function doEnter(){
   const unit=document.getElementById('login-unit').value;
   const name=document.getElementById('login-name').value.trim();
@@ -684,21 +664,14 @@ async function doEnter(){
   try{localStorage.setItem(SK,JSON.stringify(cu));}catch(e){}
   await fbLoad();showApp();
 }
-async function doLogout(){
+function doLogout(){
   try{localStorage.removeItem(SK);}catch(e){}
-  await auth.signOut();cu=null;tasks=[];prog=[];
+  cu=null;tasks=[];prog=[];
   document.getElementById('main-app').style.display='none';
   document.getElementById('login-page').style.display='flex';
-  document.getElementById('auth-btn').style.display='block';
-  document.getElementById('auth-btn').disabled=false;
-  document.getElementById('auth-btn').textContent='Нэвтрэх →';
-  document.getElementById('auth-email').disabled=false;
-  document.getElementById('auth-password').disabled=false;
-  document.getElementById('auth-email').value='';
-  document.getElementById('auth-password').value='';
-  document.getElementById('unit-section').style.display='none';
-  document.getElementById('auth-err').style.display='none';
   document.getElementById('nav-admin').style.display='none';
+  document.getElementById('login-unit').value='';
+  document.getElementById('login-name').value='';
 }
 
 // ===== HELPERS =====
@@ -1105,28 +1078,25 @@ function renderAdminList(){
     </div>`;}).join('');
 }
 
-document.getElementById('auth-password').addEventListener('keydown',e=>{if(e.key==='Enter')doAuthLogin();});
 
 // ===== INIT =====
 (async function init(){
-  auth.onAuthStateChanged(async function(user){
-    const ls=document.getElementById('loading-screen');
-    if(user){
-      try{
-        const saved=localStorage.getItem(SK);
-        if(saved){const p=JSON.parse(saved);if(p&&p.unit&&p.name){cu=p;cu.isAdmin=cu.unit==='ADMIN';await fbLoad();ls.classList.add('hide');setTimeout(()=>ls.style.display='none',400);showApp();return;}}
-      }catch(e){}
-      ls.classList.add('hide');
-      setTimeout(()=>{ls.style.display='none';document.getElementById('login-page').style.display='flex';
-        document.getElementById('auth-btn').style.display='none';
-        document.getElementById('auth-email').disabled=true;
-        document.getElementById('auth-password').disabled=true;
-        document.getElementById('unit-section').style.display='block';},400);
-    }else{
-      ls.classList.add('hide');
-      setTimeout(()=>{ls.style.display='none';document.getElementById('login-page').style.display='flex';},400);
+  const ls=document.getElementById('loading-screen');
+  try{
+    const saved=localStorage.getItem(SK);
+    if(saved){
+      const p=JSON.parse(saved);
+      if(p&&p.unit&&p.name){
+        cu=p;cu.isAdmin=cu.unit==='ADMIN';
+        await fbLoad();
+        ls.classList.add('hide');
+        setTimeout(()=>ls.style.display='none',400);
+        showApp();return;
+      }
     }
-  });
+  }catch(e){}
+  ls.classList.add('hide');
+  setTimeout(()=>{ls.style.display='none';document.getElementById('login-page').style.display='flex';},400);
 })();
 </script>
 </body>
