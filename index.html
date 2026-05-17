@@ -1057,14 +1057,14 @@ function renderAdminPills(){
   document.getElementById('admin-month-pills').innerHTML=ms.map(m=>`<button class="fpill${actMonths.includes(m)||(!actMonths.length&&m===ms[0])?' active':''}" onclick="setAdminM('${m}',this)">${ML[m]}</button>`).join('');
   document.getElementById('admin-list-title').textContent=`${ML[actMonth]||actMonth} — даалгаварын жагсаалт`;
 }
-function setAdminM(m,btn){
-  actMonths=[m];document.getElementById('a-month').value=m;
-  document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
-}
-  document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
-}
+function setAdminM(m, btn) {
+    actMonths = [m]; 
+    document.getElementById('a-month').value = m;
+    document.querySelectorAll('#admin-month-pills .fpill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('admin-list-title').textContent = `${ML[m] || m} – даалгаврын жагсаалт`;
+    renderAdminList();
+} // Энэ хаалт функцыг хааж байна. Үүнээс доош илүү хаалт байж болохгүй.
 function renderAdminList(){
   const ts=getActTasks();
   if(!ts.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
