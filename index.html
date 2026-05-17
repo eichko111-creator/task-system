@@ -41,6 +41,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .month-pills{display:flex;gap:6px;flex-wrap:wrap}
 .mpill{padding:5px 14px;border:1.5px solid #e0e0e0;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#888;font-weight:500;transition:all .15s;white-space:nowrap}
 .mpill.active{background:#e74c3c;border-color:#e74c3c;color:#fff;font-weight:700}
+.mpill.all-act{background:#1a1a2e;border-color:#1a1a2e;color:#fff;font-weight:700}
 .mpill.has{border-color:#e74c3c;color:#e74c3c}
 .container{padding:20px 24px;flex:1;overflow-y:auto}
 .kpi-row{display:grid;grid-template-columns:repeat(6,1fr);background:#fff;border-radius:12px;border:1px solid #eee;overflow:hidden;margin-bottom:16px}
@@ -256,7 +257,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
       <div class="topbar-right">
         <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
         <div class="month-pills" id="top-month-pills"></div>
-
+        <span id="topbar-month-label" style="font-size:12px;font-weight:700;color:#e74c3c;white-space:nowrap"></span>
       </div>
     </div>
     <div class="container">
@@ -611,8 +612,8 @@ const INIT=[
 ];
 
 let cu=null,tasks=[],prog={},empList=[],nid=300;
-let bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[];
-let dC=null,uCC=null,saveT=null;
+let bFilter='бүгд',actMonths=[],subTab='received',selUnits=[];
+let dC=null,uCC=null,pctC2=null,saveT=null;
 
 // ===== UTILS =====
 function syncUI(s,m){const el=document.getElementById('sync');el.textContent=m;el.className='sync show '+(s||'');if(s!=='saving')setTimeout(()=>el.classList.remove('show'),2200);}
@@ -698,6 +699,21 @@ async function doLogout(){
 
 // ===== HELPERS =====
 function getMonths(){const ms=new Set(tasks.map(t=>t.month));return MALL.filter(m=>ms.has(m));}
+function getActTasks(){
+  // Сараар шүүх
+  let ts=actMonths.length>0?tasks.filter(t=>actMonths.includes(t.month)):tasks;
+  return ts;
+}
+function getUnitTasks(){
+  // Нэгжийн хэрэглэгчид зориулсан — зөвхөн тэдний нэгжийн даалгавар
+  const ts=getActTasks();
+  if(!cu||cu.isAdmin)return ts;
+  return ts.filter(t=>t.units.includes(cu.unit)||t.giver===cu.unit);
+}
+function getMonthLabel(){
+  if(actMonths.length===0)return 'Бүгд сар';
+  return actMonths.map(m=>ML[m]).join(' + ');
+}
 function getPct(tid,u){const p=prog[tid];return(p&&p[u]!==undefined)?p[u]:0;}
 function setPct(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid][u]=Math.max(0,Math.min(100,v));}
 function getNote(tid,u){const p=prog[tid];return(p&&p['n_'+u]!==undefined)?p['n_'+u]:'';}
@@ -733,7 +749,7 @@ function showApp(){
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
   if(cu.isAdmin){document.getElementById('nav-admin').style.display='flex';initUchk();}
   document.getElementById('sub-tabs-wrap').style.display=cu.isAdmin?'none':'flex';
-  const ms=getMonths();actMonth=ms[ms.length-1]||'2026-01';
+  actMonths=[];
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
   showDeadlineToast();
@@ -753,16 +769,27 @@ function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpil
 function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
 function renderTopPills(){
   const ms=getMonths();
-  document.getElementById('top-month-pills').innerHTML=ms.map(m=>`<button class="mpill has${m===actMonth?' active':''}" onclick="setMonth('${m}',this)">${ML[m]}</button>`).join('');
+  const allAct=actMonths.length===0;
+  const pills=`<button class="mpill${allAct?' all-act':''}" onclick="setAllMonths()">${allAct?'✓ ':''} Бүгд</button>`
+    +ms.map(m=>`<button class="mpill has${actMonths.includes(m)?' active':''}" onclick="toggleMonth('${m}')">${ML[m]}</button>`).join('');
+  document.getElementById('top-month-pills').innerHTML=pills;
+  document.getElementById('topbar-month-label').textContent=getMonthLabel();
 }
-function setMonth(m,btn){
-  actMonth=m;document.querySelectorAll('#top-month-pills .mpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  updateKPI();
+function setAllMonths(){
+  actMonths=[];renderTopPills();updateKPI();
+  if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
+  else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
+}
+function toggleMonth(m){
+  if(actMonths.includes(m))actMonths=actMonths.filter(x=>x!==m);
+  else actMonths.push(m);
+  if(actMonths.length===0||actMonths.length===getMonths().length)actMonths=[];
+  renderTopPills();updateKPI();
   if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
   else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
 }
 function updateKPI(){
-  const ts=tasks.filter(t=>t.month===actMonth);
+  const ts=cu&&!cu.isAdmin?getUnitTasks():getActTasks();
   const done=ts.filter(t=>calcAvg(t)>=100).length;
   const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
   const none=ts.filter(t=>calcAvg(t)===0).length;
@@ -774,12 +801,13 @@ function updateKPI(){
   document.getElementById('kpi-none').textContent=none;
   document.getElementById('kpi-avg').textContent=avg+'%';
   document.getElementById('kpi-overdue').textContent=ovd;
-  document.getElementById('print-month-label').textContent=(ML[actMonth]||actMonth)+' | Бэлтгэсэн: '+new Date().toLocaleDateString('mn-MN');
+  document.getElementById('print-month-label').textContent=getMonthLabel()+' | Бэлтгэсэн: '+new Date().toLocaleDateString('mn-MN');
 }
 
 // ===== DASHBOARD =====
 function renderDashboard(){
-  const ts=tasks.filter(t=>t.month===actMonth);
+  // Admin: бүх даалгавар, Нэгж: зөвхөн өөрийнх
+  const ts=cu&&!cu.isAdmin?getUnitTasks():getActTasks();
   const done=ts.filter(t=>calcAvg(t)>=100).length;
   const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
   const none=ts.filter(t=>calcAvg(t)===0).length;
@@ -875,7 +903,7 @@ function renderDashboard(){
 // ===== MY TASKS =====
 function renderMyTasks(){
   if(!cu)return;
-  let ts=tasks.filter(t=>t.month===actMonth);
+  let ts=getActTasks();
   if(!cu.isAdmin){ts=subTab==='received'?ts.filter(t=>t.units.includes(cu.unit)):ts.filter(t=>t.giver===cu.unit);}
   ts=ts.filter(t=>{
     const p=calcAvg(t);
@@ -1039,16 +1067,19 @@ async function saveEditTask(){
 
 function renderAdminPills(){
   const ms=getMonths();
-  document.getElementById('admin-month-pills').innerHTML=ms.map(m=>`<button class="fpill${m===actMonth?' active':''}" onclick="setAdminM('${m}',this)">${ML[m]}</button>`).join('');
+  document.getElementById('admin-month-pills').innerHTML=ms.map(m=>`<button class="fpill${actMonths.includes(m)||(!actMonths.length&&m===ms[0])?' active':''}" onclick="setAdminM('${m}',this)">${ML[m]}</button>`).join('');
   document.getElementById('admin-list-title').textContent=`${ML[actMonth]||actMonth} — даалгаварын жагсаалт`;
 }
 function setAdminM(m,btn){
-  actMonth=m;document.getElementById('a-month').value=m;
+  actMonths=[m];document.getElementById('a-month').value=m;
+  document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
+}
   document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
 }
 function renderAdminList(){
-  const ts=tasks.filter(t=>t.month===actMonth);
+  const ts=getActTasks();
   if(!ts.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
   document.getElementById('admin-task-list').innerHTML=ts.map(t=>{
     const p=calcAvg(t);const ovd=isOverdue(t);const soon=isDueSoon(t,7);
