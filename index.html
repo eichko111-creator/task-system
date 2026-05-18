@@ -8,8 +8,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-height:100vh;display:flex;flex-direction:column}
 .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#050a12,#090f1e,#06121e)}
-.login-card{background:#111827;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.6);border:1px solid #1e293b}
-.field{margin-bottom:14px}
+.login-card{background:#111827;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.6);border:1px solid #1e293b}.field{margin-bottom:14px}
 .field label{font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
 .field input,.field select{width:100%;padding:10px 12px;border:1.5px solid #1e293b;border-radius:8px;font-size:14px;color:#d0d8e8;background:#0b0f1a;outline:none;transition:border-color .2s;font-family:inherit}
 .field input:focus,.field select:focus{border-color:#e74c3c}
@@ -196,29 +195,21 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
 <!-- LOGIN -->
 <div id="login-page" class="login-page" style="display:none">
   <div class="login-card">
-    <div style="text-align:center;margin-bottom:20px">
-      <div style="font-size:40px;margin-bottom:8px">📋</div>
-      <div style="font-size:20px;font-weight:700;color:#1a1a2e">Үүрэг даалгавар</div>
-      <div style="font-size:13px;color:#888;margin-top:4px">2026 оны хяналтын систем</div>
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:44px;margin-bottom:10px">📋</div>
+      <div style="font-size:20px;font-weight:700;color:#e2e8f0">Үүрэг даалгавар</div>
+      <div style="font-size:13px;color:#4a6080;margin-top:4px">2026 оны хяналтын систем</div>
     </div>
-    <div id="unit-section" style="margin-bottom:0">
-      <div class="field"><label>Нэгж</label>
-        <select id="login-unit">
-          <option value="">-- сонгоно уу --</option>
-          <optgroup label="Нэгжүүд">
-            <option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option><option>ХНХ</option>
-            <option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option><option>ДА</option>
-            <option>ХТЛА</option><option>ЗТТА</option><option>АТА</option><option>НҮА</option>
-            <option>ХҮТ</option><option>АЗА</option><option>ЗС</option><option>ЖС</option>
-            <option>ХС</option><option>СС</option>
-          </optgroup>
-          <optgroup label="Удирдлага"><option value="ADMIN">Админ</option></optgroup>
-        </select>
-      </div>
-      <div class="field"><label>Нэр</label><input type="text" id="login-name" placeholder="Нэрээ оруулна уу..."></div>
-      <button class="login-btn" onclick="doLogin()">Нэвтрэх →</button>
+    <div class="field">
+      <label>Нэвтрэх нэр</label>
+      <input type="text" id="login-user" placeholder="Нэвтрэх нэрээ оруулна уу..." autocomplete="username" maxlength="10">
     </div>
-    
+    <div class="field">
+      <label>Нууц үг</label>
+      <input type="password" id="login-pass" placeholder="Нууц үгээ оруулна уу..." autocomplete="current-password" maxlength="10">
+    </div>
+    <div class="login-err" id="login-err" style="display:none">Нэвтрэх нэр эсвэл нууц үг буруу байна</div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Нэвтрэх →</button>
   </div>
 </div>
 
