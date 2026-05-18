@@ -830,8 +830,8 @@ function toggleMonth(m){
   if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
   else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
 }
-function updateKPI(){
-  const ts=cu&&!cu.isAdmin?getUnitTasks():getActTasks();
+function updateKPI(customTs){
+  const ts=customTs||(cu&&!cu.isAdmin?getUnitTasks():getActTasks());
   const done=ts.filter(t=>calcAvg(t)>=100).length;
   const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
   const none=ts.filter(t=>calcAvg(t)===0).length;
@@ -932,10 +932,10 @@ function renderDashboard(){
   const notDone=ts.filter(t=>calcAvg(t)===0);
   document.getElementById('notdone-list').innerHTML=notDone.length
     ?notDone.map(t=>`<div class="all-task-row">
-        <span style="font-size:11px;color:#bbb;width:18px">${t.id}</span>
-        <span style="font-size:12px;flex:1;color:#1a1a2e;font-weight:500">${t.name}</span>
+        <span style="font-size:11px;color:#4a6080;width:18px">${t.id}</span>
+        <span style="font-size:12px;flex:1;color:#e2e8f0;font-weight:500">${t.name}</span>
         <span class="badge bdept" style="font-size:10px">${t.dept}</span>
-        <span style="font-size:11px;color:#555;margin-left:4px">👤 ${t.person||'—'}</span>
+        <span style="font-size:11px;color:#7890a8;margin-left:4px">👤 ${t.person||'—'}</span>
         ${t.dl?`<span class="badge bdl" style="font-size:10px;margin-left:4px">🕐 ${t.dl}</span>`:''}
         <span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:#e74c3c">0%</span>
       </div>`).join('')
@@ -967,11 +967,12 @@ function renderMyTasks(){
   }else if(subTab==='given'){
     ts=ts.filter(t=>t.giver===cu.unit||t.dept===cu.unit);
   }else if(subTab==='all'){
-    // seeAll биш нэгж: зөвхөн өөрийнх
     if(!cu.isAdmin&&!cu.seeAll)ts=ts.filter(t=>t.units.includes(cu.unit)||t.giver===cu.unit);
   }else{
     if(!cu.isAdmin&&!cu.seeAll)ts=ts.filter(t=>t.units.includes(cu.unit)||t.giver===cu.unit);
   }
+  // KPI-г таб-ын filtered tasks-аар шинэчлэх
+  updateKPI(ts);
   ts=ts.filter(t=>{
     const p=calcAvg(t);
     if(bFilter==='биелээгүй')return p===0;
