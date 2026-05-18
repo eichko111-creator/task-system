@@ -59,8 +59,12 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
 .task-card:hover{box-shadow:0 3px 16px rgba(0,0,0,.4)}
 .task-card.done{border-left:4px solid #27ae60}
 .task-card.inprog{border-left:4px solid #f39c12}
-.task-card.notdone{border-left:4px solid #e74c3c}
+.task-card.notdone{border-left:4px solid #4a6080}
 .task-card.overdue-card{border-left:4px solid #8e44ad}
+/* Task card дотоод текстийн өнгө */
+.tc-name{font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:4px;line-height:1.4}
+.tc-person{font-size:12px;color:#7890a8;margin-bottom:6px}
+.tc-avg-lbl{font-size:11px;color:#4a6080;min-width:80px}
 .task-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;display:inline-flex;align-items:center;gap:4px}
 .bdept{background:#1e3a5f;color:#60a5fa;border:1px solid #2563eb}
@@ -321,8 +325,9 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
       <!-- ҮҮРЭГ ДААЛГАВАР -->
       <div class="view" id="view-mine">
         <div class="sub-tabs" id="sub-tabs-wrap" style="display:none">
-          <button class="stab active" onclick="setSubTab('received',this)">📥 Надад өгсөн</button>
-          <button class="stab" onclick="setSubTab('given',this)">📤 Миний өгсөн</button>
+          <button class="stab active" onclick="setSubTab('all',this)">📋 Бүгд <span id="tab-all-cnt" style="font-size:10px;opacity:.7"></span></button>
+          <button class="stab" onclick="setSubTab('received',this)">📥 Надад өгсөн <span id="tab-recv-cnt" style="font-size:10px;opacity:.7"></span></button>
+          <button class="stab" onclick="setSubTab('given',this)">📤 Миний өгсөн <span id="tab-given-cnt" style="font-size:10px;opacity:.7"></span></button>
         </div>
         <div class="filter-row">
           <button class="fpill active" onclick="setFilter('бүгд',this)">Бүгд</button>
@@ -602,7 +607,7 @@ const INIT=[
 ];
 
 let cu=null,tasks=[],prog={},empList=[],nid=300;
-let bFilter='бүгд',actMonths=[],subTab='received',selUnits=[];
+let bFilter='бүгд',actMonths=[],subTab='all',selUnits=[];
 let dC=null,uCC=null,pctC2=null,saveT=null;
 
 // ===== UTILS =====
@@ -784,7 +789,8 @@ function showApp(){
   document.getElementById('user-unit-lbl').textContent=cu.unit;
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
   if(cu.isAdmin){document.getElementById('nav-admin').style.display='flex';initUchk();}
-  document.getElementById('sub-tabs-wrap').style.display=cu.isAdmin?'none':'flex';
+  document.getElementById('sub-tabs-wrap').style.display=(cu.isAdmin||cu.seeAll)?'flex':'none';
+  subTab=cu.isAdmin||cu.seeAll?'all':'received';
   actMonths=[];
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
@@ -937,12 +943,34 @@ function renderDashboard(){
 }
 
 // ===== MY TASKS =====
+function updateTabCounts(){
+  const all=getActTasks();
+  const myRecv=all.filter(t=>t.units.includes(cu.unit));
+  const myGiven=all.filter(t=>t.giver===cu.unit||t.dept===cu.unit);
+  const allAvg=all.length?Math.round(all.reduce((s,t)=>s+calcAvg(t),0)/all.length):0;
+  const recvAvg=myRecv.length?Math.round(myRecv.reduce((s,t)=>s+getPct(t.id,cu.unit),0)/myRecv.length):0;
+  const givenAvg=myGiven.length?Math.round(myGiven.reduce((s,t)=>s+calcAvg(t),0)/myGiven.length):0;
+  const ac=document.getElementById('tab-all-cnt');
+  const rc=document.getElementById('tab-recv-cnt');
+  const gc=document.getElementById('tab-given-cnt');
+  if(ac)ac.textContent=`${all.length} • ${allAvg}%`;
+  if(rc)rc.textContent=`${myRecv.length} • ${recvAvg}%`;
+  if(gc)gc.textContent=`${myGiven.length} • ${givenAvg}%`;
+}
 function renderMyTasks(){
   if(!cu)return;
+  if(cu.isAdmin||cu.seeAll)updateTabCounts();
   let ts=getActTasks();
-  // seeAll биш нэгж: зөвхөн өөрт өгсөн даалгавар
-  if(!cu.isAdmin&&!cu.seeAll){
-    ts=subTab==='received'?ts.filter(t=>t.units.includes(cu.unit)):ts.filter(t=>t.giver===cu.unit);
+  // Таб шүүлт
+  if(subTab==='received'){
+    ts=ts.filter(t=>t.units.includes(cu.unit));
+  }else if(subTab==='given'){
+    ts=ts.filter(t=>t.giver===cu.unit||t.dept===cu.unit);
+  }else if(subTab==='all'){
+    // seeAll биш нэгж: зөвхөн өөрийнх
+    if(!cu.isAdmin&&!cu.seeAll)ts=ts.filter(t=>t.units.includes(cu.unit)||t.giver===cu.unit);
+  }else{
+    if(!cu.isAdmin&&!cu.seeAll)ts=ts.filter(t=>t.units.includes(cu.unit)||t.giver===cu.unit);
   }
   ts=ts.filter(t=>{
     const p=calcAvg(t);
@@ -1003,11 +1031,11 @@ function renderMyTasks(){
         ${t.dl?`<span class="badge ${ovd?'bovd':'bdl'}">🕐 ${t.dl}${ovd?' ⚠️':''}</span>`:''}
         ${t.giver&&t.giver!==t.dept?`<span class="badge bgiver">📤 ${t.giver}</span>`:''}
       </div>
-      <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px;line-height:1.4">${ovd?'🚨 ':''} ${t.name}</div>
-      <div style="font-size:12px;color:#888;margin-bottom:6px">Хариуцагч: ${t.person||'—'}</div>
+      <div style="font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:4px;line-height:1.4">${ovd?'🚨 ':''} ${t.name}</div>
+      <div style="font-size:12px;color:#7890a8;margin-bottom:6px">Хариуцагч: ${t.person||'—'}</div>
       <div class="unit-rows">${rows}</div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid #f5f5f5">
-        <span style="font-size:11px;color:#aaa;min-width:80px">${cu.isAdmin?'Нийт дундаж':'Миний биелэлт'}</span>
+        <span style="font-size:11px;color:#4a6080;min-width:80px">${cu.isAdmin?'Нийт дундаж':'Миний биелэлт'}</span>
         <div class="pbar" style="flex:1"><div class="pfill" id="pf-${t.id}" style="width:${myPct}%;background:${pColor(myPct)}"></div></div>
         <span style="font-size:13px;font-weight:700;min-width:36px;text-align:right;color:${pColor(myPct)}" id="pv-${t.id}">${myPct}%</span>
       </div>
@@ -1129,10 +1157,10 @@ function renderAdminList(){
         <button class="edit-btn" style="margin-left:auto" onclick="openEditTask(${t.id})">✏️ Засах</button>
         <button class="del-btn" onclick="deleteTask(${t.id})">🗑</button>
       </div>
-      <div style="font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:6px">${ovd?'🚨 ':soon?'⚡ ':''}${t.name}</div>
-      <div style="font-size:11px;color:#bbb;margin-bottom:6px">📅 ${t.date||''} | Нэгжүүд: ${t.units.join(', ')}</div>
+      <div style="font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:6px">${ovd?'🚨 ':soon?'⚡ ':''}${t.name}</div>
+      <div style="font-size:11px;color:#374151;margin-bottom:6px">📅 ${t.date||''} | Нэгжүүд: ${t.units.join(', ')}</div>
       <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:11px;color:#aaa;min-width:80px">Дундаж биелэлт</span>
+        <span style="font-size:11px;color:#4a6080;min-width:80px">Дундаж биелэлт</span>
         <div class="pbar" style="flex:1"><div class="pfill" style="width:${p}%;background:${pColor(p)}"></div></div>
         <span style="font-size:13px;font-weight:700;min-width:36px;text-align:right;color:${pColor(p)}">${p}%</span>
       </div>
