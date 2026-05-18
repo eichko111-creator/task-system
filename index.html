@@ -64,11 +64,11 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
 .task-card.overdue-card{border-left:4px solid #8e44ad}
 .task-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;display:inline-flex;align-items:center;gap:4px}
-.bdept{background:#1e3a5f;color:#93c5fd}
-.bdate{background:#14301a;color:#4ade80}
-.bdl{background:rgba(231,76,60,.2);color:#f87171}
-.bgiver{background:#2d1b69;color:#c4b5fd}
-.bovd{background:rgba(142,68,173,.2);color:#c084fc}
+.bdept{background:#1e3a5f;color:#60a5fa;border:1px solid #2563eb}
+.bdate{background:#14532d;color:#4ade80;border:1px solid #16a34a}
+.bdl{background:#7f1d1d;color:#fca5a5;border:1px solid #dc2626}
+.bgiver{background:#2e1065;color:#c4b5fd;border:1px solid #7c3aed}
+.bovd{background:#3b0764;color:#e879f9;border:1px solid #a21caf}
 .pbar{flex:1;height:7px;background:#1a2540;border-radius:4px;overflow:hidden}
 .pfill{height:100%;border-radius:4px;transition:width .4s}
 .db-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
@@ -216,7 +216,7 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
         </select>
       </div>
       <div class="field"><label>Нэр</label><input type="text" id="login-name" placeholder="Нэрээ оруулна уу..."></div>
-      <button class="login-btn" onclick="doEnter()">Орох →</button>
+      <button class="login-btn" onclick="doLogin()">Нэвтрэх →</button>
     </div>
     
   </div>
@@ -659,19 +659,44 @@ async function saveProgress(){syncUI('saving','Хадгалж байна...');tr
 async function saveEmpList(){try{await EDOC.set({list:empList});}catch(e){}}
 function updateEmpDatalist(){const dl=document.getElementById('emp-list');if(dl)dl.innerHTML=empList.map(e=>`<option value="${e}">`).join('');}
 
-// ===== AUTH =====
+// ===== USERS =====
+const USERS={
+  '31079':{unit:'СЭЗХ',person:'Л.Эрдэнэсугар',pass:'1079',seeAll:true,isAdmin:false},
+  '31853':{unit:'ДХХ',person:'В.Болормаа',pass:'1853',seeAll:true,isAdmin:false},
+  '31072':{unit:'ТБТХ',person:'Э.Эрдэнэбат',pass:'1072',seeAll:true,isAdmin:false},
+  '31066':{unit:'ХНХ',person:'Ч.Чинцогт',pass:'1066',seeAll:true,isAdmin:false},
+  '31234':{unit:'ББТХ',person:'С.Батбаатар',pass:'1234',seeAll:true,isAdmin:false},
+  '31029':{unit:'НҮА',person:'Ц.Даваасамбуу',pass:'1029',seeAll:true,isAdmin:false},
+  '31056':{unit:'МТХ',person:'О.Сэр-Од',pass:'1056',seeAll:true,isAdmin:false},
+  '31089':{unit:'ХЭМАБА',person:'С.Одончимэг',pass:'1089',seeAll:false,isAdmin:false},
+  '31476':{unit:'ДА',person:'Ж.Ариунаа',pass:'1476',seeAll:false,isAdmin:false},
+  '31805':{unit:'ХТЛА',person:'Т.Гэрэлт-Од',pass:'1805',seeAll:false,isAdmin:false},
+  '31808':{unit:'ЗТТА',person:'Д.Батсайхан',pass:'1808',seeAll:false,isAdmin:false},
+  '31712':{unit:'АТА',person:'Д.Гансүх',pass:'1712',seeAll:false,isAdmin:false},
+  '31871':{unit:'ХҮТ',person:'Б.Болдсүх',pass:'1871',seeAll:false,isAdmin:false},
+  '31408':{unit:'АЗА',person:'Б.Оюундэлгэр',pass:'1408',seeAll:false,isAdmin:false},
+  '31901':{unit:'ЖС',person:'С.Ариунбаяр',pass:'1901',seeAll:false,isAdmin:false},
+  '32589':{unit:'СС',person:'Э.Сувдаа',pass:'2589',seeAll:false,isAdmin:false},
+  '31002':{unit:'ХС',person:'Ц.Содбаяр',pass:'1002',seeAll:false,isAdmin:false},
+  '32141':{unit:'ЗС',person:'М.Энх-Амгалан',pass:'2141',seeAll:false,isAdmin:false},
+  '31870':{unit:'ADMIN',person:'Э.Ичинхорлоо',pass:'1870',seeAll:true,isAdmin:true},
+};
 
-async function doEnter(){
-  const unit=document.getElementById('login-unit').value;
-  const name=document.getElementById('login-name').value.trim();
-  if(!unit){alert('Нэгжээ сонгоно уу');return;}
-  if(!name){alert('Нэрээ оруулна уу');return;}
-  cu={unit,name,isAdmin:unit==='ADMIN'};
+// ===== AUTH =====
+async function doLogin(){
+  const uname=document.getElementById('login-user').value.trim();
+  const pass=document.getElementById('login-pass').value.trim();
+  const err=document.getElementById('login-err');
+  const btn=document.getElementById('login-btn');
+  if(!uname||!pass){err.textContent='Нэвтрэх нэр болон нууц үгийг оруулна уу';err.style.display='block';return;}
+  const user=USERS[uname];
+  if(!user||user.pass!==pass){err.textContent='Нэвтрэх нэр эсвэл нууц үг буруу байна';err.style.display='block';return;}
+  err.style.display='none';
+  btn.disabled=true;btn.textContent='Ачаалж байна...';
+  cu={unit:user.unit,name:user.person,isAdmin:user.isAdmin,seeAll:user.seeAll};
   try{localStorage.setItem(SK,JSON.stringify(cu));}catch(e){}
-  const btn=document.querySelector('#unit-section .login-btn');
-  if(btn){btn.disabled=true;btn.textContent='Ачаалж байна...';}
   await fbLoad();
-  if(btn){btn.disabled=false;btn.textContent='Орох →';}
+  btn.disabled=false;btn.textContent='Нэвтрэх →';
   showApp();
 }
 function doLogout(){
@@ -680,8 +705,8 @@ function doLogout(){
   document.getElementById('main-app').style.display='none';
   document.getElementById('login-page').style.display='flex';
   document.getElementById('nav-admin').style.display='none';
-  document.getElementById('login-unit').value='';
-  document.getElementById('login-name').value='';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
 }
 
 // ===== HELPERS =====
@@ -692,9 +717,11 @@ function getActTasks(){
   return ts;
 }
 function getUnitTasks(){
-  // Нэгжийн хэрэглэгчид зориулсан — зөвхөн тэдний нэгжийн даалгавар
   const ts=getActTasks();
-  if(!cu||cu.isAdmin)return ts;
+  if(!cu)return ts;
+  // Admin эсвэл seeAll нэгж: бүх даалгавар харна
+  if(cu.isAdmin||cu.seeAll)return ts;
+  // Бусад: зөвхөн өөрийн нэгжийн даалгавар
   return ts.filter(t=>t.units.includes(cu.unit)||t.giver===cu.unit);
 }
 function getMonthLabel(){
@@ -891,7 +918,10 @@ function renderDashboard(){
 function renderMyTasks(){
   if(!cu)return;
   let ts=getActTasks();
-  if(!cu.isAdmin){ts=subTab==='received'?ts.filter(t=>t.units.includes(cu.unit)):ts.filter(t=>t.giver===cu.unit);}
+  // seeAll биш нэгж: зөвхөн өөрт өгсөн даалгавар
+  if(!cu.isAdmin&&!cu.seeAll){
+    ts=subTab==='received'?ts.filter(t=>t.units.includes(cu.unit)):ts.filter(t=>t.giver===cu.unit);
+  }
   ts=ts.filter(t=>{
     const p=calcAvg(t);
     if(bFilter==='биелээгүй')return p===0;
@@ -928,17 +958,19 @@ function renderMyTasks(){
   document.getElementById('my-tasks').innerHTML=ts.map(t=>{
     const avg=calcAvg(t);const cls=avg>=100?'done':avg>0?'inprog':'notdone';
     const ovd=isOverdue(t);
-    const visibleUnits=cu.isAdmin?t.units:t.units.filter(u=>u===cu.unit);
+    // seeAll нэгж: бүх нэгжийн мөр харна; бусад: зөвхөн өөрийнх
+    const visibleUnits=(cu.isAdmin||cu.seeAll)?t.units:t.units.filter(u=>u===cu.unit);
     const rows=visibleUnits.map(u=>{
       const v=getPct(t.id,u);const n=getNote(t.id,u);const delay=getDelay(t.id,u);
-      const ok=true;
+      // Admin болон өөрийн нэгж л засах боломжтой
+      const ok=cu.isAdmin||(u===cu.unit);
       return`<div class="unit-row">
         <span class="unit-nm">${u}</span>
         <input type="number" min="0" max="100" value="${v}" id="inp-${t.id}-${u}" class="pct-inp" style="border-color:${pColor(v)}" oninput="this.style.borderColor=pColor(parseInt(this.value)||0)">
         <span style="font-size:11px;font-weight:700;color:${pColor(v)};flex-shrink:0">%</span>
-        <input type="text" value="${n}" id="note-${t.id}-${u}" class="note-inp" placeholder="Тайлбар...">
-        <button class="save-btn" onclick="saveU(${t.id},'${u}')">Хадгалах</button>
-        <span class="saved-ok" id="sok-${t.id}-${u}">✓</span>
+        <input type="text" value="${n}" id="note-${t.id}-${u}" class="note-inp" placeholder="Тайлбар..." ${!ok?'disabled':''}>
+        ${ok?`<button class="save-btn" onclick="saveU(${t.id},'${u}')">Хадгалах</button>
+        <span class="saved-ok" id="sok-${t.id}-${u}">✓</span>`:`<span style="font-size:10px;color:#374151;flex-shrink:0">🔒</span>`}
       </div>`;    }).join('');
 
     const myPct=cu.isAdmin?avg:getPct(t.id,cu.unit);
@@ -1057,14 +1089,14 @@ function renderAdminPills(){
   document.getElementById('admin-month-pills').innerHTML=ms.map(m=>`<button class="fpill${actMonths.includes(m)||(!actMonths.length&&m===ms[0])?' active':''}" onclick="setAdminM('${m}',this)">${ML[m]}</button>`).join('');
   document.getElementById('admin-list-title').textContent=`${ML[actMonth]||actMonth} — даалгаварын жагсаалт`;
 }
-function setAdminM(m, btn) {
-    actMonths = [m]; 
-    document.getElementById('a-month').value = m;
-    document.querySelectorAll('#admin-month-pills .fpill').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('admin-list-title').textContent = `${ML[m] || m} – даалгаврын жагсаалт`;
-    renderAdminList();
-} // Энэ хаалт функцыг хааж байна. Үүнээс доош илүү хаалт байж болохгүй.
+function setAdminM(m,btn){
+  actMonths=[m];document.getElementById('a-month').value=m;
+  document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
+}
+  document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
+}
 function renderAdminList(){
   const ts=getActTasks();
   if(!ts.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
@@ -1089,10 +1121,15 @@ function renderAdminList(){
 }
 
 
-// ===== INIT =====
+// Enter товч
+document.addEventListener('DOMContentLoaded',()=>{
+  const lp=document.getElementById('login-pass');
+  if(lp)lp.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  const lu=document.getElementById('login-user');
+  if(lu)lu.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('login-pass').focus();});
+});
 (async function init(){
   const ls=document.getElementById('loading-screen');
-  // 5 секундын дараа loading дуусгах timeout
   const hideLS=()=>{ls.classList.add('hide');setTimeout(()=>ls.style.display='none',400);}
   const timer=setTimeout(()=>{hideLS();document.getElementById('login-page').style.display='flex';},5000);
   try{
@@ -1100,7 +1137,7 @@ function renderAdminList(){
     if(saved){
       const p=JSON.parse(saved);
       if(p&&p.unit&&p.name){
-        cu=p;cu.isAdmin=cu.unit==='ADMIN';
+        cu=p;
         await fbLoad();
         clearTimeout(timer);hideLS();showApp();return;
       }
