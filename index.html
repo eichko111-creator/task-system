@@ -1094,9 +1094,6 @@ function setAdminM(m,btn){
   document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
 }
-  document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
-}
 function renderAdminList(){
   const ts=getActTasks();
   if(!ts.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
