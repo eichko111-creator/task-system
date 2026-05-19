@@ -229,7 +229,6 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
       <div class="nav-item active" onclick="showTab('dashboard',this)"><div class="nav-dot" style="background:#e74c3c"></div>НҮҮ Р</div>
       <div class="nav-item" onclick="showTab('mine',this)"><div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР</div>
       <div class="nav-item" onclick="showTab('decision',this)"><div class="nav-dot" style="background:#8b5cf6"></div>ХУРЛЫН ШИЙДВЭР</div>
-      <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin',this)"><div class="nav-dot" style="background:#f39c12"></div>НЭМЭХ</div>
     </nav>
     <div class="sidebar-footer">
       <div class="user-chip">
@@ -250,6 +249,7 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
         <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
         <div class="month-pills" id="top-month-pills"></div>
         <span id="topbar-month-label" style="font-size:12px;font-weight:700;color:#e74c3c;white-space:nowrap"></span>
+        <button id="admin-add-toggle" style="display:none;padding:6px 14px;background:#1e3a5f;color:#93c5fd;border:1px solid #2563eb;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit" onclick="toggleAddSection()">➕ Нэмэх</button>
       </div>
     </div>
     <div class="container">
@@ -325,6 +325,64 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
 
       <!-- ҮҮРЭГ ДААЛГАВАР -->
       <div class="view" id="view-mine">
+        <!-- Admin нэмэх хэсэг -->
+        <div id="admin-add-section" style="display:none;margin-bottom:16px">
+          <div class="admin-form" style="border:1px solid #2563eb">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <div class="form-title" style="margin-bottom:0">➕ Шинэ үүрэг даалгавар нэмэх</div>
+              <button onclick="toggleAddSection()" style="background:none;border:none;color:#4a6080;cursor:pointer;font-size:18px;line-height:1">×</button>
+            </div>
+            <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:10px">
+              <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Ерөнхий мэдээлэл</div>
+              <div class="form-row" style="margin-bottom:8px">
+                <div class="form-field"><label>Сар</label>
+                  <select id="a-month">
+                    <option value="2026-01">1-р сар</option><option value="2026-02">2-р сар</option>
+                    <option value="2026-03">3-р сар</option><option value="2026-04">4-р сар</option>
+                    <option value="2026-05">5-р сар</option><option value="2026-06">6-р сар</option>
+                    <option value="2026-07">7-р сар</option><option value="2026-08">8-р сар</option>
+                    <option value="2026-09">9-р сар</option><option value="2026-10">10-р сар</option>
+                    <option value="2026-11">11-р сар</option><option value="2026-12">12-р сар</option>
+                  </select>
+                </div>
+                <div class="form-field"><label>Огноо</label><input type="date" id="a-date"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-field"><label>Хэлтэс/нэгж</label>
+                  <select id="a-dept"><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option><option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option><option>ДА</option><option>ХТЛА</option><option>ЗТТА</option><option>АТА</option><option>НҮА</option><option>ХҮТ</option><option>АЗА</option><option>ЗС</option><option>ЖС</option><option>ХС</option><option>СС</option><option>Бусад</option></select>
+                </div>
+                <div class="form-field"><label>Ажилтны нэр</label>
+                  <input type="text" id="a-person" placeholder="Нэр бичих..." list="emp-list" autocomplete="off">
+                  <datalist id="emp-list"></datalist>
+                </div>
+              </div>
+            </div>
+            <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:10px">
+              <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Даалгаварын мэдээлэл</div>
+              <div class="form-field" style="margin-bottom:8px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
+              <div class="form-field" style="margin-bottom:0"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
+            </div>
+            <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:12px">
+              <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Биелэх нэгжүүд</div>
+              <div class="uchk-wrap" id="units-check"></div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-outline" onclick="selectAllUnits()">Бүгд сонгох</button>
+              <button class="btn-primary" onclick="addTask()">✓ Нэмэх</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Даалгаварын жагсаалтын толгой -->
+        <div id="admin-list-bar" style="display:none;margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div class="section-title" id="admin-list-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0">Даалгаварын жагсаалт</div>
+          </div>
+          <div class="filter-row" id="admin-month-pills" style="margin-bottom:0"></div>
+          <div id="admin-task-list" style="margin-top:10px"></div>
+          <div style="height:1px;background:#1a2540;margin:16px 0"></div>
+        </div>
+
         <div class="sub-tabs" id="sub-tabs-wrap" style="display:none">
           <button class="stab active" onclick="setSubTab('all',this)">📋 Бүгд <span id="tab-all-cnt" style="font-size:10px;opacity:.7"></span></button>
           <button class="stab" onclick="setSubTab('received',this)">📥 Надад өгсөн <span id="tab-recv-cnt" style="font-size:10px;opacity:.7"></span></button>
@@ -338,57 +396,6 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
           <button class="fpill" onclick="setFilter('хэтэрсэн',this)">🚨 Хэтэрсэн</button>
         </div>
         <div id="my-tasks"></div>
-      </div>
-
-      <!-- НЭМЭХ -->
-      <div class="view" id="view-admin">
-        <div class="admin-form" id="task-add-rows-wrap">
-          <div class="form-title">➕ Шинэ үүрэг даалгавар нэмэх</div>
-          <!-- Ерөнхий мэдээлэл -->
-          <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:10px">
-            <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Ерөнхий мэдээлэл</div>
-            <div class="form-row" style="margin-bottom:8px">
-              <div class="form-field"><label>Сар</label>
-                <select id="a-month">
-                  <option value="2026-01">1-р сар</option><option value="2026-02">2-р сар</option>
-                  <option value="2026-03">3-р сар</option><option value="2026-04">4-р сар</option>
-                  <option value="2026-05">5-р сар</option><option value="2026-06">6-р сар</option>
-                  <option value="2026-07">7-р сар</option><option value="2026-08">8-р сар</option>
-                  <option value="2026-09">9-р сар</option><option value="2026-10">10-р сар</option>
-                  <option value="2026-11">11-р сар</option><option value="2026-12">12-р сар</option>
-                </select>
-              </div>
-              <div class="form-field"><label>Огноо</label><input type="date" id="a-date"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-field"><label>Хэлтэс/нэгж</label>
-                <select id="a-dept"><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option><option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option><option>ДА</option><option>ХТЛА</option><option>ЗТТА</option><option>АТА</option><option>НҮА</option><option>ХҮТ</option><option>АЗА</option><option>ЗС</option><option>ЖС</option><option>ХС</option><option>СС</option><option>Бусад</option></select>
-              </div>
-              <div class="form-field"><label>Ажилтны нэр</label>
-                <input type="text" id="a-person" placeholder="Нэр бичих..." list="emp-list" autocomplete="off">
-                <datalist id="emp-list"></datalist>
-              </div>
-            </div>
-          </div>
-          <!-- Даалгаварын мэдээлэл -->
-          <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:10px">
-            <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Даалгаварын мэдээлэл</div>
-            <div class="form-field" style="margin-bottom:8px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
-            <div class="form-field" style="margin-bottom:0"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
-          </div>
-          <!-- Биелэх нэгжүүд -->
-          <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:12px">
-            <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Биелэх нэгжүүд</div>
-            <div class="uchk-wrap" id="units-check"></div>
-          </div>
-          <div class="btn-row">
-            <button class="btn-outline" onclick="selectAllUnits()">Бүгд сонгох</button>
-            <button class="btn-primary" onclick="addTask()">✓ Нэмэх</button>
-          </div>
-        </div>
-        <div class="section-title" id="admin-list-title">Даалгаварын жагсаалт</div>
-        <div class="filter-row" id="admin-month-pills" style="margin-bottom:12px"></div>
-        <div id="admin-task-list"></div>
       </div>
 
       <!-- ХУРЛЫН ШИЙДВЭР -->
@@ -840,8 +847,10 @@ function showApp(){
   document.getElementById('user-unit-lbl').textContent=cu.unit;
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
   if(cu.isAdmin){
-    document.getElementById('nav-admin').style.display='flex';
     document.getElementById('dec-add-btn-wrap').style.display='block';
+    document.getElementById('admin-list-bar').style.display='block';
+    const addBtn=document.getElementById('admin-add-toggle');
+    if(addBtn)addBtn.style.display='block';
     initUchk();
   }
   document.getElementById('sub-tabs-wrap').style.display=(cu.isAdmin||cu.seeAll)?'flex':'none';
@@ -856,17 +865,16 @@ function showTab(name,el){
   if(el)el.classList.add('active');
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',admin:'Нэмэх',decision:'Хурлын шийдвэр'};
+  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',decision:'Хурлын шийдвэр'};
   document.getElementById('topbar-title').textContent=t[name];
   if(name==='dashboard'){updateKPI();renderDashboard();}
-  else if(name==='mine'){updateKPI();renderMyTasks();}
-  else if(name==='admin'){renderAdminPills();renderAdminList();updateEmpDatalist();}
+  else if(name==='mine'){updateKPI();renderMyTasks();if(cu&&cu.isAdmin){renderAdminPills();renderAdminList();updateEmpDatalist();}}
   else if(name==='decision'){
     document.getElementById('kpi-row').style.display='none';
     loadAndRenderDecisions();
   }
-  // KPI row харагдах/нуух
-  if(name!=='decision')document.getElementById('kpi-row').style.display='';
+  const addBtn=document.getElementById('admin-add-toggle');
+  if(addBtn)addBtn.style.display=(name==='mine'&&cu&&cu.isAdmin)?'block':'none';
 }
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderMyTasks();}
 function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
@@ -1123,7 +1131,15 @@ async function saveU(tid,u){
   updateKPI();
 }
 
-// ===== ХУРЛЫН ШИЙДВЭР =====
+function toggleAddSection(){
+  const s=document.getElementById('admin-add-section');
+  const isOpen=s.style.display!=='none';
+  s.style.display=isOpen?'none':'block';
+  if(!isOpen){
+    // Нэмэх хэсэг нээхэд огноо тохируулах
+    document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
+  }
+}
 async function loadAndRenderDecisions(){
   try{
     const snap=await DCOL.orderBy('createdAt','desc').get();
@@ -1353,7 +1369,9 @@ async function addTask(){
   document.getElementById('a-person').value='';
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
   selUnits=[];document.querySelectorAll('.uchk').forEach(el=>el.classList.remove('sel'));
-  renderAdminPills();renderAdminList();renderTopPills();
+  // Хэвийн нэмэхийн дараа хаах
+  document.getElementById('admin-add-section').style.display='none';
+  renderAdminPills();renderAdminList();renderTopPills();renderMyTasks();
   alert('✓ Үүрэг даалгавар амжилттай нэмэгдлээ!');
 }
 
