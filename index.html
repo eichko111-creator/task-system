@@ -342,33 +342,45 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
 
       <!-- НЭМЭХ -->
       <div class="view" id="view-admin">
-        <div class="admin-form">
+        <div class="admin-form" id="task-add-rows-wrap">
           <div class="form-title">➕ Шинэ үүрэг даалгавар нэмэх</div>
-          <div class="form-row">
-            <div class="form-field"><label>Сар</label>
-              <select id="a-month">
-                <option value="2026-01">1-р сар</option><option value="2026-02">2-р сар</option>
-                <option value="2026-03">3-р сар</option><option value="2026-04">4-р сар</option>
-                <option value="2026-05">5-р сар</option><option value="2026-06">6-р сар</option>
-                <option value="2026-07">7-р сар</option><option value="2026-08">8-р сар</option>
-                <option value="2026-09">9-р сар</option><option value="2026-10">10-р сар</option>
-                <option value="2026-11">11-р сар</option><option value="2026-12">12-р сар</option>
-              </select>
+          <!-- Ерөнхий мэдээлэл -->
+          <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:10px">
+            <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Ерөнхий мэдээлэл</div>
+            <div class="form-row" style="margin-bottom:8px">
+              <div class="form-field"><label>Сар</label>
+                <select id="a-month">
+                  <option value="2026-01">1-р сар</option><option value="2026-02">2-р сар</option>
+                  <option value="2026-03">3-р сар</option><option value="2026-04">4-р сар</option>
+                  <option value="2026-05">5-р сар</option><option value="2026-06">6-р сар</option>
+                  <option value="2026-07">7-р сар</option><option value="2026-08">8-р сар</option>
+                  <option value="2026-09">9-р сар</option><option value="2026-10">10-р сар</option>
+                  <option value="2026-11">11-р сар</option><option value="2026-12">12-р сар</option>
+                </select>
+              </div>
+              <div class="form-field"><label>Огноо</label><input type="date" id="a-date"></div>
             </div>
-            <div class="form-field"><label>Огноо</label><input type="date" id="a-date"></div>
+            <div class="form-row">
+              <div class="form-field"><label>Хэлтэс/нэгж</label>
+                <select id="a-dept"><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option><option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option><option>ДА</option><option>ХТЛА</option><option>ЗТТА</option><option>АТА</option><option>НҮА</option><option>ХҮТ</option><option>АЗА</option><option>ЗС</option><option>ЖС</option><option>ХС</option><option>СС</option><option>Бусад</option></select>
+              </div>
+              <div class="form-field"><label>Ажилтны нэр</label>
+                <input type="text" id="a-person" placeholder="Нэр бичих..." list="emp-list" autocomplete="off">
+                <datalist id="emp-list"></datalist>
+              </div>
+            </div>
           </div>
-          <div class="form-row">
-            <div class="form-field"><label>Хэлтэс/нэгж</label>
-              <select id="a-dept"><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option><option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option><option>ДА</option><option>ХТЛА</option><option>ЗТТА</option><option>АТА</option><option>НҮА</option><option>ХҮТ</option><option>АЗА</option><option>ЗС</option><option>ЖС</option><option>ХС</option><option>СС</option><option>Бусад</option></select>
-            </div>
-            <div class="form-field"><label>Ажилтны нэр</label>
-              <input type="text" id="a-person" placeholder="Нэр бичих..." list="emp-list" autocomplete="off">
-              <datalist id="emp-list"></datalist>
-            </div>
+          <!-- Даалгаварын мэдээлэл -->
+          <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:10px">
+            <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Даалгаварын мэдээлэл</div>
+            <div class="form-field" style="margin-bottom:8px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
+            <div class="form-field" style="margin-bottom:0"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
           </div>
-          <div class="form-field" style="margin-bottom:10px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
-          <div class="form-field" style="margin-bottom:10px"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
-          <div class="form-field" style="margin-bottom:12px"><label>Биелэх нэгжүүд</label><div class="uchk-wrap" id="units-check"></div></div>
+          <!-- Биелэх нэгжүүд -->
+          <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:12px">
+            <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Биелэх нэгжүүд</div>
+            <div class="uchk-wrap" id="units-check"></div>
+          </div>
           <div class="btn-row">
             <button class="btn-outline" onclick="selectAllUnits()">Бүгд сонгох</button>
             <button class="btn-primary" onclick="addTask()">✓ Нэмэх</button>
@@ -849,7 +861,12 @@ function showTab(name,el){
   if(name==='dashboard'){updateKPI();renderDashboard();}
   else if(name==='mine'){updateKPI();renderMyTasks();}
   else if(name==='admin'){renderAdminPills();renderAdminList();updateEmpDatalist();}
-  else if(name==='decision'){loadAndRenderDecisions();}
+  else if(name==='decision'){
+    document.getElementById('kpi-row').style.display='none';
+    loadAndRenderDecisions();
+  }
+  // KPI row харагдах/нуух
+  if(name!=='decision')document.getElementById('kpi-row').style.display='';
 }
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderMyTasks();}
 function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
@@ -1118,7 +1135,7 @@ function setDecFilter(f,btn){decFilter=f;document.querySelectorAll('#view-decisi
 function renderDecisions(){
   let ds=decisions;
   if(decFilter==='миний'){
-    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.resp||'').includes(cu.unit)));
+    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)||(r.resp||'').includes(cu.unit)));
   }else if(decFilter==='шинэ'){
     const last=localStorage.getItem('dec_view_'+cu.unit)||'';
     ds=ds.filter(d=>d.createdAt>last);
@@ -1154,16 +1171,25 @@ function renderDecCard(d){
       <table style="width:100%;border-collapse:collapse">
         <thead><tr style="background:#080d18">
           <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:32px">№</th>
-          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:25%">Хэлэлцсэн асуудал</th>
+          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:22%">Хэлэлцсэн асуудал</th>
           <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e">Гарсан шийдвэр</th>
-          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:150px">Хариуцах</th>
+          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:130px">Хариуцагч</th>
+          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:160px">Хуулах нэгж</th>
         </tr></thead>
         <tbody>
-          ${rows.map((r,i)=>`<tr style="border-bottom:1px solid #0b0f1a;${(r.resp||'').includes(cu.unit)?'background:rgba(30,58,95,.2)':''}">
+          ${rows.map((r,i)=>`<tr style="border-bottom:1px solid #0b0f1a;${(r.units||[]).includes(cu.unit)?'background:rgba(30,58,95,.2)':''}">
             <td style="padding:8px 12px;color:#4a6080;font-weight:700;font-size:12px">${i+1}</td>
             <td style="padding:8px 12px;color:#a8b8d0;font-size:12px;vertical-align:top">${r.topic||''}</td>
             <td style="padding:8px 12px;color:#e2e8f0;font-size:13px;vertical-align:top">${r.decision||''}</td>
-            <td style="padding:8px 12px;vertical-align:top"><span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600">👤 ${r.resp||'—'}</span></td>
+            <td style="padding:8px 12px;vertical-align:top">
+              ${r.resp?`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:3px">🏢 ${r.resp}</span><br>`:''}
+              ${r.person?`<span style="font-size:11px;color:#c8d5e8">👤 ${r.person}</span>`:''}
+            </td>
+            <td style="padding:8px 12px;vertical-align:top">
+              <div style="display:flex;flex-wrap:wrap;gap:3px">
+                ${(r.units||[]).map(u=>`<span style="padding:2px 6px;background:${u===cu.unit?'rgba(231,76,60,.2)':'#1a2540'};color:${u===cu.unit?'#f87171':'#7890a8'};border-radius:4px;font-size:10px;font-weight:${u===cu.unit?'700':'400'}">${u}</span>`).join('')}
+              </div>
+            </td>
           </tr>`).join('')}
         </tbody>
       </table>
@@ -1233,26 +1259,52 @@ function openDecModal(){
 function renderDecRowsModal(){
   const unitOpts=AU.map(u=>`<option value="${u}">${u}</option>`).join('');
   document.getElementById('dec-rows-wrap').innerHTML=decRows.map((r,i)=>`
-    <div style="display:flex;gap:8px;margin-bottom:8px;align-items:flex-start">
-      <div style="flex:1;display:flex;flex-direction:column;gap:5px">
-        <textarea placeholder="${i+1}. Хэлэлцсэн асуудал..." id="dr-topic-${i}" rows="2" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit;resize:vertical">${r.topic||''}</textarea>
+    <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:700;color:#4a6080;margin-bottom:8px;text-transform:uppercase">${i+1}-р асуудал</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <textarea placeholder="Хэлэлцсэн асуудал..." id="dr-topic-${i}" rows="2" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit;resize:vertical">${r.topic||''}</textarea>
         <textarea placeholder="Гарсан шийдвэр..." id="dr-dec-${i}" rows="3" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit;resize:vertical">${r.decision||''}</textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div>
+            <div style="font-size:10px;color:#4a6080;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцагч (нэр/албан тушаал)</div>
+            <input type="text" id="dr-person-${i}" placeholder="Хариуцагчийн нэр..." value="${r.person||''}" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#4a6080;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцах нэгж (жагсаалтаас)</div>
+            <select id="dr-resp-${i}" style="width:100%;padding:7px 8px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit">
+              <option value="">Нэгж сонгох...</option>${unitOpts}
+            </select>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#4a6080;margin-bottom:6px;font-weight:600;text-transform:uppercase">Хуулах нэгжүүд (олон сонгоно)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px" id="dr-units-${i}">
+            ${AU.map(u=>`<div onclick="toggleDecUnit(${i},'${u}',this)" style="padding:3px 9px;border:1.5px solid ${(r.units||[]).includes(u)?'#2563eb':'#1e293b'};border-radius:6px;font-size:11px;cursor:pointer;background:${(r.units||[]).includes(u)?'#1e3a5f':'#131c2e'};color:${(r.units||[]).includes(u)?'#93c5fd':'#64748b'};user-select:none;transition:all .15s;font-weight:${(r.units||[]).includes(u)?'700':'400'}">${u}</div>`).join('')}
+          </div>
+        </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:5px">
-        <select id="dr-resp-${i}" style="padding:7px 8px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit;width:140px">
-          <option value="">Хариуцагч...</option>${unitOpts}
-        </select>
-        <button onclick="removeDecRowModal(${i})" style="padding:6px;border:1px solid #1e293b;border-radius:6px;background:none;color:#4a6080;cursor:pointer;font-size:14px;transition:all .15s" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#4a6080'">×</button>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px">
+        <button onclick="removeDecRowModal(${i})" style="padding:5px 10px;border:1px solid #1e293b;border-radius:6px;background:none;color:#4a6080;cursor:pointer;font-size:12px;font-family:inherit">× Хасах</button>
       </div>
     </div>`).join('');
-  // Set selected values
+  // Set values
   decRows.forEach((_,i)=>{
     const rs=document.getElementById('dr-resp-'+i);
     if(rs&&decRows[i].resp)rs.value=decRows[i].resp;
   });
 }
-function addDecRowModal(){decRows.push({topic:'',decision:'',resp:''});renderDecRowsModal();}
+function addDecRowModal(){decRows.push({topic:'',decision:'',resp:'',person:'',units:[]});renderDecRowsModal();}
 function removeDecRowModal(i){decRows.splice(i,1);renderDecRowsModal();}
+function toggleDecUnit(i,u,el){
+  if(!decRows[i].units)decRows[i].units=[];
+  if(decRows[i].units.includes(u)){
+    decRows[i].units=decRows[i].units.filter(x=>x!==u);
+    el.style.background='#131c2e';el.style.borderColor='#1e293b';el.style.color='#64748b';el.style.fontWeight='400';
+  }else{
+    decRows[i].units.push(u);
+    el.style.background='#1e3a5f';el.style.borderColor='#2563eb';el.style.color='#93c5fd';el.style.fontWeight='700';
+  }
+}
 async function saveDecision(){
   const title=document.getElementById('df-title').value.trim();
   const num=document.getElementById('df-num').value.trim();
@@ -1263,9 +1315,12 @@ async function saveDecision(){
     const t=document.getElementById('dr-topic-'+i);
     const d=document.getElementById('dr-dec-'+i);
     const r=document.getElementById('dr-resp-'+i);
+    const p=document.getElementById('dr-person-'+i);
     if(t)decRows[i].topic=t.value.trim();
     if(d)decRows[i].decision=d.value.trim();
     if(r)decRows[i].resp=r.value;
+    if(p)decRows[i].person=p.value.trim();
+    // units are tracked via toggleDecUnit
   });
   const rows=decRows.filter(r=>r.decision);
   if(!rows.length){alert('Дор хаяж нэг шийдвэр оруулна уу!');return;}
