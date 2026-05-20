@@ -1150,8 +1150,12 @@ async function loadAndRenderDecisions(){
 function setDecFilter(f,btn){decFilter=f;document.querySelectorAll('#view-decision .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDecisions();}
 function renderDecisions(){
   let ds=decisions;
+  // Admin бус хэрэглэгч: зөвхөн өөрийн нэгжид шилжүүлсэн шийдвэр харна
+  if(!cu.isAdmin&&!cu.seeAll){
+    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)));
+  }
   if(decFilter==='миний'){
-    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)||(r.resp||'').includes(cu.unit)));
+    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)));
   }else if(decFilter==='шинэ'){
     const last=localStorage.getItem('dec_view_'+cu.unit)||'';
     ds=ds.filter(d=>d.createdAt>last);
@@ -1163,83 +1167,96 @@ function renderDecisions(){
 }
 function renderDecCard(d){
   const rows=d.rows||[];
-  const myRows=rows.filter(r=>(r.resp||'').includes(cu.unit));
+  // Хэрэглэгчийн нэгжид хамаарах мөрүүд
+  const myRows=cu.isAdmin||cu.seeAll?rows:rows.filter(r=>(r.units||[]).includes(cu.unit));
   const last=localStorage.getItem('dec_view_'+cu.unit)||'';
   const isNew=d.createdAt>last;
-  return`<div style="background:#0f1520;border:1px solid #1a2540;border-radius:10px;margin-bottom:12px;overflow:hidden">
-    <div style="padding:14px 16px;border-bottom:1px solid #131c2e;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+  return`<div style="background:#0f1520;border:1px solid #1a2540;border-radius:10px;margin-bottom:10px;cursor:pointer;transition:border-color .15s" onmouseenter="this.style.borderColor='#2563eb'" onmouseleave="this.style.borderColor='#1a2540'" onclick="openDecDetail('${d.id}')">
+    <div style="padding:14px 16px;display:flex;align-items:center;gap:12px">
       <div style="flex:1">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
           <span style="background:#1e3a5f;color:#93c5fd;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700">${d.num||'—'}</span>
           ${isNew?`<span style="background:rgba(231,76,60,.2);color:#f87171;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700">ШИНЭ</span>`:''}
           <span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📅 ${d.date||'—'}</span>
           ${d.loc?`<span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📍 ${d.loc}</span>`:''}
+          <span style="background:#131c2e;color:#4a6080;padding:3px 8px;border-radius:6px;font-size:11px">${rows.length} асуудал</span>
+          ${myRows.length&&!cu.isAdmin?`<span style="background:rgba(231,76,60,.15);color:#fca5a5;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600">📌 ${myRows.length} шийдвэр</span>`:''}
         </div>
         <div style="font-size:14px;font-weight:600;color:#e2e8f0;line-height:1.4">${d.title||'—'}</div>
-        ${myRows.length?`<div style="margin-top:6px"><span style="background:rgba(231,76,60,.15);color:#fca5a5;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600">📌 Таны нэгжид ${myRows.length} шийдвэр хамаарна</span></div>`:''}
       </div>
-      <div style="display:flex;gap:6px;flex-shrink:0">
+      <div style="display:flex;gap:6px;flex-shrink:0" onclick="event.stopPropagation()">
         <button class="btn-outline" onclick="openDecDetail('${d.id}')">👁 Харах</button>
-        ${cu.isAdmin?`<button class="del-btn" onclick="deleteDecision('${d.id}')">🗑</button>`:''}
+        ${cu.isAdmin?`<button class="btn-outline" onclick="openDecEdit('${d.id}')">✏️</button><button class="del-btn" onclick="deleteDecision('${d.id}')">🗑</button>`:''}
       </div>
-    </div>
-    <div style="overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse">
-        <thead><tr style="background:#080d18">
-          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:32px">№</th>
-          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:22%">Хэлэлцсэн асуудал</th>
-          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e">Гарсан шийдвэр</th>
-          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:130px">Хариуцагч</th>
-          <th style="padding:8px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e;width:160px">Хуулах нэгж</th>
-        </tr></thead>
-        <tbody>
-          ${rows.map((r,i)=>`<tr style="border-bottom:1px solid #0b0f1a;${(r.units||[]).includes(cu.unit)?'background:rgba(30,58,95,.2)':''}">
-            <td style="padding:8px 12px;color:#4a6080;font-weight:700;font-size:12px">${i+1}</td>
-            <td style="padding:8px 12px;color:#a8b8d0;font-size:12px;vertical-align:top">${r.topic||''}</td>
-            <td style="padding:8px 12px;color:#e2e8f0;font-size:13px;vertical-align:top">${r.decision||''}</td>
-            <td style="padding:8px 12px;vertical-align:top">
-              ${r.resp?`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:3px">🏢 ${r.resp}</span><br>`:''}
-              ${r.person?`<span style="font-size:11px;color:#c8d5e8">👤 ${r.person}</span>`:''}
-            </td>
-            <td style="padding:8px 12px;vertical-align:top">
-              <div style="display:flex;flex-wrap:wrap;gap:3px">
-                ${(r.units||[]).map(u=>`<span style="padding:2px 6px;background:${u===cu.unit?'rgba(231,76,60,.2)':'#1a2540'};color:${u===cu.unit?'#f87171':'#7890a8'};border-radius:4px;font-size:10px;font-weight:${u===cu.unit?'700':'400'}">${u}</span>`).join('')}
-              </div>
-            </td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
     </div>
   </div>`;
 }
 function openDecDetail(id){
   const d=decisions.find(x=>x.id===id);if(!d)return;
-  const rows=d.rows||[];
-  document.getElementById('dec-detail-title').textContent=d.title||'Шийдвэр';
+  const allRows=d.rows||[];
+  // Нэгж хэрэглэгч: зөвхөн өөрийн нэгжид хамаарах мөрүүд
+  const rows=cu.isAdmin||cu.seeAll?allRows:allRows.filter(r=>(r.units||[]).includes(cu.unit));
+  document.getElementById('dec-detail-title').textContent=d.num+' — '+d.title;
   document.getElementById('dec-detail-body').innerHTML=`
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
       <span style="background:#1e3a5f;color:#93c5fd;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700">${d.num||''}</span>
       <span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📅 ${d.date||'—'}</span>
       ${d.loc?`<span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📍 ${d.loc}</span>`:''}
     </div>
-    <div style="font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:14px;line-height:1.4">${d.title||''}</div>
-    <table style="width:100%;border-collapse:collapse;border:1px solid #1a2540;border-radius:8px;overflow:hidden">
+    <div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:14px;line-height:1.4">${d.title||''}</div>
+    ${rows.length?`<table style="width:100%;border-collapse:collapse;border:1px solid #1a2540;border-radius:8px;overflow:hidden">
       <thead><tr style="background:#080d18">
         <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:32px">№</th>
-        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:25%">Хэлэлцсэн асуудал</th>
+        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:22%">Хэлэлцсэн асуудал</th>
         <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540">Гарсан шийдвэр</th>
-        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:150px">Хариуцах</th>
+        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:130px">Хариуцагч</th>
+        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:150px">Шилжүүлэх нэгж</th>
       </tr></thead>
       <tbody>
-        ${rows.map((r,i)=>`<tr style="border-bottom:1px solid #131c2e;${(r.resp||'').includes(cu.unit)?'background:rgba(30,58,95,.25)':''}">
+        ${rows.map((r,i)=>`<tr style="border-bottom:1px solid #131c2e;${(r.units||[]).includes(cu.unit)?'background:rgba(30,58,95,.25)':''}">
           <td style="padding:10px 12px;color:#4a6080;font-weight:700">${i+1}</td>
-          <td style="padding:10px 12px;color:#a8b8d0;vertical-align:top">${r.topic||''}</td>
-          <td style="padding:10px 12px;color:#e2e8f0;vertical-align:top">${r.decision||''}</td>
-          <td style="padding:10px 12px;vertical-align:top"><span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600">👤 ${r.resp||'—'}</span></td>
+          <td style="padding:10px 12px;color:#a8b8d0;vertical-align:top;font-size:13px">${r.topic||''}</td>
+          <td style="padding:10px 12px;color:#e2e8f0;vertical-align:top;font-size:13px">${r.decision||''}</td>
+          <td style="padding:10px 12px;vertical-align:top">
+            ${r.resp?`<div style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:3px">🏢 ${r.resp}</div>`:''}
+            ${r.person?`<div style="font-size:11px;color:#c8d5e8;margin-top:2px">👤 ${r.person}</div>`:''}
+          </td>
+          <td style="padding:10px 12px;vertical-align:top">
+            <div style="display:flex;flex-wrap:wrap;gap:3px">
+              ${(r.units||[]).map(u=>`<span style="padding:2px 7px;background:${u===cu.unit?'rgba(231,76,60,.2)':'#1a2540'};color:${u===cu.unit?'#f87171':'#7890a8'};border-radius:4px;font-size:10px;font-weight:${u===cu.unit?'700':'400'}">${u}</span>`).join('')}
+            </div>
+          </td>
         </tr>`).join('')}
       </tbody>
-    </table>`;
+    </table>`:`<div style="text-align:center;padding:2rem;color:#4a6080;font-size:13px">Таны нэгжид хамаарах шийдвэр байхгүй байна</div>`}`;
   document.getElementById('dec-detail-modal').classList.add('open');
+}
+function openDecEdit(id){
+  const d=decisions.find(x=>x.id===id);if(!d)return;
+  decRows=(d.rows||[]).map(r=>({...r,units:[...(r.units||[])]}));
+  const unitOpts=AU.map(u=>`<option value="${u}">${u}</option>`).join('');
+  document.getElementById('dec-add-modal').classList.add('open');
+  document.getElementById('dec-modal-title').textContent='✏️ Шийдвэр засах';
+  document.getElementById('dec-modal-body').innerHTML=`
+    <input type="hidden" id="df-edit-id" value="${id}">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Огноо</label>
+        <input type="date" id="df-date" value="${d.date||''}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+      <div><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Дугаар</label>
+        <input type="text" id="df-num" value="${d.num||''}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+    </div>
+    <div style="margin-bottom:10px"><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Гарчиг</label>
+      <input type="text" id="df-title" value="${(d.title||'').replace(/"/g,'&quot;')}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+    <div style="margin-bottom:12px"><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Байршил</label>
+      <input type="text" id="df-loc" value="${d.loc||''}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+    <div style="font-size:11px;font-weight:700;color:#4a6080;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Шийдвэрийн мөрүүд</div>
+    <div id="dec-rows-wrap"></div>
+    <button onclick="addDecRowModal()" style="width:100%;padding:7px;border:1.5px dashed #1e293b;border-radius:8px;background:none;color:#4a6080;cursor:pointer;font-size:12px;font-family:inherit;margin-top:4px">＋ Шийдвэр нэмэх</button>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #1a2540">
+      <button class="btn-outline" onclick="closeModal('dec-add-modal')">Болих</button>
+      <button class="btn-primary" onclick="saveDecision()">✓ Хадгалах</button>
+    </div>`;
+  renderDecRowsModal();
 }
 async function deleteDecision(id){
   if(!confirm('Устгах уу?'))return;
@@ -1293,7 +1310,7 @@ function renderDecRowsModal(){
           </div>
         </div>
         <div>
-          <div style="font-size:10px;color:#4a6080;margin-bottom:6px;font-weight:600;text-transform:uppercase">Хуулах нэгжүүд (олон сонгоно)</div>
+          <div style="font-size:10px;color:#4a6080;margin-bottom:6px;font-weight:600;text-transform:uppercase">Шилжүүлэх нэгжүүд (олон сонгоно)</div>
           <div style="display:flex;flex-wrap:wrap;gap:4px" id="dr-units-${i}">
             ${AU.map(u=>`<div onclick="toggleDecUnit(${i},'${u}',this)" style="padding:3px 9px;border:1.5px solid ${(r.units||[]).includes(u)?'#2563eb':'#1e293b'};border-radius:6px;font-size:11px;cursor:pointer;background:${(r.units||[]).includes(u)?'#1e3a5f':'#131c2e'};color:${(r.units||[]).includes(u)?'#93c5fd':'#64748b'};user-select:none;transition:all .15s;font-weight:${(r.units||[]).includes(u)?'700':'400'}">${u}</div>`).join('')}
           </div>
@@ -1342,7 +1359,12 @@ async function saveDecision(){
   if(!rows.length){alert('Дор хаяж нэг шийдвэр оруулна уу!');return;}
   syncUI('saving','Хадгалж байна...');
   try{
-    await DCOL.add({title,num,date,loc,rows,createdAt:new Date().toISOString(),createdBy:cu.name});
+    const editId=document.getElementById('df-edit-id')?.value;
+    if(editId){
+      await DCOL.doc(editId).update({title,num,date,loc,rows,updatedAt:new Date().toISOString()});
+    }else{
+      await DCOL.add({title,num,date,loc,rows,createdAt:new Date().toISOString(),createdBy:cu.name});
+    }
     syncUI('ok','✓ Хадгалагдлаа');
     closeModal('dec-add-modal');
     await loadAndRenderDecisions();
