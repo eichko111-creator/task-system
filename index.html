@@ -166,13 +166,11 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
 .dl-toast-item:last-child{border-bottom:none}
 /* PRINT */
 @media print{
-  .sidebar,.topbar,.filter-row,.sub-tabs,.kpi-row,#loading-screen,.sync,.dl-toast,.btn-row{display:none!important}
-  body{background:#fff;font-size:11px}
-  .container{padding:0}
-  .task-card{break-inside:avoid;border:1px solid #ddd;margin-bottom:6px}
-  .print-header{display:block!important}
+  body *{visibility:hidden}
+  #print-template,#print-template *{visibility:visible}
+  #print-template{display:block!important;position:fixed;inset:0;background:#fff;color:#000;padding:20px 24px;z-index:9999}
 }
-.print-header{display:none;text-align:center;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #1a1a2e}
+.print-header{display:none}
 </style>
 </head>
 <body>
@@ -246,9 +244,11 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
     <div class="topbar">
       <div class="topbar-title" id="topbar-title">Нүүр</div>
       <div class="topbar-right">
-        <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
-        <div class="month-pills" id="top-month-pills"></div>
-        <span id="topbar-month-label" style="font-size:12px;font-weight:700;color:#e74c3c;white-space:nowrap"></span>
+        <div id="month-section" style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
+          <div class="month-pills" id="top-month-pills"></div>
+          <span id="topbar-month-label" style="font-size:12px;font-weight:700;color:#e74c3c;white-space:nowrap"></span>
+        </div>
         <button id="admin-add-toggle" style="display:none;padding:6px 14px;background:#1e3a5f;color:#93c5fd;border:1px solid #2563eb;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit" onclick="toggleAddSection()">➕ Нэмэх</button>
       </div>
     </div>
@@ -416,6 +416,31 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
   </div>
 </div>
 
+
+<!-- DECISION DETAIL - Full page view -->
+<div id="dec-detail-page" style="display:none;position:fixed;inset:0;background:#0b0f1a;z-index:200;overflow-y:auto">
+  <div style="max-width:900px;margin:0 auto;padding:20px 24px">
+    <!-- Topbar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #1a2540">
+      <button onclick="closeDecDetail()" style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:#131c2e;color:#7890a8;border:1px solid #1a2540;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit">← Буцах</button>
+      <div style="display:flex;gap:8px">
+        <button id="dec-edit-btn" style="display:none;padding:7px 14px;background:#1e3a5f;color:#93c5fd;border:1px solid #2563eb;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit" onclick="openDecEditFromDetail()">✏️ Засах</button>
+        <button onclick="printDecDetail()" style="padding:7px 14px;background:rgba(39,174,96,.15);color:#4ade80;border:1px solid rgba(39,174,96,.3);border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit">🖨 Хэвлэх</button>
+      </div>
+    </div>
+    <!-- Detail content -->
+    <div id="dec-detail-content"></div>
+  </div>
+</div>
+
+<!-- PRINT TEMPLATE (hidden, only for print) -->
+<div id="print-template" style="display:none"></div>
+  <div class="modal">
+    <div class="modal-head"><h3>Даалгавар засах</h3><button class="modal-close" onclick="closeModal('edit-modal')">×</button></div>
+    <div id="edit-modal-body"></div>
+  </div>
+</div>
+
 <!-- EDIT TASK MODAL -->
 <div class="modal-bg" id="edit-modal">
   <div class="modal">
@@ -423,8 +448,6 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
     <div id="edit-modal-body"></div>
   </div>
 </div>
-
-<!-- DECISION ADD MODAL -->
 <div class="modal-bg" id="dec-add-modal">
   <div class="modal" style="max-width:720px">
     <div class="modal-head"><h3 id="dec-modal-title">📋 Шинэ хурлын шийдвэр</h3><button class="modal-close" onclick="closeModal('dec-add-modal')">×</button></div>
@@ -871,7 +894,12 @@ function showTab(name,el){
   else if(name==='mine'){updateKPI();renderMyTasks();if(cu&&cu.isAdmin){renderAdminPills();renderAdminList();updateEmpDatalist();}}
   else if(name==='decision'){
     document.getElementById('kpi-row').style.display='none';
+    document.getElementById('month-section').style.display='none';
     loadAndRenderDecisions();
+  }
+  if(name!=='decision'){
+    document.getElementById('kpi-row').style.display='';
+    document.getElementById('month-section').style.display='flex';
   }
   const addBtn=document.getElementById('admin-add-toggle');
   if(addBtn)addBtn.style.display=(name==='mine'&&cu&&cu.isAdmin)?'block':'none';
@@ -1166,70 +1194,134 @@ function renderDecisions(){
   try{localStorage.setItem('dec_view_'+cu.unit,new Date().toISOString());}catch(e){}
 }
 function renderDecCard(d){
-  const rows=d.rows||[];
-  // Хэрэглэгчийн нэгжид хамаарах мөрүүд
-  const myRows=cu.isAdmin||cu.seeAll?rows:rows.filter(r=>(r.units||[]).includes(cu.unit));
+  const allRows=d.rows||[];
+  const myRows=cu.isAdmin||cu.seeAll?allRows:allRows.filter(r=>(r.units||[]).includes(cu.unit));
   const last=localStorage.getItem('dec_view_'+cu.unit)||'';
   const isNew=d.createdAt>last;
-  return`<div style="background:#0f1520;border:1px solid #1a2540;border-radius:10px;margin-bottom:10px;cursor:pointer;transition:border-color .15s" onmouseenter="this.style.borderColor='#2563eb'" onmouseleave="this.style.borderColor='#1a2540'" onclick="openDecDetail('${d.id}')">
-    <div style="padding:14px 16px;display:flex;align-items:center;gap:12px">
+  return`<div id="dc-${d.id}" style="background:#0f1520;border:1px solid #1a2540;border-radius:10px;margin-bottom:10px;overflow:hidden;transition:border-color .15s">
+    <div style="padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="toggleDecCard('${d.id}')">
       <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap">
           <span style="background:#1e3a5f;color:#93c5fd;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700">${d.num||'—'}</span>
           ${isNew?`<span style="background:rgba(231,76,60,.2);color:#f87171;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700">ШИНЭ</span>`:''}
           <span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📅 ${d.date||'—'}</span>
           ${d.loc?`<span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📍 ${d.loc}</span>`:''}
-          <span style="background:#131c2e;color:#4a6080;padding:3px 8px;border-radius:6px;font-size:11px">${rows.length} асуудал</span>
-          ${myRows.length&&!cu.isAdmin?`<span style="background:rgba(231,76,60,.15);color:#fca5a5;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600">📌 ${myRows.length} шийдвэр</span>`:''}
+          ${!cu.isAdmin&&!cu.seeAll&&myRows.length?`<span style="background:rgba(231,76,60,.15);color:#fca5a5;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600">📌 ${myRows.length} шийдвэр</span>`:''}
         </div>
-        <div style="font-size:14px;font-weight:600;color:#e2e8f0;line-height:1.4">${d.title||'—'}</div>
+        <div style="font-size:15px;font-weight:600;color:#e2e8f0;line-height:1.4">${d.title||'—'}</div>
       </div>
-      <div style="display:flex;gap:6px;flex-shrink:0" onclick="event.stopPropagation()">
-        <button class="btn-outline" onclick="openDecDetail('${d.id}')">👁 Харах</button>
+      <div style="display:flex;gap:6px;flex-shrink:0;align-items:center" onclick="event.stopPropagation()">
+        <button onclick="printDecisionById('${d.id}')" style="padding:5px 10px;background:rgba(39,174,96,.15);color:#4ade80;border:1px solid rgba(39,174,96,.3);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">🖨</button>
         ${cu.isAdmin?`<button class="btn-outline" onclick="openDecEdit('${d.id}')">✏️</button><button class="del-btn" onclick="deleteDecision('${d.id}')">🗑</button>`:''}
+        <span id="dc-arrow-${d.id}" style="color:#4a6080;font-size:16px;transition:transform .2s">▼</span>
       </div>
+    </div>
+    <div id="dc-body-${d.id}" style="display:none;border-top:1px solid #131c2e;overflow-x:auto">
+      ${myRows.length?`<table style="width:100%;border-collapse:collapse">
+        <thead><tr style="background:#080d18">
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;width:36px;border-bottom:1px solid #131c2e">№</th>
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;width:24%;border-bottom:1px solid #131c2e">Хэлэлцсэн асуудал</th>
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e">Гарсан шийдвэр</th>
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;width:140px;border-bottom:1px solid #131c2e">Хариуцагч</th>
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;width:150px;border-bottom:1px solid #131c2e">Шилжүүлэх нэгж</th>
+        </tr></thead>
+        <tbody>
+          ${myRows.map((r,i)=>`<tr style="border-bottom:1px solid #0b0f1a;${(r.units||[]).includes(cu.unit)?'background:rgba(30,58,95,.2)':''}">
+            <td style="padding:10px 12px;color:#4a6080;font-weight:700">${i+1}</td>
+            <td style="padding:10px 12px;color:#a8b8d0;font-size:13px;vertical-align:top">${r.topic||''}</td>
+            <td style="padding:10px 12px;color:#e2e8f0;font-size:13px;vertical-align:top;line-height:1.5">${r.decision||''}</td>
+            <td style="padding:10px 12px;vertical-align:top">
+              ${r.resp?`<div style="padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:3px;display:inline-block">🏢 ${r.resp}</div>`:''}
+              ${r.person?`<div style="font-size:11px;color:#c8d5e8;margin-top:2px">👤 ${r.person}</div>`:''}
+            </td>
+            <td style="padding:10px 12px;vertical-align:top">
+              <div style="display:flex;flex-wrap:wrap;gap:3px">
+                ${(r.units||[]).map(u=>`<span style="padding:2px 7px;background:${u===cu.unit?'rgba(231,76,60,.2)':'#1a2540'};color:${u===cu.unit?'#f87171':'#7890a8'};border-radius:4px;font-size:10px;font-weight:${u===cu.unit?'700':'400'}">${u}</span>`).join('')}
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`:`<div style="padding:20px;text-align:center;color:#4a6080;font-size:13px">Таны нэгжид хамаарах шийдвэр байхгүй</div>`}
     </div>
   </div>`;
 }
-function openDecDetail(id){
+
+function toggleDecCard(id){
+  const body=document.getElementById('dc-body-'+id);
+  const arrow=document.getElementById('dc-arrow-'+id);
+  const card=document.getElementById('dc-'+id);
+  const isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'block';
+  arrow.style.transform=isOpen?'':'rotate(180deg)';
+  card.style.borderColor=isOpen?'#1a2540':'#2563eb';
+}
+
+function openDecDetail(id){toggleDecCard(id);}
+
+function printDecisionById(id){
   const d=decisions.find(x=>x.id===id);if(!d)return;
   const allRows=d.rows||[];
-  // Нэгж хэрэглэгч: зөвхөн өөрийн нэгжид хамаарах мөрүүд
   const rows=cu.isAdmin||cu.seeAll?allRows:allRows.filter(r=>(r.units||[]).includes(cu.unit));
-  document.getElementById('dec-detail-title').textContent=d.num+' — '+d.title;
-  document.getElementById('dec-detail-body').innerHTML=`
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-      <span style="background:#1e3a5f;color:#93c5fd;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700">${d.num||''}</span>
-      <span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📅 ${d.date||'—'}</span>
-      ${d.loc?`<span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📍 ${d.loc}</span>`:''}
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>${d.num} - Хурлын шийдвэр</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Times New Roman',serif}
+    body{padding:20px 30px;color:#000;font-size:11pt}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;border-bottom:2px solid #000;padding-bottom:10px}
+    .logo-area{display:flex;align-items:center;gap:10px}
+    .logo-triangle{width:0;height:0;border-left:22px solid transparent;border-right:22px solid transparent;border-bottom:38px solid #f90;margin-right:4px}
+    .company-name{font-size:14pt;font-weight:700;line-height:1.2}
+    .doc-num{font-size:10pt;color:#555;text-align:right}
+    .main-title{text-align:center;margin:14px 0 6px;font-size:13pt;font-weight:700;text-transform:uppercase;line-height:1.4}
+    .sub-info{display:flex;justify-content:space-between;margin-bottom:16px;font-size:10pt}
+    .sub-info span{color:#333}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th{border:1px solid #000;padding:8px 10px;background:#f5f5f5;font-weight:700;font-size:10pt;text-align:center;vertical-align:middle}
+    td{border:1px solid #000;padding:8px 10px;font-size:10pt;vertical-align:top;line-height:1.5}
+    .td-num{text-align:center;width:36px}
+    .footer{margin-top:30px;display:flex;justify-content:space-between;font-size:10pt}
+    @media print{body{padding:10px 20px}}
+  </style></head><body>
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-triangle"></div>
+      <div>
+        <div class="company-name">Хурлын шийдвэрийн маягт</div>
+        <div style="font-size:9pt;color:#555">ДСЦТС ХК</div>
+      </div>
     </div>
-    <div style="font-size:15px;font-weight:600;color:#e2e8f0;margin-bottom:14px;line-height:1.4">${d.title||''}</div>
-    ${rows.length?`<table style="width:100%;border-collapse:collapse;border:1px solid #1a2540;border-radius:8px;overflow:hidden">
-      <thead><tr style="background:#080d18">
-        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:32px">№</th>
-        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:22%">Хэлэлцсэн асуудал</th>
-        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540">Гарсан шийдвэр</th>
-        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:130px">Хариуцагч</th>
-        <th style="padding:10px 12px;font-size:10px;color:#4a6080;text-align:left;border-bottom:1px solid #1a2540;width:150px">Шилжүүлэх нэгж</th>
-      </tr></thead>
-      <tbody>
-        ${rows.map((r,i)=>`<tr style="border-bottom:1px solid #131c2e;${(r.units||[]).includes(cu.unit)?'background:rgba(30,58,95,.25)':''}">
-          <td style="padding:10px 12px;color:#4a6080;font-weight:700">${i+1}</td>
-          <td style="padding:10px 12px;color:#a8b8d0;vertical-align:top;font-size:13px">${r.topic||''}</td>
-          <td style="padding:10px 12px;color:#e2e8f0;vertical-align:top;font-size:13px">${r.decision||''}</td>
-          <td style="padding:10px 12px;vertical-align:top">
-            ${r.resp?`<div style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:3px">🏢 ${r.resp}</div>`:''}
-            ${r.person?`<div style="font-size:11px;color:#c8d5e8;margin-top:2px">👤 ${r.person}</div>`:''}
-          </td>
-          <td style="padding:10px 12px;vertical-align:top">
-            <div style="display:flex;flex-wrap:wrap;gap:3px">
-              ${(r.units||[]).map(u=>`<span style="padding:2px 7px;background:${u===cu.unit?'rgba(231,76,60,.2)':'#1a2540'};color:${u===cu.unit?'#f87171':'#7890a8'};border-radius:4px;font-size:10px;font-weight:${u===cu.unit?'700':'400'}">${u}</span>`).join('')}
-            </div>
-          </td>
-        </tr>`).join('')}
-      </tbody>
-    </table>`:`<div style="text-align:center;padding:2rem;color:#4a6080;font-size:13px">Таны нэгжид хамаарах шийдвэр байхгүй байна</div>`}`;
-  document.getElementById('dec-detail-modal').classList.add('open');
+    <div class="doc-num">ДСЦТСХК-М-021-01</div>
+  </div>
+  <div class="main-title">${d.title||''}</div>
+  <div class="sub-info">
+    <span>${d.date||''}</span>
+    <span>${d.num||''}</span>
+    <span>${d.loc||''}</span>
+  </div>
+  <table>
+    <thead><tr>
+      <th class="td-num">№</th>
+      <th style="width:25%">Хэлэлцүүлсэн асуудал</th>
+      <th>Хурлаас гарсан шийдвэр</th>
+      <th style="width:18%">Хариуцах албан тушаалтан</th>
+    </tr></thead>
+    <tbody>
+      ${rows.map((r,i)=>`<tr>
+        <td class="td-num">${i+1}</td>
+        <td>${r.topic||''}</td>
+        <td>${r.decision||''}</td>
+        <td style="text-align:center">${r.resp?r.resp+'\n':''} ${r.person?'<br>'+r.person:''}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+  <div class="footer">
+    <div>Бэлтгэсэн: ${d.createdBy||''}</div>
+    <div>Огноо: ${d.date||''}</div>
+  </div>
+  <script>window.onload=()=>{window.print();}<\/script>
+  </body></html>`);
+  w.document.close();
 }
 function openDecEdit(id){
   const d=decisions.find(x=>x.id===id);if(!d)return;
