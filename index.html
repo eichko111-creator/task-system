@@ -360,7 +360,8 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
             <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:10px">
               <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Даалгаварын мэдээлэл</div>
               <div class="form-field" style="margin-bottom:8px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
-              <div class="form-field" style="margin-bottom:0"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
+              <div class="form-field" style="margin-bottom:8px"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
+              <div class="form-field" style="margin-bottom:0"><label>Даалгаврын төрөл</label><select id="a-tasktype"><option value="шуурхай">⚡ Шуурхайгаас өгсөн</option><option value="тайлан">📄 Тайлан хамгаалалтаас өгсөн</option></select></div>
             </div>
             <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:12px">
               <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Биелэх нэгжүүд</div>
@@ -387,6 +388,11 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
           <button class="stab active" onclick="setSubTab('all',this)">📋 Бүгд <span id="tab-all-cnt" style="font-size:10px;opacity:.7"></span></button>
           <button class="stab" onclick="setSubTab('received',this)">📥 Надад өгсөн <span id="tab-recv-cnt" style="font-size:10px;opacity:.7"></span></button>
           <button class="stab" onclick="setSubTab('given',this)">📤 Миний өгсөн <span id="tab-given-cnt" style="font-size:10px;opacity:.7"></span></button>
+        </div>
+        <!-- Даалгаврын төрлийн шүүлт -->
+        <div class="sub-tabs" style="margin-bottom:10px">
+          <button class="stab active" id="ttype-all" onclick="setTaskType('шуурхай',this)">⚡ Шуурхайгаас өгсөн</button>
+          <button class="stab" id="ttype-report" onclick="setTaskType('тайлан',this)">📄 Тайлан хамгаалалтаас өгсөн</button>
         </div>
         <div class="filter-row">
           <button class="fpill active" onclick="setFilter('бүгд',this)">Бүгд</button>
@@ -424,7 +430,7 @@ body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-heig
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #1a2540">
       <button onclick="closeDecDetail()" style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:#131c2e;color:#7890a8;border:1px solid #1a2540;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit">← Буцах</button>
       <div style="display:flex;gap:8px">
-        <button id="dec-edit-btn" style="display:none;padding:7px 14px;background:#1e3a5f;color:#93c5fd;border:1px solid #2563eb;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit" onclick="openDecEditFromDetail()">✏️ Засах</button>
+        
         <button onclick="printDecDetail()" style="padding:7px 14px;background:rgba(39,174,96,.15);color:#4ade80;border:1px solid rgba(39,174,96,.3);border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit">🖨 Хэвлэх</button>
       </div>
     </div>
@@ -686,7 +692,7 @@ const INIT=[
 ];
 
 let cu=null,tasks=[],prog={},empList=[],nid=300;
-let bFilter='бүгд',actMonths=[],subTab='all',selUnits=[];
+let bFilter='бүгд',actMonths=[],subTab='all',selUnits=[],taskTypeFilter='шуурхай';
 let dC=null,uCC=null,pctC2=null,saveT=null;
 
 // ===== UTILS =====
@@ -905,7 +911,8 @@ function showTab(name,el){
   if(addBtn)addBtn.style.display=(name==='mine'&&cu&&cu.isAdmin)?'block':'none';
 }
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderMyTasks();}
-function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
+function setSubTab(s,btn){subTab=s;document.querySelectorAll('#sub-tabs-wrap .stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
+function setTaskType(t,btn){taskTypeFilter=t;document.querySelectorAll('.sub-tabs:not(#sub-tabs-wrap) .stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
 function renderTopPills(){
   const ms=getMonths();
   const allAct=actMonths.length===0;
@@ -1070,6 +1077,8 @@ function renderMyTasks(){
   }
   // KPI-г таб-ын filtered tasks-аар шинэчлэх
   updateKPI(ts);
+  // Даалгаврын төрлийн шүүлт
+  ts=ts.filter(t=>(t.taskType||'шуурхай')===(taskTypeFilter));
   ts=ts.filter(t=>{
     const p=calcAvg(t);
     if(bFilter==='биелээгүй')return p===0;
@@ -1180,10 +1189,10 @@ function renderDecisions(){
   let ds=decisions;
   // Admin бус хэрэглэгч: зөвхөн өөрийн нэгжид шилжүүлсэн шийдвэр харна
   if(!cu.isAdmin&&!cu.seeAll){
-    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)));
+    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)||(r.resp||'')===(cu.unit)||(r.respUnits||[]).includes(cu.unit)));
   }
   if(decFilter==='миний'){
-    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)));
+    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)||(r.resp||'')===(cu.unit)||(r.respUnits||[]).includes(cu.unit)));
   }else if(decFilter==='шинэ'){
     const last=localStorage.getItem('dec_view_'+cu.unit)||'';
     ds=ds.filter(d=>d.createdAt>last);
@@ -1195,7 +1204,7 @@ function renderDecisions(){
 }
 function renderDecCard(d){
   const allRows=d.rows||[];
-  const myRows=cu.isAdmin||cu.seeAll?allRows:allRows.filter(r=>(r.units||[]).includes(cu.unit));
+  const myRows=cu.isAdmin||cu.seeAll?allRows:allRows.filter(r=>(r.units||[]).includes(cu.unit)||(r.resp||'')===(cu.unit)||(r.respUnits||[]).includes(cu.unit));
   const last=localStorage.getItem('dec_view_'+cu.unit)||'';
   const isNew=d.createdAt>last;
   return`<div id="dc-${d.id}" style="background:#0f1520;border:1px solid #1a2540;border-radius:10px;margin-bottom:10px;overflow:hidden;transition:border-color .15s">
@@ -1231,7 +1240,7 @@ function renderDecCard(d){
             <td style="padding:10px 12px;color:#a8b8d0;font-size:13px;vertical-align:top">${r.topic||''}</td>
             <td style="padding:10px 12px;color:#e2e8f0;font-size:13px;vertical-align:top;line-height:1.5">${r.decision||''}</td>
             <td style="padding:10px 12px;vertical-align:top">
-              ${r.resp?`<div style="padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:3px;display:inline-block">🏢 ${r.resp}</div>`:''}
+              ${(r.respUnits&&r.respUnits.length?r.respUnits:[r.resp].filter(Boolean)).map(ru=>`<div style="padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:3px;display:inline-block">🏢 ${ru}</div>`).join('')}
               ${r.person?`<div style="font-size:11px;color:#c8d5e8;margin-top:2px">👤 ${r.person}</div>`:''}
             </td>
             <td style="padding:10px 12px;vertical-align:top">
@@ -1325,7 +1334,7 @@ function printDecisionById(id){
 }
 function openDecEdit(id){
   const d=decisions.find(x=>x.id===id);if(!d)return;
-  decRows=(d.rows||[]).map(r=>({...r,units:[...(r.units||[])]}));
+  decRows=(d.rows||[]).map(r=>({...r,units:[...(r.units||[])],respUnits:[...(r.respUnits||[r.resp].filter(Boolean))]}));
   const unitOpts=AU.map(u=>`<option value="${u}">${u}</option>`).join('');
   document.getElementById('dec-add-modal').classList.add('open');
   document.getElementById('dec-modal-title').textContent='✏️ Шийдвэр засах';
@@ -1395,10 +1404,8 @@ function renderDecRowsModal(){
             <input type="text" id="dr-person-${i}" placeholder="Хариуцагчийн нэр..." value="${r.person||''}" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit">
           </div>
           <div>
-            <div style="font-size:10px;color:#4a6080;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцах нэгж (жагсаалтаас)</div>
-            <select id="dr-resp-${i}" style="width:100%;padding:7px 8px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit">
-              <option value="">Нэгж сонгох...</option>${unitOpts}
-            </select>
+            <div style="font-size:10px;color:#4a6080;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцах нэгж (олон сонгоно)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px" id="dr-resp-units-${i}">${AU.map(u=>`<div onclick="toggleRespUnit(${i},'${u}',this)" style="padding:3px 9px;border:1.5px solid ${(r.respUnits||[r.resp].filter(Boolean)).includes(u)?'#7c3aed':'#1e293b'};border-radius:6px;font-size:11px;cursor:pointer;background:${(r.respUnits||[r.resp].filter(Boolean)).includes(u)?'#2e1065':'#131c2e'};color:${(r.respUnits||[r.resp].filter(Boolean)).includes(u)?'#c4b5fd':'#64748b'};user-select:none;transition:all .15s;font-weight:${(r.respUnits||[r.resp].filter(Boolean)).includes(u)?'700':'400'}">${u}</div>`).join('')}</div>
           </div>
         </div>
         <div>
@@ -1418,7 +1425,19 @@ function renderDecRowsModal(){
     if(rs&&decRows[i].resp)rs.value=decRows[i].resp;
   });
 }
-function addDecRowModal(){decRows.push({topic:'',decision:'',resp:'',person:'',units:[]});renderDecRowsModal();}
+function addDecRowModal(){decRows.push({topic:'',decision:'',resp:'',respUnits:[],person:'',units:[]});renderDecRowsModal();}
+function toggleRespUnit(i,u,el){
+  if(!decRows[i].respUnits)decRows[i].respUnits=decRows[i].resp?[decRows[i].resp]:[];
+  if(decRows[i].respUnits.includes(u)){
+    decRows[i].respUnits=decRows[i].respUnits.filter(x=>x!==u);
+    el.style.background='#131c2e';el.style.borderColor='#1e293b';el.style.color='#64748b';el.style.fontWeight='400';
+  }else{
+    decRows[i].respUnits.push(u);
+    el.style.background='#2e1065';el.style.borderColor='#7c3aed';el.style.color='#c4b5fd';el.style.fontWeight='700';
+  }
+  // resp field: first selected unit for backward compat
+  decRows[i].resp=decRows[i].respUnits[0]||'';
+}
 function removeDecRowModal(i){decRows.splice(i,1);renderDecRowsModal();}
 function toggleDecUnit(i,u,el){
   if(!decRows[i].units)decRows[i].units=[];
@@ -1439,12 +1458,13 @@ async function saveDecision(){
   decRows.forEach((_,i)=>{
     const t=document.getElementById('dr-topic-'+i);
     const d=document.getElementById('dr-dec-'+i);
-    const r=document.getElementById('dr-resp-'+i);
     const p=document.getElementById('dr-person-'+i);
     if(t)decRows[i].topic=t.value.trim();
     if(d)decRows[i].decision=d.value.trim();
-    if(r)decRows[i].resp=r.value;
     if(p)decRows[i].person=p.value.trim();
+    // respUnits tracked via toggleRespUnit; ensure resp is first for backward compat
+    if(!decRows[i].respUnits)decRows[i].respUnits=decRows[i].resp?[decRows[i].resp]:[];
+    decRows[i].resp=decRows[i].respUnits[0]||'';
     // units are tracked via toggleDecUnit
   });
   const rows=decRows.filter(r=>r.decision);
@@ -1475,8 +1495,9 @@ async function addTask(){
   const person=document.getElementById('a-person').value.trim();
   const name=document.getElementById('a-name').value.trim();
   const dl=document.getElementById('a-dl').value.trim();
+  const taskType=(document.getElementById('a-tasktype')||{value:'шуурхай'}).value||'шуурхай';
   if(!name||!person||!selUnits.length){alert('Даалгавар, ажилтны нэр, нэгжүүдийг оруулна уу!');return;}
-  tasks.push({id:nid++,month,date,dept,giver:dept,person,name,units:[...selUnits],dl});
+  tasks.push({id:nid++,month,date,dept,giver:dept,person,name,units:[...selUnits],dl,taskType});
   if(person&&!empList.includes(person)){empList.push(person);await saveEmpList();updateEmpDatalist();}
   saveTasks();
   ['a-name','a-dl'].forEach(id=>document.getElementById(id).value='');
