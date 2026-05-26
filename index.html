@@ -728,23 +728,24 @@ let decisions=[],decFilter='бүгд',decRows=[];
 async function fbLoad(){
   fbLoaded=false;
   try{
-    const[ts,ps,es]=await Promise.all([TDOC.get(),PDOC.get(),EDOC.get()]);
+    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),6000));
+    const load=Promise.all([TDOC.get(),PDOC.get(),EDOC.get()]);
+    const[ts,ps,es]=await Promise.race([load,timeout]);
     if(ts.exists&&ts.data().list){
       tasks=ts.data().list;
       nid=Math.max(...tasks.map(t=>t.id),299)+1;
     }else{
       tasks=[...INIT];
-      await TDOC.set({list:tasks});
+      try{await TDOC.set({list:tasks});}catch(e){}
     }
-    // progress-г зөвхөн Firebase-аас ачааллана — хэзээ ч дарж бичихгүй
     prog=ps.exists?ps.data().data||{}:{};
     empList=es.exists?es.data().list||[]:[...new Set(INIT.map(t=>t.person))];
     fbLoaded=true;
   }catch(e){
-    console.error('fbLoad error:',e.message);
-    // Алдаа гарвал tasks зөвхөн санах ойд, prog-г хэзээ ч устгахгүй
+    console.warn('fbLoad:',e.message,'— INIT ашиглана');
     if(!tasks.length)tasks=[...INIT];
     if(!empList.length)empList=[...new Set(INIT.map(t=>t.person))];
+    prog=prog||{};
   }
 }
 function saveTasks(){
@@ -810,7 +811,12 @@ async function doLogin(){
   btn.disabled=true;btn.textContent='Ачаалж байна...';
   cu={unit:user.unit,name:user.person,isAdmin:user.isAdmin,seeAll:user.seeAll};
   try{localStorage.setItem(SK,JSON.stringify(cu));}catch(e){}
-  await fbLoad();
+  try{
+    await fbLoad();
+  }catch(e){
+    console.warn('Login fbLoad failed, continuing with INIT');
+    if(!tasks.length)tasks=[...INIT];
+  }
   btn.disabled=false;btn.textContent='Нэвтрэх →';
   showApp();
 }
@@ -1599,7 +1605,11 @@ document.addEventListener('DOMContentLoaded',()=>{
 (async function init(){
   const ls=document.getElementById('loading-screen');
   const hideLS=()=>{ls.classList.add('hide');setTimeout(()=>ls.style.display='none',400);}
-  const timer=setTimeout(()=>{hideLS();document.getElementById('login-page').style.display='flex';},5000);
+  // 3 секундын дараа заавал login харуулна
+  const timer=setTimeout(()=>{
+    hideLS();
+    document.getElementById('login-page').style.display='flex';
+  },3000);
   try{
     const saved=localStorage.getItem(SK);
     if(saved){
@@ -1607,11 +1617,15 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(p&&p.unit&&p.name){
         cu=p;
         await fbLoad();
-        clearTimeout(timer);hideLS();showApp();return;
+        clearTimeout(timer);
+        hideLS();
+        showApp();
+        return;
       }
     }
-  }catch(e){console.error('Init error:',e);}
-  clearTimeout(timer);hideLS();
+  }catch(e){console.warn('Init:',e);}
+  clearTimeout(timer);
+  hideLS();
   document.getElementById('login-page').style.display='flex';
 })();
 </script>
