@@ -1347,30 +1347,31 @@ function printDecisionById(id){
   if(w)setTimeout(function(){w.print();URL.revokeObjectURL(url);},800);
 }
 function openDecEdit(id){
-  const d=decisions.find(x=>x.id===id);if(!d)return;
-  decRows=(d.rows||[]).map(r=>({...r,units:[...(r.units||[])]}));
-  const unitOpts=AU.map(u=>`<option value="${u}">${u}</option>`).join('');
+  var d=decisions.find(function(x){return x.id===id;});if(!d)return;
+  decRows=(d.rows||[]).map(function(r){return Object.assign({},r,{units:(r.units||[]).slice()});});
+  var is='width:100%;padding:8px 11px;border:1.5px solid var(--bd);border-radius:8px;font-size:13px;color:var(--t1);background:var(--wh);outline:none;font-family:inherit';
+  var lbl='font-size:11px;font-weight:700;color:var(--t2);display:block;margin-bottom:4px;text-transform:uppercase';
   document.getElementById('dec-add-modal').classList.add('open');
-  document.getElementById('dec-modal-title').textContent='✏️ Шийдвэр засах';
-  document.getElementById('dec-modal-body').innerHTML=`
-    <input type="hidden" id="df-edit-id" value="${id}">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-      <div><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Огноо</label>
-        <input type="date" id="df-date" value="${d.date||''}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
-      <div><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Дугаар</label>
-        <input type="text" id="df-num" value="${d.num||''}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
-    </div>
-    <div style="margin-bottom:10px"><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Гарчиг</label>
-      <input type="text" id="df-title" value="${(d.title||'').replace(/"/g,'&quot;')}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
-    <div style="margin-bottom:12px"><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Байршил</label>
-      <input type="text" id="df-loc" value="${d.loc||''}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
-    <div style="font-size:11px;font-weight:700;color:#4a6080;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Шийдвэрийн мөрүүд</div>
-    <div id="dec-rows-wrap"></div>
-    <button onclick="addDecRowModal()" style="width:100%;padding:7px;border:1.5px dashed #1e293b;border-radius:8px;background:none;color:#4a6080;cursor:pointer;font-size:12px;font-family:inherit;margin-top:4px">＋ Шийдвэр нэмэх</button>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #1a2540">
-      <button class="btn-outline" onclick="closeModal('dec-add-modal')">Болих</button>
-      <button class="btn-primary" onclick="saveDecision()">✓ Хадгалах</button>
-    </div>`;
+  document.getElementById('dec-modal-title').textContent='Шийдвэр засах';
+  document.getElementById('dec-modal-body').innerHTML=
+    '<input type="hidden" id="df-edit-id" value="'+id+'">'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'+
+      '<div><label style="'+lbl+'">Огноо</label>'+
+      '<input type="date" id="df-date" value="'+(d.date||'')+'" style="'+is+'"></div>'+
+      '<div><label style="'+lbl+'">Дугаар</label>'+
+      '<input type="text" id="df-num" value="'+(d.num||'')+'" style="'+is+'"></div>'+
+    '</div>'+
+    '<div style="margin-bottom:10px"><label style="'+lbl+'">Гарчиг</label>'+
+    '<input type="text" id="df-title" value="'+(d.title||'').replace(/"/g,'&quot;')+'" style="'+is+'"></div>'+
+    '<div style="margin-bottom:12px"><label style="'+lbl+'">Байршил</label>'+
+    '<input type="text" id="df-loc" value="'+(d.loc||'')+'" style="'+is+'"></div>'+
+    '<div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;margin-bottom:8px">Шийдвэрийн мөрүүд</div>'+
+    '<div id="dec-rows-wrap"></div>'+
+    '<button onclick="addDecRowModal()" style="width:100%;padding:7px;border:1.5px dashed var(--bd);border-radius:8px;background:none;color:var(--t2);cursor:pointer;font-size:12px;font-family:inherit;margin-top:4px">+ Шийдвэр нэмэх</button>'+
+    '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid var(--bd)">'+
+      '<button class="btn-outline" onclick="closeModal(\'dec-add-modal\')">Болих</button>'+
+      '<button class="btn-primary" onclick="saveDecision()">Хадгалах</button>'+
+    '</div>';
   renderDecRowsModal();
 }
 async function deleteDecision(id){
@@ -1405,44 +1406,41 @@ function openDecModal(){
   document.getElementById('dec-add-modal').classList.add('open');
 }
 function renderDecRowsModal(){
-  const unitOpts=AU.map(u=>`<option value="${u}">${u}</option>`).join('');
-  document.getElementById('dec-rows-wrap').innerHTML=decRows.map((r,i)=>`
-    <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:8px">
-      <div style="font-size:11px;font-weight:700;color:#4a6080;margin-bottom:8px;text-transform:uppercase">${i+1}-р асуудал</div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <textarea placeholder="Хэлэлцсэн асуудал..." id="dr-topic-${i}" rows="2" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit;resize:vertical">${r.topic||''}</textarea>
-        <textarea placeholder="Гарсан шийдвэр..." id="dr-dec-${i}" rows="3" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit;resize:vertical">${r.decision||''}</textarea>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div>
-            <div style="font-size:10px;color:#4a6080;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцагч (нэр/албан тушаал)</div>
-            <input type="text" id="dr-person-${i}" placeholder="Хариуцагчийн нэр..." value="${r.person||''}" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit">
-          </div>
-          <div>
-            <div style="font-size:10px;color:#4a6080;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцах нэгж (жагсаалтаас)</div>
-            <select id="dr-resp-${i}" style="width:100%;padding:7px 8px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit">
-              <option value="">Нэгж сонгох...</option>${unitOpts}
-            </select>
-          </div>
-        </div>
-        <div>
-          <div style="font-size:10px;color:#4a6080;margin-bottom:6px;font-weight:600;text-transform:uppercase">Шилжүүлэх нэгжүүд (олон сонгоно)</div>
-          <div style="display:flex;flex-wrap:wrap;gap:4px" id="dr-units-${i}">
-            ${AU.map(u=>`<div onclick="toggleDecUnit(${i},'${u}',this)" style="padding:3px 9px;border:1.5px solid ${(r.units||[]).includes(u)?'#2563eb':'#1e293b'};border-radius:6px;font-size:11px;cursor:pointer;background:${(r.units||[]).includes(u)?'#1e3a5f':'#131c2e'};color:${(r.units||[]).includes(u)?'#93c5fd':'#64748b'};user-select:none;transition:all .15s;font-weight:${(r.units||[]).includes(u)?'700':'400'}">${u}</div>`).join('')}
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;margin-top:8px">
-        <button onclick="removeDecRowModal(${i})" style="padding:5px 10px;border:1px solid #1e293b;border-radius:6px;background:none;color:#4a6080;cursor:pointer;font-size:12px;font-family:inherit">× Хасах</button>
-      </div>
-    </div>`).join('');
-  // Set values
-  decRows.forEach((_,i)=>{
-    const rs=document.getElementById('dr-resp-'+i);
+  var unitOpts=AU.map(function(u){return '<option value="'+u+'">'+u+'</option>';}).join('');
+  var iStyle='width:100%;padding:7px 10px;border:1.5px solid #2e4060;border-radius:8px;font-size:12px;color:var(--t1);background:var(--wh);outline:none;font-family:inherit';
+  var html=decRows.map(function(r,i){
+    var unitDivs=AU.map(function(u){
+      var sel=(r.units||[]).includes(u);
+      return '<div data-ri="'+i+'" data-ru="'+u+'" onclick="toggleDecUnitBtn(this)" style="padding:3px 9px;border:1.5px solid '+(sel?'var(--g)':'var(--bd)')+';border-radius:6px;font-size:11px;cursor:pointer;background:'+(sel?'var(--gl)':'var(--wh)')+';color:'+(sel?'var(--g)':'var(--t3)')+';user-select:none;transition:all .15s;font-weight:'+(sel?'700':'400')+'">'+u+'</div>';
+    }).join('');
+    return '<div style="background:var(--bg);border:1.5px solid var(--bd);border-radius:8px;padding:12px;margin-bottom:8px">'+
+      '<div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px;text-transform:uppercase">'+(i+1)+'-р асуудал</div>'+
+      '<textarea placeholder="Хэлэлцсэн асуудал..." id="dr-topic-'+i+'" rows="2" style="'+iStyle+';resize:vertical;margin-bottom:6px;display:block">'+(r.topic||'')+'</textarea>'+
+      '<textarea placeholder="Гарсан шийдвэр..." id="dr-dec-'+i+'" rows="3" style="'+iStyle+';resize:vertical;margin-bottom:6px;display:block">'+(r.decision||'')+'</textarea>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'+
+        '<div><div style="font-size:10px;color:var(--t2);margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцагч</div>'+
+        '<input type="text" id="dr-person-'+i+'" placeholder="Нэр..." value="'+(r.person||'')+'" style="'+iStyle+'"></div>'+
+        '<div><div style="font-size:10px;color:var(--t2);margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцах нэгж</div>'+
+        '<select id="dr-resp-'+i+'" style="'+iStyle+'">'+
+          '<option value="">Нэгж сонгох...</option>'+unitOpts+
+        '</select></div>'+
+      '</div>'+
+      '<div style="font-size:10px;color:var(--t2);margin-bottom:6px;font-weight:600;text-transform:uppercase">Шилжүүлэх нэгжүүд</div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">'+unitDivs+'</div>'+
+      '<div style="display:flex;justify-content:flex-end">'+
+        '<button onclick="removeDecRowModal('+i+')" style="padding:5px 10px;border:1px solid var(--bd);border-radius:6px;background:none;color:var(--t3);cursor:pointer;font-size:12px;font-family:inherit">Хасах</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('dec-rows-wrap').innerHTML=html;
+  decRows.forEach(function(_,i){
+    var rs=document.getElementById('dr-resp-'+i);
     if(rs&&decRows[i].resp)rs.value=decRows[i].resp;
   });
 }
 function addDecRowModal(){decRows.push({topic:'',decision:'',resp:'',person:'',units:[]});renderDecRowsModal();}
 function removeDecRowModal(i){decRows.splice(i,1);renderDecRowsModal();}
+function toggleDecUnitBtn(el){toggleDecUnit(parseInt(el.dataset.ri),el.dataset.ru,el);}
 function toggleDecUnit(i,u,el){
   if(!decRows[i].units)decRows[i].units=[];
   if(decRows[i].units.includes(u)){
