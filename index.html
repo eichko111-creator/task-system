@@ -146,7 +146,27 @@ body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--t1);min-
 .modal-close:hover{color:var(--t1)}
 .modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1.5px solid var(--bd)}
 .modal .form-field input,.modal .form-field select,.modal .form-field textarea{background:#f8fcf9;border-color:var(--bd)}
-</style>
+.sync{position:fixed;bottom:14px;right:14px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100}
+.sync.show{opacity:1}
+.sync.saving{background:#fff8e0;color:#7a5c00;border:1px solid #f0d060}
+.sync.ok{background:var(--gl);color:var(--gd);border:1px solid var(--gm)}
+.sync.err{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.dl-toast{position:fixed;top:16px;right:16px;z-index:999;background:var(--sid);border:1.5px solid var(--g);border-radius:12px;padding:14px 16px;max-width:320px;box-shadow:0 8px 30px rgba(13,125,63,.3);transform:translateX(120%);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.dl-toast.show{transform:translateX(0)}
+.dl-toast-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.dl-toast-title{font-size:13px;font-weight:700;color:#fff;flex:1}
+.dl-toast-close{background:rgba(255,255,255,.1);border:none;cursor:pointer;font-size:14px;color:#fff;line-height:1;padding:2px 6px;border-radius:4px}
+.dl-toast-close:hover{background:rgba(255,255,255,.2)}
+.dl-toast-item{font-size:12px;color:rgba(255,255,255,.85);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:6px}
+.dl-toast-item:last-child{border-bottom:none}
+#loading-screen{position:fixed;inset:0;background:var(--sid);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
+#loading-screen.hide{opacity:0;pointer-events:none}
+.loading-text{color:rgba(255,255,255,.5);font-size:14px;margin-top:10px}
+.loading-bar{width:180px;height:3px;background:rgba(255,255,255,.15);border-radius:999px;margin-top:14px;overflow:hidden}
+.loading-fill{height:100%;background:var(--g);border-radius:999px;animation:lb 1.4s ease-in-out infinite}
+@keyframes lb{0%{width:0;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0;margin-left:100%}}
+@media print{.sidebar,.topbar,.filter-row,.sub-tabs,.kpi-row,#loading-screen,.sync,.dl-toast,button,.btn-primary,.btn-outline{display:none!important}body{background:#fff;font-size:11px}.container{padding:0}.print-header{display:block!important}}
+.print-header{display:none}
 </head>
 <body>
 
@@ -159,13 +179,13 @@ body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--t1);min-
 <div class="sync" id="sync"></div>
 <div class="dl-toast" id="dl-toast">
   <div class="dl-toast-head">
-    <span style="font-size:18px">⚠️</span>
+    <span style="font-size:16px">⚠️</span>
     <div class="dl-toast-title" id="dl-toast-title">Анхааруулга</div>
     <button class="dl-toast-close" onclick="document.getElementById('dl-toast').classList.remove('show')">×</button>
   </div>
   <div id="dl-toast-body"></div>
-  <div style="margin-top:8px">
-    <button onclick="goToUrgent()" style="padding:5px 12px;background:#e74c3c;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Даалгаварыг үзэх →</button>
+  <div style="margin-top:10px">
+    <button onclick="goToUrgent()" style="padding:5px 14px;background:var(--g);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Даалгаварыг үзэх →</button>
   </div>
 </div>
 
@@ -202,7 +222,7 @@ body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--t1);min-
       <div class="nav-item active" onclick="showTab('dashboard',this)"><div class="nav-dot" style="background:#e74c3c"></div>НҮҮ Р</div>
       <div class="nav-item" onclick="showTab('mine',this);setSourceFilter('бүгд')"><div class="nav-dot" style="background:#0D7D3F"></div>ҮҮРЭГ ДААЛГАВАР</div>
       <div class="nav-sub" onclick="showTab('mine',null);setSourceFilter('шуурхай')"><i class="nav-sub-dot"></i>Шуурхайгаас өгсөн</div>
-      <div class="nav-sub" onclick="showTab('mine',null);setSourceFilter('хамгаалалт')"><i class="nav-sub-dot"></i>Хамгаалалтаас өгсөн</div>
+      <div class="nav-sub" onclick="showTab('mine',null);setSourceFilter('тайлан')"><i class="nav-sub-dot"></i>Тайлангаас өгсөн</div>
       <div class="nav-item" onclick="showTab('decision',this)"><div class="nav-dot" style="background:#8b5cf6"></div>ХУРЛЫН ШИЙДВЭР</div>
     </nav>
     <div class="sidebar-footer">
@@ -344,7 +364,7 @@ body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--t1);min-
               <div class="form-field" style="margin-bottom:0"><label>Ангилал</label>
                 <select id="a-source">
                   <option value="шуурхай">Шуурхайгаас өгсөн</option>
-                  <option value="хамгаалалт">Хамгаалалтаас өгсөн</option>
+                  <option value="тайлан">Тайлангаас өгсөн</option>
                   <option value="бусад">Бусад</option>
                 </select>
               </div>
@@ -902,7 +922,16 @@ function setSourceFilter(f){
   document.getElementById('view-mine').classList.add('active');
   document.getElementById('topbar-title').textContent=
     f==='шуурхай'?'Шуурхайгаас өгсөн':
-    f==='хамгаалалт'?'Хамгаалалтаас өгсөн':'Үүрэг даалгавар';
+    f==='тайлан'?'Тайлангаас өгсөн':'Үүрэг даалгавар';
+  if(f==='тайлан'){
+    updateKPI([]);
+    document.getElementById('my-tasks').innerHTML=`<div style="text-align:center;padding:5rem 2rem">
+      <div style="font-size:48px;margin-bottom:16px">📋</div>
+      <div style="font-size:16px;font-weight:600;color:var(--t1);margin-bottom:8px">Тайлангаас өгсөн үүрэг даалгавар</div>
+      <div style="font-size:14px;color:var(--t3)">Энэ хэсэг удахгүй нэмэгдэнэ</div>
+    </div>`;
+    return;
+  }
   updateKPI();renderMyTasks();
   const addBtn=document.getElementById('admin-add-toggle');
   if(addBtn)addBtn.style.display=(cu&&cu.isAdmin)?'block':'none';
