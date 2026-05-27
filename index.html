@@ -220,6 +220,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
       <div class="nav-item active" onclick="showTab('dashboard',this)"><div class="nav-dot" style="background:#e74c3c"></div>НҮҮ Р</div>
       <div class="nav-item" onclick="showTab('mine',this)"><div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР</div>
       <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin',this)"><div class="nav-dot" style="background:#f39c12"></div>НЭМЭХ</div>
+      <div class="nav-item" id="nav-restore" style="display:none" onclick="restoreInitTasks()"><div class="nav-dot" style="background:#e74c3c"></div>⟳ СЭРГЭЭХ</div>
       <div class="nav-item" onclick="showTab('decisions',this)"><div class="nav-dot" style="background:#3498db"></div>ХУРЛЫН ШИЙДВЭР</div>
     </nav>
     <div class="sidebar-footer">
@@ -509,11 +510,39 @@ function setDelay(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid]['d_'+u]=v;}
 async function fbLoad(){
   try{
     const[ts,ps,es]=await Promise.all([TDOC.get(),PDOC.get(),EDOC.get()]);
-    if(ts.exists&&ts.data().list){tasks=ts.data().list;nid=Math.max(...tasks.map(t=>t.id),299)+1;}
-    else{tasks=[...INIT];await TDOC.set({list:tasks});}
+    if(ts.exists&&ts.data().list&&ts.data().list.length>0){
+      tasks=ts.data().list;nid=Math.max(...tasks.map(t=>t.id),299)+1;
+    } else {
+      // Firestore-д өгөгдөл байхгүй бол INIT-ээс сэргээнэ
+      tasks=[...INIT];nid=301;
+      try{await TDOC.set({list:tasks});}catch(e){}
+    }
     prog=ps.exists?ps.data().data||{}:{};
     empList=es.exists?es.data().list||[]:[...new Set(INIT.map(t=>t.person))];
-  }catch(e){tasks=[...INIT];prog={};empList=[];}
+  }catch(e){tasks=[...INIT];prog={};empList=[...new Set(INIT.map(t=>t.person))];nid=301;}
+}
+
+// Admin хэрэглэгч INIT өгөгдөл сэргээх
+async function restoreInitTasks(){
+  if(!cu||!cu.isAdmin){alert('Зөвхөн Admin хийж болно');return;}
+  if(!confirm('20 анхны даалгаварыг Firestore-д сэргээх үү? Одоогийн өгөгдөл хадгалагдана.'))return;
+  syncUI('saving','Сэргээж байна...');
+  try{
+    const snap=await TDOC.get();
+    const existing=snap.exists&&snap.data().list?snap.data().list:[];
+    // Existing tasks-ийг хадгалаад INIT-ийг нэмнэ (давхардахгүй)
+    const existingIds=new Set(existing.map(t=>t.id));
+    const toAdd=INIT.filter(t=>!existingIds.has(t.id));
+    const merged=[...existing,...toAdd];
+    nid=Math.max(...merged.map(t=>t.id),299)+1;
+    await TDOC.set({list:merged});
+    tasks=merged;
+    syncUI('ok','✓ '+toAdd.length+' даалгавар сэргээгдлээ');
+    renderTopPills();updateKPI();renderDashboard();
+    if(document.getElementById('view-admin').classList.contains('active')){
+      renderAdminPills();renderAdminList();
+    }
+  }catch(e){syncUI('err','⚠ Алдаа: '+e.message);}
 }
 function saveTasks(){syncUI('saving','Хадгалж байна...');clearTimeout(saveT);saveT=setTimeout(async()=>{try{await TDOC.set({list:tasks});syncUI('ok','✓ Хадгалагдлаа');}catch(e){syncUI('err','⚠ Алдаа');}},700);}
 async function saveProgress(){syncUI('saving','Хадгалж байна...');try{await PDOC.set({data:prog});syncUI('ok','✓ Хадгалагдлаа');}catch(e){syncUI('err','⚠ Алдаа');}}
@@ -548,6 +577,7 @@ function doLogout(){
   document.getElementById('login-btn').disabled=false;
   document.getElementById('login-btn').textContent='Нэвтрэх →';
   document.getElementById('nav-admin').style.display='none';
+  var nr=document.getElementById('nav-restore');if(nr)nr.style.display='none';
 }
 
 // ===== HELPERS =====
@@ -585,7 +615,11 @@ function showApp(){
   document.getElementById('user-name-lbl').textContent=cu.name;
   document.getElementById('user-unit-lbl').textContent=cu.unit;
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
-  if(cu.isAdmin){document.getElementById('nav-admin').style.display='flex';initUchk();}
+  if(cu.isAdmin){
+    document.getElementById('nav-admin').style.display='flex';
+    document.getElementById('nav-restore').style.display='flex';
+    initUchk();
+  }
   document.getElementById('sub-tabs-wrap').style.display=(cu.isAdmin||cu.seeAll)?'none':'flex';
   const ms=getMonths();actMonth=ms[ms.length-1]||'2026-01';
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
