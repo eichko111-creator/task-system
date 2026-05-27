@@ -6,153 +6,156 @@
 <title>Үүрэг даалгавар</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-height:100vh;display:flex;flex-direction:column}
-.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a1628,#0d2137,#0a3352)}
-.login-card{background:#fff;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
-.field{margin-bottom:14px}
-.field label{font-size:11px;font-weight:700;color:#666;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
-.field input,.field select{width:100%;padding:10px 12px;border:1.5px solid #e2e2e2;border-radius:8px;font-size:14px;color:#1a1a2e;background:#fff;outline:none;transition:border-color .2s;font-family:inherit}
+body{font-family:'Segoe UI',sans-serif;background:#0b0f1a;color:#d0d8e8;min-height:100vh;display:flex;flex-direction:column}
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#050a12,#090f1e,#06121e)}
+.login-card{background:#111827;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.6);border:1px solid #1e293b}.field{margin-bottom:14px}
+.field label{font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.field input,.field select{width:100%;padding:10px 12px;border:1.5px solid #1e293b;border-radius:8px;font-size:14px;color:#d0d8e8;background:#0b0f1a;outline:none;transition:border-color .2s;font-family:inherit}
 .field input:focus,.field select:focus{border-color:#e74c3c}
 .login-btn{width:100%;padding:12px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;font-family:inherit}
 .login-btn:hover{opacity:.9}.login-btn:disabled{opacity:.6;cursor:not-allowed}
-.login-err{font-size:12px;color:#e74c3c;margin-top:8px;text-align:center;display:none;background:#fff0f0;padding:8px;border-radius:6px}
+.login-err{font-size:12px;color:#e74c3c;margin-top:8px;text-align:center;display:none;background:rgba(231,76,60,.15);padding:8px;border-radius:6px;border:1px solid rgba(231,76,60,.3)}
 .app-wrap{display:flex;flex:1;min-height:100vh}
-.sidebar{width:220px;background:#0d1f33;flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
-.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.sidebar-logo-title{font-size:14px;font-weight:700;color:#fff}
-.sidebar-logo-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.sidebar{width:220px;background:#080d18;flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;border-right:1px solid #131c2e}
+.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-logo-title{font-size:14px;font-weight:700;color:#e2e8f0}
+.sidebar-logo-sub{font-size:11px;color:rgba(255,255,255,.3);margin-top:2px}
 .sidebar-nav{flex:1;padding:16px 0}
-.nav-section{padding:6px 18px 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.7px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:13px;color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s;border-left:3px solid transparent;font-weight:500}
-.nav-item:hover{background:rgba(231,76,60,.12);color:#e74c3c}
-.nav-item.active{background:rgba(231,76,60,.18);color:#e74c3c;border-left-color:#e74c3c;font-weight:700}
+.nav-section{padding:6px 18px 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.7px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:13px;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;border-left:3px solid transparent;font-weight:500}
+.nav-item:hover{background:rgba(231,76,60,.1);color:#e74c3c}
+.nav-item.active{background:rgba(231,76,60,.15);color:#e74c3c;border-left-color:#e74c3c;font-weight:700}
 .nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.sidebar-footer{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08)}
+.sidebar-footer{padding:14px 18px;border-top:1px solid rgba(255,255,255,.06)}
 .user-chip{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#e74c3c,#c0392b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
-.user-name{font-size:13px;font-weight:600;color:#e0e8f0}
-.user-unit{font-size:11px;color:rgba(255,255,255,.4)}
-.logout-btn{width:100%;padding:7px;border:1px solid rgba(255,255,255,.15);border-radius:7px;font-size:12px;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);transition:all .15s;font-family:inherit}
+.user-name{font-size:13px;font-weight:600;color:#c8d5e8}
+.user-unit{font-size:11px;color:rgba(255,255,255,.3)}
+.logout-btn{width:100%;padding:7px;border:1px solid rgba(255,255,255,.1);border-radius:7px;font-size:12px;cursor:pointer;background:transparent;color:rgba(255,255,255,.4);transition:all .15s;font-family:inherit}
 .logout-btn:hover{border-color:#e74c3c;color:#e74c3c}
 .main-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{background:#fff;border-bottom:1px solid #eee;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.topbar-title{font-size:16px;font-weight:700;color:#1a1a2e}
+.topbar{background:#0f1520;border-bottom:1px solid #131c2e;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.topbar-title{font-size:16px;font-weight:700;color:#d0d8e8}
 .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .month-pills{display:flex;gap:6px;flex-wrap:wrap}
-.mpill{padding:5px 14px;border:1.5px solid #e0e0e0;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#888;font-weight:500;transition:all .15s;white-space:nowrap}
+.mpill{padding:5px 14px;border:1.5px solid #1e293b;border-radius:20px;font-size:12px;cursor:pointer;background:#131c2e;color:#64748b;font-weight:500;transition:all .15s;white-space:nowrap}
 .mpill.active{background:#e74c3c;border-color:#e74c3c;color:#fff;font-weight:700}
+.mpill.all-act{background:#1e3a5f;border-color:#2563eb;color:#93c5fd;font-weight:700}
 .mpill.has{border-color:#e74c3c;color:#e74c3c}
 .container{padding:20px 24px;flex:1;overflow-y:auto}
-.kpi-row{display:grid;grid-template-columns:repeat(7,1fr);background:#fff;border-radius:12px;border:1px solid #eee;overflow:hidden;margin-bottom:16px}
-.kpi-item{padding:14px 12px;border-right:1px solid #eee;position:relative}
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);background:#0f1520;border-radius:12px;border:1px solid #1a2540;overflow:hidden;margin-bottom:16px}
+.kpi-item{padding:14px 12px;border-right:1px solid #1a2540;position:relative}
 .kpi-item:last-child{border-right:none}
-.kpi-val{font-size:24px;font-weight:700;color:#1a1a2e;line-height:1}
-.kpi-lbl{font-size:11px;color:#aaa;margin-top:4px;line-height:1.3}
-.kpi-icon{font-size:22px;opacity:.15;position:absolute;right:8px;top:50%;transform:translateY(-50%)}
+.kpi-val{font-size:24px;font-weight:700;color:#e2e8f0;line-height:1}
+.kpi-lbl{font-size:11px;color:#4a6080;margin-top:4px;line-height:1.3}
+.kpi-icon{font-size:22px;opacity:.08;position:absolute;right:8px;top:50%;transform:translateY(-50%)}
 .filter-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
-.fpill{padding:6px 18px;border:1.5px solid #e0e0e0;border-radius:20px;font-size:13px;cursor:pointer;background:#fff;color:#888;font-weight:500;transition:all .15s;font-family:inherit}
-.fpill.active{background:#1a1a2e;border-color:#1a1a2e;color:#fff;font-weight:700}
+.fpill{padding:6px 18px;border:1.5px solid #1e293b;border-radius:20px;font-size:13px;cursor:pointer;background:#131c2e;color:#64748b;font-weight:500;transition:all .15s;font-family:inherit}
+.fpill.active{background:#1e3a5f;border-color:#2563eb;color:#93c5fd;font-weight:700}
 .sub-tabs{display:flex;gap:6px;margin-bottom:14px}
-.stab{padding:6px 16px;border:1.5px solid #eee;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#888;font-weight:500;transition:all .15s;font-family:inherit}
-.stab.active{background:#1a1a2e;border-color:#1a1a2e;color:#fff;font-weight:700}
-.task-card{background:#fff;border-radius:10px;padding:14px 16px;margin-bottom:10px;border:1px solid #eee;transition:box-shadow .2s}
-.task-card:hover{box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.stab{padding:6px 16px;border:1.5px solid #1e293b;border-radius:20px;font-size:12px;cursor:pointer;background:#131c2e;color:#64748b;font-weight:500;transition:all .15s;font-family:inherit}
+.stab.active{background:#1e3a5f;border-color:#2563eb;color:#93c5fd;font-weight:700}
+.task-card{background:#0f1520;border-radius:10px;padding:14px 16px;margin-bottom:10px;border:1px solid #1a2540;transition:box-shadow .2s}
+.task-card:hover{box-shadow:0 3px 16px rgba(0,0,0,.4)}
 .task-card.done{border-left:4px solid #27ae60}
 .task-card.inprog{border-left:4px solid #f39c12}
-.task-card.notdone{border-left:4px solid #e74c3c}
+.task-card.notdone{border-left:4px solid #4a6080}
 .task-card.overdue-card{border-left:4px solid #8e44ad}
+/* Task card дотоод текстийн өнгө */
+.tc-name{font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:4px;line-height:1.4}
+.tc-person{font-size:12px;color:#7890a8;margin-bottom:6px}
+.tc-avg-lbl{font-size:11px;color:#4a6080;min-width:80px}
 .task-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;display:inline-flex;align-items:center;gap:4px}
-.bdept{background:#1a1a2e;color:#fff}.bdate{background:#2d7a27;color:#fff}
-.bdl{background:#e74c3c;color:#fff}.bgiver{background:#7c3aed;color:#fff}
-.bovd{background:#8e44ad;color:#fff}
-.pbar{flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden}
+.bdept{background:#1e3a5f;color:#60a5fa;border:1px solid #2563eb}
+.bdate{background:#14532d;color:#4ade80;border:1px solid #16a34a}
+.bdl{background:#7f1d1d;color:#fca5a5;border:1px solid #dc2626}
+.bgiver{background:#2e1065;color:#c4b5fd;border:1px solid #7c3aed}
+.bovd{background:#3b0764;color:#e879f9;border:1px solid #a21caf}
+.pbar{flex:1;height:7px;background:#1a2540;border-radius:4px;overflow:hidden}
 .pfill{height:100%;border-radius:4px;transition:width .4s}
 .db-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.db-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:14px 16px}
-.db-card-title{font-size:11px;font-weight:700;color:#aaa;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:space-between}
-.dept-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f5f5f5}
+.db-card{background:#0f1520;border:1px solid #1a2540;border-radius:10px;padding:14px 16px}
+.db-card-title{font-size:11px;font-weight:700;color:#4a6080;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:space-between}
+.dept-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #131c2e}
 .dept-row:last-child{border-bottom:none}
 .ddot{width:8px;height:8px;border-radius:50%;margin-right:7px;flex-shrink:0}
-.dnm{font-size:13px;color:#1a1a2e;font-weight:500}.dcnt{font-size:11px;color:#aaa}
-.all-task-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5}
+.dnm{font-size:13px;color:#c8d5e8;font-weight:500}.dcnt{font-size:11px;color:#4a6080}
+.all-task-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #131c2e}
 .all-task-row:last-child{border-bottom:none}
-.rank-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f5f5f5}
+.rank-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #131c2e}
 .rank-row:last-child{border-bottom:none}
 .rank-medal{font-size:16px;width:24px;text-align:center;flex-shrink:0}
-.rank-unit{font-size:13px;font-weight:700;color:#1a1a2e;min-width:44px}
-.rank-bar{flex:1;height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden}
+.rank-unit{font-size:13px;font-weight:700;color:#c8d5e8;min-width:44px}
+.rank-bar{flex:1;height:8px;background:#1a2540;border-radius:4px;overflow:hidden}
 .rank-fill{height:100%;border-radius:4px}
 .rank-pct{font-size:13px;font-weight:700;min-width:36px;text-align:right}
-.ovd-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f5f5f5;font-size:12px}
+.ovd-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #131c2e;font-size:12px}
 .ovd-row:last-child{border-bottom:none}
-/* COMPACT UNIT ROW */
-.unit-rows{border-top:1px solid #f5f5f5;padding-top:10px;margin-top:4px}
-.unit-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid #f8f8f8}
+.unit-rows{border-top:1px solid #1a2540;padding-top:10px;margin-top:4px}
+.unit-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid #131c2e}
 .unit-row:last-child{border-bottom:none}
-.unit-nm{font-size:12px;font-weight:700;color:#555;min-width:44px;flex-shrink:0}
-.pct-inp{width:54px;padding:4px 6px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:12px;font-weight:700;text-align:center;outline:none;color:#1a1a2e;transition:border-color .2s;flex-shrink:0}
+.unit-nm{font-size:12px;font-weight:700;color:#7890a8;min-width:44px;flex-shrink:0}
+.pct-inp{width:54px;padding:4px 6px;border:1.5px solid #1e293b;border-radius:6px;font-size:12px;font-weight:700;text-align:center;outline:none;color:#d0d8e8;background:#0b0f1a;transition:border-color .2s;flex-shrink:0}
 .pct-inp:focus{border-color:#e74c3c}
-.pct-inp:disabled{opacity:.35;background:#f8f8f8;cursor:not-allowed}
-.note-inp{flex:1;padding:4px 8px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:12px;outline:none;color:#333;font-family:inherit;transition:border-color .2s;min-width:0}
+.pct-inp:disabled{opacity:.3;cursor:not-allowed}
+.note-inp{flex:1;padding:4px 8px;border:1.5px solid #1e293b;border-radius:6px;font-size:12px;outline:none;color:#c8d5e8;font-family:inherit;transition:border-color .2s;min-width:0;background:#0b0f1a}
 .note-inp:focus{border-color:#e74c3c}
-.save-btn{padding:4px 10px;background:#1a1a2e;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit;transition:background .15s}
-.save-btn:hover{background:#e74c3c}
-.saved-ok{font-size:11px;color:#27ae60;opacity:0;transition:opacity .4s;white-space:nowrap;min-width:16px;flex-shrink:0}
+.save-btn{padding:4px 10px;background:#1e3a5f;color:#93c5fd;border:1px solid #2563eb;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit;transition:all .15s}
+.save-btn:hover{background:#e74c3c;color:#fff;border-color:#e74c3c}
+.saved-ok{font-size:11px;color:#4ade80;opacity:0;transition:opacity .4s;white-space:nowrap;min-width:16px;flex-shrink:0}
 .saved-ok.show{opacity:1}
-.delay-inp{width:100%;margin-top:5px;padding:5px 8px;border:1.5px solid #8e44ad;border-radius:6px;font-size:12px;outline:none;color:#333;font-family:inherit;background:#faf5ff}
-.delay-inp::placeholder{color:#c39bd3}
-.list-card{background:#fff;border-radius:8px;padding:10px 14px;margin-bottom:7px;border:1px solid #eee;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.list-card{background:#0f1520;border-radius:8px;padding:10px 14px;margin-bottom:7px;border:1px solid #1a2540;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .list-card.done{border-left:3px solid #27ae60}
 .list-card.inprog{border-left:3px solid #f39c12}
 .list-card.notdone{border-left:3px solid #e74c3c}
-.list-name{font-size:13px;font-weight:600;color:#1a1a2e;flex:1;min-width:0}
+.list-name{font-size:13px;font-weight:600;color:#c8d5e8;flex:1;min-width:0}
 .list-pct{font-size:13px;font-weight:700;min-width:36px;text-align:right}
-.admin-form{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px;margin-bottom:18px}
-.form-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:14px}
+.admin-form{background:#0f1520;border:1px solid #1a2540;border-radius:10px;padding:18px;margin-bottom:18px}
+.form-title{font-size:14px;font-weight:700;color:#c8d5e8;margin-bottom:14px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.form-field label{font-size:11px;font-weight:700;color:#888;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
-.form-field input,.form-field select,.form-field textarea{width:100%;padding:9px 11px;border:1.5px solid #e2e2e2;border-radius:8px;font-size:13px;color:#1a1a2e;background:#fff;outline:none;font-family:inherit;transition:border-color .2s}
+.form-field label{font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+.form-field input,.form-field select,.form-field textarea{width:100%;padding:9px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit;transition:border-color .2s}
 .form-field textarea{resize:vertical;min-height:64px}
 .form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:#e74c3c}
 .uchk-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
-.uchk{padding:4px 10px;border:1.5px solid #e0e0e0;border-radius:6px;font-size:11px;cursor:pointer;background:#fff;color:#555;font-weight:500;user-select:none;transition:all .15s}
-.uchk.sel{background:#1a1a2e;border-color:#1a1a2e;color:#fff}
+.uchk{padding:4px 10px;border:1.5px solid #1e293b;border-radius:6px;font-size:11px;cursor:pointer;background:#131c2e;color:#64748b;font-weight:500;user-select:none;transition:all .15s}
+.uchk.sel{background:#1e3a5f;border-color:#2563eb;color:#93c5fd}
 .btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.btn-primary{padding:9px 20px;background:#1a1a2e;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;font-family:inherit}
-.btn-primary:hover{background:#e74c3c}
-.btn-outline{padding:9px 16px;background:transparent;color:#1a1a2e;border:1.5px solid #1a1a2e;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
-.btn-outline:hover{background:#1a1a2e;color:#fff}
-.btn-green{padding:7px 14px;background:#27ae60;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s}
-.btn-green:hover{opacity:.85}
-.btn-blue{padding:7px 14px;background:#3498db;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s}
-.btn-blue:hover{opacity:.85}
-.del-btn{padding:3px 9px;background:transparent;border:1px solid #eee;border-radius:5px;font-size:11px;cursor:pointer;color:#bbb;transition:all .15s;font-family:inherit}
-.del-btn:hover{border-color:#e74c3c;color:#e74c3c}
-.edit-btn{padding:3px 9px;background:transparent;border:1px solid #3498db;border-radius:5px;font-size:11px;cursor:pointer;color:#3498db;transition:all .15s;font-family:inherit}
-.edit-btn:hover{background:#3498db;color:#fff}
-.section-title{font-size:12px;font-weight:700;color:#aaa;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #eee;text-transform:uppercase;letter-spacing:.5px}
+.btn-primary{padding:9px 20px;background:#1e3a5f;color:#93c5fd;border:1px solid #2563eb;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn-primary:hover{background:#e74c3c;color:#fff;border-color:#e74c3c}
+.btn-outline{padding:9px 16px;background:transparent;color:#64748b;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn-outline:hover{background:#1e3a5f;color:#93c5fd;border-color:#2563eb}
+.btn-green{padding:7px 14px;background:rgba(39,174,96,.2);color:#4ade80;border:1px solid rgba(39,174,96,.4);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn-green:hover{opacity:.8}
+.btn-blue{padding:7px 14px;background:rgba(52,152,219,.2);color:#60a5fa;border:1px solid rgba(52,152,219,.4);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn-blue:hover{opacity:.8}
+.del-btn{padding:3px 9px;background:transparent;border:1px solid #1e293b;border-radius:5px;font-size:11px;cursor:pointer;color:#4a6080;transition:all .15s;font-family:inherit}
+.del-btn:hover{border-color:#e74c3c;color:#f87171}
+.edit-btn{padding:3px 9px;background:transparent;border:1px solid #1e3a5f;border-radius:5px;font-size:11px;cursor:pointer;color:#60a5fa;transition:all .15s;font-family:inherit}
+.edit-btn:hover{background:#1e3a5f;color:#93c5fd}
+.section-title{font-size:12px;font-weight:700;color:#4a6080;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #1a2540;text-transform:uppercase;letter-spacing:.5px}
 .view{display:none}.view.active{display:block}
-.empty{text-align:center;padding:3rem;color:#bbb;font-size:14px}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.empty{text-align:center;padding:3rem;color:#374151;font-size:14px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
 .modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:14px;padding:20px;width:100%;max-width:560px;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #eee}
-.modal-head h3{font-size:15px;font-weight:700;color:#1a1a2e}
-.modal-close{background:none;border:none;font-size:20px;color:#aaa;cursor:pointer;padding:0 3px;line-height:1}
-.modal-close:hover{color:#1a1a2e}
-.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #eee}
-#loading-screen{position:fixed;inset:0;background:#0d1f33;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
+.modal{background:#0f1520;border-radius:14px;padding:20px;width:100%;max-width:560px;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.6);border:1px solid #1a2540}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #1a2540}
+.modal-head h3{font-size:15px;font-weight:700;color:#c8d5e8}
+.modal-close{background:none;border:none;font-size:20px;color:#4a6080;cursor:pointer;padding:0 3px;line-height:1}
+.modal-close:hover{color:#c8d5e8}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #1a2540}
+#loading-screen{position:fixed;inset:0;background:#080d18;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
 #loading-screen.hide{opacity:0;pointer-events:none}
-.loading-text{color:rgba(255,255,255,.7);font-size:14px;margin-top:10px}
-.loading-bar{width:180px;height:3px;background:rgba(255,255,255,.1);border-radius:999px;margin-top:14px;overflow:hidden}
+.loading-text{color:rgba(255,255,255,.5);font-size:14px;margin-top:10px}
+.loading-bar{width:180px;height:3px;background:rgba(255,255,255,.08);border-radius:999px;margin-top:14px;overflow:hidden}
 .loading-fill{height:100%;background:#e74c3c;border-radius:999px;animation:lb 1.4s ease-in-out infinite}
 @keyframes lb{0%{width:0;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0;margin-left:100%}}
 .sync{position:fixed;bottom:14px;right:14px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100}
 .sync.show{opacity:1}
-.sync.saving{background:#faeeda;color:#633806}
-.sync.ok{background:#e1f5ee;color:#085041}
-.sync.err{background:#fcebeb;color:#791f1f}
+.sync.saving{background:rgba(243,156,18,.2);color:#f59e0b;border:1px solid rgba(243,156,18,.3)}
+.sync.ok{background:rgba(39,174,96,.2);color:#4ade80;border:1px solid rgba(39,174,96,.3)}
+.sync.err{background:rgba(231,76,60,.2);color:#f87171;border:1px solid rgba(231,76,60,.3)}
 /* DEADLINE TOAST */
 .dl-toast{position:fixed;top:16px;right:16px;z-index:999;background:#fff;border:1px solid #eee;border-radius:12px;padding:14px 16px;max-width:320px;box-shadow:0 8px 30px rgba(0,0,0,.12);transform:translateX(120%);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
 .dl-toast.show{transform:translateX(0)}
@@ -163,13 +166,11 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 .dl-toast-item:last-child{border-bottom:none}
 /* PRINT */
 @media print{
-  .sidebar,.topbar,.filter-row,.sub-tabs,.kpi-row,#loading-screen,.sync,.dl-toast,.btn-row{display:none!important}
-  body{background:#fff;font-size:11px}
-  .container{padding:0}
-  .task-card{break-inside:avoid;border:1px solid #ddd;margin-bottom:6px}
-  .print-header{display:block!important}
+  body *{visibility:hidden}
+  #print-template,#print-template *{visibility:visible}
+  #print-template{display:block!important;position:fixed;inset:0;background:#fff;color:#000;padding:20px 24px;z-index:9999}
 }
-.print-header{display:none;text-align:center;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #1a1a2e}
+.print-header{display:none}
 </style>
 </head>
 <body>
@@ -196,14 +197,20 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 <!-- LOGIN -->
 <div id="login-page" class="login-page" style="display:none">
   <div class="login-card">
-    <div style="text-align:center;margin-bottom:20px">
-      <div style="font-size:40px;margin-bottom:8px">📋</div>
-      <div style="font-size:20px;font-weight:700;color:#1a1a2e">Үүрэг даалгавар</div>
-      <div style="font-size:13px;color:#888;margin-top:4px">2026 оны хяналтын систем</div>
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:44px;margin-bottom:10px">📋</div>
+      <div style="font-size:20px;font-weight:700;color:#e2e8f0">Үүрэг даалгавар</div>
+      <div style="font-size:13px;color:#4a6080;margin-top:4px">2026 оны хяналтын систем</div>
     </div>
-    <div class="field"><label>Нэвтрэх нэр</label><input type="text" id="login-user" placeholder="Жишээ: 31870" autocomplete="username"></div>
-    <div class="field"><label>Нууц үг</label><input type="password" id="login-pass" placeholder="Нууц үгээ оруулна уу" autocomplete="current-password"></div>
-    <div class="login-err" id="login-err"></div>
+    <div class="field">
+      <label>Нэвтрэх нэр</label>
+      <input type="text" id="login-user" placeholder="Нэвтрэх нэрээ оруулна уу..." autocomplete="username" maxlength="10">
+    </div>
+    <div class="field">
+      <label>Нууц үг</label>
+      <input type="password" id="login-pass" placeholder="Нууц үгээ оруулна уу..." autocomplete="current-password" maxlength="10">
+    </div>
+    <div class="login-err" id="login-err" style="display:none">Нэвтрэх нэр эсвэл нууц үг буруу байна</div>
     <button class="login-btn" id="login-btn" onclick="doLogin()">Нэвтрэх →</button>
   </div>
 </div>
@@ -219,9 +226,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
       <div class="nav-section">Үндсэн цэс</div>
       <div class="nav-item active" onclick="showTab('dashboard',this)"><div class="nav-dot" style="background:#e74c3c"></div>НҮҮ Р</div>
       <div class="nav-item" onclick="showTab('mine',this)"><div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР</div>
-      <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin',this)"><div class="nav-dot" style="background:#f39c12"></div>НЭМЭХ</div>
-      <div class="nav-item" id="nav-restore" style="display:none" onclick="restoreInitTasks()"><div class="nav-dot" style="background:#e74c3c"></div>⟳ СЭРГЭЭХ</div>
-      <div class="nav-item" onclick="showTab('decisions',this)"><div class="nav-dot" style="background:#3498db"></div>ХУРЛЫН ШИЙДВЭР</div>
+      <div class="nav-item" onclick="showTab('decision',this)"><div class="nav-dot" style="background:#8b5cf6"></div>ХУРЛЫН ШИЙДВЭР</div>
     </nav>
     <div class="sidebar-footer">
       <div class="user-chip">
@@ -239,10 +244,12 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
     <div class="topbar">
       <div class="topbar-title" id="topbar-title">Нүүр</div>
       <div class="topbar-right">
-        <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
-        <div class="month-pills" id="top-month-pills"></div>
-        <button class="btn-green" onclick="exportExcel()" title="Excel татах">📊 Excel</button>
-        <button class="btn-blue" onclick="exportPDF()" title="PDF тайлан">🖨 PDF</button>
+        <div id="month-section" style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
+          <div class="month-pills" id="top-month-pills"></div>
+          <span id="topbar-month-label" style="font-size:12px;font-weight:700;color:#e74c3c;white-space:nowrap"></span>
+        </div>
+        <button id="admin-add-toggle" style="display:none;padding:6px 14px;background:#1e3a5f;color:#93c5fd;border:1px solid #2563eb;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit" onclick="toggleAddSection()">➕ Нэмэх</button>
       </div>
     </div>
     <div class="container">
@@ -256,24 +263,30 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
         <div class="kpi-item"><div class="kpi-icon">📋</div><div class="kpi-val" id="kpi-total">0</div><div class="kpi-lbl">Нийт<br>даалгавар</div></div>
         <div class="kpi-item"><div class="kpi-icon">✅</div><div class="kpi-val" id="kpi-done" style="color:#27ae60">0</div><div class="kpi-lbl">Хийгдсэн</div></div>
         <div class="kpi-item"><div class="kpi-icon">⏳</div><div class="kpi-val" id="kpi-partial" style="color:#f39c12">0</div><div class="kpi-lbl">Дутуу<br>хийгдсэн</div></div>
-        <div class="kpi-item"><div class="kpi-icon">📌</div><div class="kpi-val" id="kpi-none" style="color:#e74c3c">0</div><div class="kpi-lbl">Эхлээгүй</div></div>
+        <div class="kpi-item"><div class="kpi-icon">📌</div><div class="kpi-val" id="kpi-none" style="color:#e74c3c">0</div><div class="kpi-lbl">Хийгдээгүй</div></div>
         <div class="kpi-item"><div class="kpi-icon">📊</div><div class="kpi-val" id="kpi-avg" style="color:#3498db">0%</div><div class="kpi-lbl">Дундаж<br>биелэлт</div></div>
         <div class="kpi-item" style="background:#fdf2f8"><div class="kpi-icon">🚨</div><div class="kpi-val" id="kpi-overdue" style="color:#8e44ad">0</div><div class="kpi-lbl">Хугацаа<br>хэтэрсэн</div></div>
-        <div class="kpi-item" style="background:#fffde7"><div class="kpi-icon">⚡</div><div class="kpi-val" id="kpi-soon" style="color:#f39c12">0</div><div class="kpi-lbl">7 хоногт<br>дуусах</div></div>
       </div>
 
       <!-- НҮҮ Р -->
       <div class="view active" id="view-dashboard">
-        <!-- Combined chart full width -->
+        <!-- Grouped bar chart: нийт / хийгдсэн / дутуу -->
         <div class="db-card" style="margin-bottom:12px">
           <div class="db-card-title">
-            Нэгжид өгсөн даалгаварын тоо ба биелэлт
+            Нэгжид өгсөн даалгаварын тоо
             <div style="display:flex;gap:12px;font-size:11px;color:#888;font-weight:400;text-transform:none;letter-spacing:0">
-              <span><span style="width:10px;height:10px;background:#1a1a2e;display:inline-block;border-radius:2px;margin-right:3px"></span>Тоо</span>
-              <span><span style="width:16px;height:2px;background:#e74c3c;display:inline-block;margin-right:3px;vertical-align:middle"></span>Биелэлт %</span>
+              <span><span style="width:10px;height:10px;background:#1a1a2e;display:inline-block;border-radius:2px;margin-right:3px"></span>Нийт</span>
+              <span><span style="width:10px;height:10px;background:#27ae60;display:inline-block;border-radius:2px;margin-right:3px"></span>Хийж дууссан</span>
+              <span><span style="width:10px;height:10px;background:#f39c12;display:inline-block;border-radius:2px;margin-right:3px"></span>Дутуу хийгдсэн</span>
             </div>
           </div>
-          <div style="position:relative;width:100%;height:230px"><canvas id="unitComboChart"></canvas></div>
+          <div style="position:relative;width:100%;height:240px"><canvas id="unitComboChart"></canvas></div>
+        </div>
+
+        <!-- Биелэлтийн хувь тусдаа график -->
+        <div class="db-card" style="margin-bottom:12px">
+          <div class="db-card-title">Нэгж бүрийн биелэлтийн хувь (%)</div>
+          <div style="position:relative;width:100%;height:360px"><canvas id="unitPctChart"></canvas></div>
         </div>
 
         <div class="db-grid">
@@ -287,115 +300,150 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
               <span><span style="width:9px;height:9px;border-radius:2px;background:#e74c3c;display:inline-block;margin-right:3px"></span>Хийгдээгүй</span>
             </div>
           </div>
-          <!-- Trend chart -->
-          <div class="db-card">
-            <div class="db-card-title">Сарын биелэлтийн динамик</div>
-            <div style="position:relative;width:100%;height:190px"><canvas id="trendChart"></canvas></div>
-          </div>
-        </div>
-
-        <div class="db-grid">
-          <!-- Unit ranking -->
+          <!-- Ranking -->
           <div class="db-card">
             <div class="db-card-title">🏆 Нэгжийн рейтинг</div>
             <div id="unit-ranking"></div>
           </div>
+        </div>
+
+        <div class="db-grid">
           <!-- Overdue table -->
           <div class="db-card">
             <div class="db-card-title">🚨 Хугацаа хэтэрсэн нэгжүүд</div>
             <div id="overdue-table"></div>
           </div>
+          <div class="db-card"><div class="db-card-title">Хэлтсийн хураангуй</div><div id="dept-list"></div></div>
         </div>
 
-        <div class="db-grid">
-          <div class="db-card"><div class="db-card-title">Хэлтсийн хураангуй</div><div id="dept-list"></div></div>
-          <div class="db-card"><div class="db-card-title">Бүх үүрэг даалгавар</div><div id="all-tasks-db"></div></div>
+        <!-- Хийгдээгүй даалгаварын жагсаалт -->
+        <div class="db-card" style="margin-bottom:12px">
+          <div class="db-card-title">📌 Хийгдээгүй даалгаварууд (0%)</div>
+          <div id="notdone-list"></div>
         </div>
       </div>
 
       <!-- ҮҮРЭГ ДААЛГАВАР -->
       <div class="view" id="view-mine">
+        <!-- Admin нэмэх хэсэг -->
+        <div id="admin-add-section" style="display:none;margin-bottom:16px">
+          <div class="admin-form" style="border:1px solid #2563eb">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <div class="form-title" style="margin-bottom:0">➕ Шинэ үүрэг даалгавар нэмэх</div>
+              <button onclick="toggleAddSection()" style="background:none;border:none;color:#4a6080;cursor:pointer;font-size:18px;line-height:1">×</button>
+            </div>
+            <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:10px">
+              <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Ерөнхий мэдээлэл</div>
+              <div class="form-row" style="margin-bottom:8px">
+                <div class="form-field"><label>Сар</label>
+                  <select id="a-month">
+                    <option value="2026-01">1-р сар</option><option value="2026-02">2-р сар</option>
+                    <option value="2026-03">3-р сар</option><option value="2026-04">4-р сар</option>
+                    <option value="2026-05">5-р сар</option><option value="2026-06">6-р сар</option>
+                    <option value="2026-07">7-р сар</option><option value="2026-08">8-р сар</option>
+                    <option value="2026-09">9-р сар</option><option value="2026-10">10-р сар</option>
+                    <option value="2026-11">11-р сар</option><option value="2026-12">12-р сар</option>
+                  </select>
+                </div>
+                <div class="form-field"><label>Огноо</label><input type="date" id="a-date"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-field"><label>Хэлтэс/нэгж</label>
+                  <select id="a-dept"><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option><option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option><option>ДА</option><option>ХТЛА</option><option>ЗТТА</option><option>АТА</option><option>НҮА</option><option>ХҮТ</option><option>АЗА</option><option>ЗС</option><option>ЖС</option><option>ХС</option><option>СС</option><option>Бусад</option></select>
+                </div>
+                <div class="form-field"><label>Ажилтны нэр</label>
+                  <input type="text" id="a-person" placeholder="Нэр бичих..." list="emp-list" autocomplete="off">
+                  <datalist id="emp-list"></datalist>
+                </div>
+              </div>
+            </div>
+            <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:10px">
+              <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Даалгаварын мэдээлэл</div>
+              <div class="form-field" style="margin-bottom:8px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
+              <div class="form-field" style="margin-bottom:8px"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
+              <div class="form-field" style="margin-bottom:0"><label>Даалгаврын төрөл</label><select id="a-tasktype"><option value="шуурхай">⚡ Шуурхайгаас өгсөн</option><option value="тайлан">📄 Тайлан хамгаалалтаас өгсөн</option></select></div>
+            </div>
+            <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:12px">
+              <div style="font-size:10px;font-weight:700;color:#4a6080;text-transform:uppercase;margin-bottom:8px">Биелэх нэгжүүд</div>
+              <div class="uchk-wrap" id="units-check"></div>
+            </div>
+            <div class="btn-row">
+              <button class="btn-outline" onclick="selectAllUnits()">Бүгд сонгох</button>
+              <button class="btn-primary" onclick="addTask()">✓ Нэмэх</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Даалгаварын жагсаалтын толгой -->
+        <div id="admin-list-bar" style="display:none;margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div class="section-title" id="admin-list-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0">Даалгаварын жагсаалт</div>
+          </div>
+          <div class="filter-row" id="admin-month-pills" style="margin-bottom:0"></div>
+          <div id="admin-task-list" style="margin-top:10px"></div>
+          <div style="height:1px;background:#1a2540;margin:16px 0"></div>
+        </div>
+
         <div class="sub-tabs" id="sub-tabs-wrap" style="display:none">
-          <button class="stab active" onclick="setSubTab('received',this)">📥 Надад өгсөн</button>
-          <button class="stab" onclick="setSubTab('given',this)">📤 Миний өгсөн</button>
+          <button class="stab active" onclick="setSubTab('all',this)">📋 Бүгд <span id="tab-all-cnt" style="font-size:10px;opacity:.7"></span></button>
+          <button class="stab" onclick="setSubTab('received',this)">📥 Надад өгсөн <span id="tab-recv-cnt" style="font-size:10px;opacity:.7"></span></button>
+          <button class="stab" onclick="setSubTab('given',this)">📤 Миний өгсөн <span id="tab-given-cnt" style="font-size:10px;opacity:.7"></span></button>
+        </div>
+        <!-- Даалгаврын төрлийн шүүлт -->
+        <div class="sub-tabs" style="margin-bottom:10px">
+          <button class="stab active" id="ttype-all" onclick="setTaskType('шуурхай',this)">⚡ Шуурхайгаас өгсөн</button>
+          <button class="stab" id="ttype-report" onclick="setTaskType('тайлан',this)">📄 Тайлан хамгаалалтаас өгсөн</button>
         </div>
         <div class="filter-row">
           <button class="fpill active" onclick="setFilter('бүгд',this)">Бүгд</button>
-          <button class="fpill" onclick="setFilter('биелээгүй',this)">Биелэлгүй</button>
+          <button class="fpill" onclick="setFilter('биелээгүй',this)">Хийгдээгүй</button>
           <button class="fpill" onclick="setFilter('явцтай',this)">Явцтай</button>
           <button class="fpill" onclick="setFilter('дууссан',this)">✓ Дууссан</button>
-          <button class="fpill" onclick="setFilter('яаралтай',this)">⚡ Яаралтай</button>
           <button class="fpill" onclick="setFilter('хэтэрсэн',this)">🚨 Хэтэрсэн</button>
         </div>
         <div id="my-tasks"></div>
       </div>
 
       <!-- ХУРЛЫН ШИЙДВЭР -->
-      <div class="view" id="view-decisions">
-        <div id="decisions-container"></div>
-      </div>
-
-      <!-- НЭМЭХ -->
-      <div class="view" id="view-admin">
-        <div class="admin-form">
-          <div class="form-title">➕ Шинэ үүрэг даалгавар нэмэх</div>
-          <div class="form-row">
-            <div class="form-field"><label>Сар</label>
-              <select id="a-month">
-                <option value="2026-01">1-р сар</option><option value="2026-02">2-р сар</option>
-                <option value="2026-03">3-р сар</option><option value="2026-04">4-р сар</option>
-                <option value="2026-05">5-р сар</option><option value="2026-06">6-р сар</option>
-                <option value="2026-07">7-р сар</option><option value="2026-08">8-р сар</option>
-                <option value="2026-09">9-р сар</option><option value="2026-10">10-р сар</option>
-                <option value="2026-11">11-р сар</option><option value="2026-12">12-р сар</option>
-              </select>
-            </div>
-            <div class="form-field"><label>Огноо</label><input type="date" id="a-date"></div>
+      <div class="view" id="view-decision">
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+          <div class="filter-row" style="margin-bottom:0">
+            <button class="fpill active" onclick="setDecFilter('бүгд',this)">Бүгд</button>
+            <button class="fpill" onclick="setDecFilter('миний',this)">👤 Надад хамаарах</button>
+            <button class="fpill" onclick="setDecFilter('шинэ',this)">🔴 Шинэ</button>
           </div>
-          <div class="form-row">
-            <div class="form-field"><label>Хэлтэс/нэгж</label>
-              <select id="a-dept"><option>ДХХ</option><option>ББТХ</option><option>СЭЗХ</option><option>ХНХ</option><option>ХЭМАБА</option><option>ТБТХ</option><option>Ер.Инженер</option><option>Бусад</option></select>
-            </div>
-            <div class="form-field"><label>Ажилтны нэр</label>
-              <input type="text" id="a-person" placeholder="Нэр бичих..." list="emp-list" autocomplete="off">
-              <datalist id="emp-list"></datalist>
-            </div>
-          </div>
-          <div class="form-field" style="margin-bottom:10px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
-          <div class="form-field" style="margin-bottom:10px"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
-          <div class="form-field" style="margin-bottom:12px"><label>Биелэх нэгжүүд</label><div class="uchk-wrap" id="units-check"></div></div>
-          <div class="btn-row">
-            <button class="btn-outline" onclick="selectAllUnits()">Бүгд сонгох</button>
-            <button class="btn-primary" onclick="addTask()">✓ Нэмэх</button>
+          <div id="dec-add-btn-wrap" style="display:none">
+            <button class="btn-primary" onclick="openDecModal()">＋ Шийдвэр нэмэх</button>
           </div>
         </div>
-        <div class="section-title" id="admin-list-title">Даалгаварын жагсаалт</div>
-        <div class="filter-row" id="admin-month-pills" style="margin-bottom:12px"></div>
-        <div id="admin-task-list"></div>
+        <div id="decision-list"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- DECISIONS VIEW (injected by JS) -->
-<!-- DECISIONS MODAL -->
-<div class="modal-bg" id="dec-add-modal">
-  <div class="modal" style="max-width:640px">
-    <div class="modal-head"><h3 id="dec-modal-title">Шинэ хурлын шийдвэр</h3><button class="modal-close" onclick="closeModal('dec-add-modal')">×</button></div>
-    <div id="dec-modal-body" style="max-height:70vh;overflow-y:auto"></div>
-  </div>
-</div>
-<!-- DECISION DETAIL MODAL -->
-<div class="modal-bg" id="dec-detail-modal">
-  <div class="modal" style="max-width:700px">
-    <div class="modal-head">
-      <h3 id="dec-detail-title">Шийдвэрийн дэлгэрэнгүй</h3>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button id="dec-edit-btn" style="display:none;padding:6px 12px;background:#3498db;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit" onclick="openDecEditFromDetail()">✏️ Засах</button>
-        <button class="modal-close" onclick="closeModal('dec-detail-modal')">×</button>
+
+<!-- DECISION DETAIL - Full page view -->
+<div id="dec-detail-page" style="display:none;position:fixed;inset:0;background:#0b0f1a;z-index:200;overflow-y:auto">
+  <div style="max-width:900px;margin:0 auto;padding:20px 24px">
+    <!-- Topbar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #1a2540">
+      <button onclick="closeDecDetail()" style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:#131c2e;color:#7890a8;border:1px solid #1a2540;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit">← Буцах</button>
+      <div style="display:flex;gap:8px">
+        
+        <button onclick="printDecDetail()" style="padding:7px 14px;background:rgba(39,174,96,.15);color:#4ade80;border:1px solid rgba(39,174,96,.3);border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit">🖨 Хэвлэх</button>
       </div>
     </div>
-    <div id="dec-detail-body" style="max-height:75vh;overflow-y:auto"></div>
+    <!-- Detail content -->
+    <div id="dec-detail-content"></div>
+  </div>
+</div>
+
+<!-- PRINT TEMPLATE (hidden, only for print) -->
+<div id="print-template" style="display:none"></div>
+  <div class="modal">
+    <div class="modal-head"><h3>Даалгавар засах</h3><button class="modal-close" onclick="closeModal('edit-modal')">×</button></div>
+    <div id="edit-modal-body"></div>
   </div>
 </div>
 
@@ -406,12 +454,33 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
     <div id="edit-modal-body"></div>
   </div>
 </div>
+<div class="modal-bg" id="dec-add-modal">
+  <div class="modal" style="max-width:720px">
+    <div class="modal-head"><h3 id="dec-modal-title">📋 Шинэ хурлын шийдвэр</h3><button class="modal-close" onclick="closeModal('dec-add-modal')">×</button></div>
+    <div id="dec-modal-body" style="max-height:70vh;overflow-y:auto"></div>
+  </div>
+</div>
+
+<!-- DECISION DETAIL MODAL -->
+<div class="modal-bg" id="dec-detail-modal">
+  <div class="modal" style="max-width:800px">
+    <div class="modal-head"><h3 id="dec-detail-title">Шийдвэрийн дэлгэрэнгүй</h3><button class="modal-close" onclick="closeModal('dec-detail-modal')">×</button></div>
+    <div id="dec-detail-body"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #1a2540">
+      <button class="btn-outline" onclick="closeModal('dec-detail-modal')">Хаах</button>
+      <button style="padding:7px 14px;background:rgba(39,174,96,.15);color:#4ade80;border:1px solid rgba(39,174,96,.3);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit" onclick="window.print()">🖨 Хэвлэх</button>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+Chart.defaults.color='#4a6080';
+Chart.defaults.borderColor='#1a2540';
+Chart.defaults.backgroundColor='rgba(14,21,32,0.8)';
+</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<!-- Firebase Auth removed; using USERS object -->
 <script>
 firebase.initializeApp({
   apiKey:"AIzaSyCDBVVt_rEY7tb96ZBDY4a_FZEa_-q4cUw",
@@ -422,65 +491,209 @@ firebase.initializeApp({
   appId:"1:934034525733:web:6ccf4b7f8c1cdca86839cc"
 });
 const db=firebase.firestore();
-// Firebase Auth removed
 const TDOC=db.collection('app_data').doc('tasks');
 const PDOC=db.collection('app_data').doc('progress');
 const EDOC=db.collection('app_data').doc('employees');
+const DCOL=db.collection('meeting_decisions');
 
-const AU=['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'];
+const AU=['СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ДА','ХТЛА','ЗТТА','АТА','НҮА','ХҮТ','АЗА','ЗС','ЖС','ХС','СС'];
 const DEPTS={'ДХХ':'#2196F3','ББТХ':'#9c27b0','СЭЗХ':'#f44336','ХНХ':'#4caf50','ХЭМАБА':'#ff9800','ТБТХ':'#e91e63','Ер.Инженер':'#607d8b','Бусад':'#455a64'};
 const ML={'2026-01':'1-р сар','2026-02':'2-р сар','2026-03':'3-р сар','2026-04':'4-р сар','2026-05':'5-р сар','2026-06':'6-р сар','2026-07':'7-р сар','2026-08':'8-р сар','2026-09':'9-р сар','2026-10':'10-р сар','2026-11':'11-р сар','2026-12':'12-р сар'};
 const MALL=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
 const SK='uurdeg_session_v2';
-const USERS={
-  '31079':{unit:'СЭЗХ',person:'Л.Эрдэнэсугар',pass:'1079',seeAll:true,isAdmin:false},
-  '31853':{unit:'ДХХ',person:'В.Болормаа',pass:'1853',seeAll:true,isAdmin:false},
-  '31072':{unit:'ТБТХ',person:'Э.Эрдэнэбат',pass:'1072',seeAll:true,isAdmin:false},
-  '31066':{unit:'ХНХ',person:'Ч.Чинцогт',pass:'1066',seeAll:true,isAdmin:false},
-  '31234':{unit:'ББТХ',person:'С.Батбаатар',pass:'1234',seeAll:true,isAdmin:false},
-  '31029':{unit:'НҮА',person:'Ц.Даваасамбуу',pass:'1029',seeAll:true,isAdmin:false},
-  '31056':{unit:'МТХ',person:'О.Сэр-Од',pass:'1056',seeAll:true,isAdmin:false},
-  '31089':{unit:'ХЭМАБА',person:'С.Одончимэг',pass:'1089',seeAll:false,isAdmin:false},
-  '31476':{unit:'ДА',person:'Ж.Ариунаа',pass:'1476',seeAll:false,isAdmin:false},
-  '31805':{unit:'ХТЛА',person:'Т.Гэрэлт-Од',pass:'1805',seeAll:false,isAdmin:false},
-  '31808':{unit:'ЗТТА',person:'Д.Батсайхан',pass:'1808',seeAll:false,isAdmin:false},
-  '31712':{unit:'АТА',person:'Д.Гансүх',pass:'1712',seeAll:false,isAdmin:false},
-  '31871':{unit:'ХҮТ',person:'Б.Болдсүх',pass:'1871',seeAll:false,isAdmin:false},
-  '31408':{unit:'АЗА',person:'Б.Оюундэлгэр',pass:'1408',seeAll:false,isAdmin:false},
-  '31901':{unit:'ЖС',person:'С.Ариунбаяр',pass:'1901',seeAll:false,isAdmin:false},
-  '32589':{unit:'СС',person:'Э.Сувдаа',pass:'2589',seeAll:false,isAdmin:false},
-  '31002':{unit:'ХС',person:'Ц.Содбаяр',pass:'1002',seeAll:false,isAdmin:false},
-  '32141':{unit:'ЗС',person:'М.Энх-Амгалан',pass:'2141',seeAll:false,isAdmin:false},
-  '31870':{unit:'ADMIN',person:'Э.Ичинхорлоо',pass:'1870',seeAll:true,isAdmin:true},
-};
 const INIT=[
-  {id:1,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'Э.Эрдэнэбат',name:'Мэдээ тайлан ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:2,month:'2026-01',date:'2026/01/05',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:3,month:'2026-01',date:'2026/01/05',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Тооцоо нийлсэн акт ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:4,month:'2026-01',date:'2026/01/05',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Дансны үлдэгдлийн баталгаа ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:5,month:'2026-01',date:'2026/01/05',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Календарчилсан төлөвлөгөө ирүүлэх',units:AU,dl:'2026/01/31'},
-  {id:6,month:'2026-01',date:'2026/01/05',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Ээлжийн амралтын төлөвлөгөө ирүүлэх',units:AU,dl:'2026/01/31'},
-  {id:7,month:'2026-01',date:'2026/01/05',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'Ганхүү',name:'ГАУС мэдээлэл явуулсан салбарууд тайлан',units:['ЖС','ХС','СС','ЗС'],dl:'2026/01/31'},
-  {id:8,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'ERP дээр бичиг хаагдахгүй байна засварлах',units:['МТХ'],dl:'2026/01/31'},
-  {id:9,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын гэрчилгээний тайлан',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:10,month:'2026-01',date:'2026/01/06',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Нэгжүүд Улаанбаатар явах ажлаа нийлүүлж нэг явах',units:AU,dl:'тухай бүр'},
-  {id:11,month:'2026-01',date:'2026/01/12',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:12,month:'2026-01',date:'2026/01/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Илүү цагийг амрааж дуусгах',units:AU,dl:'2026.03.01'},
-  {id:13,month:'2026-01',date:'2026/01/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Архивт материалаа өгөх',units:AU,dl:'2026/01/31'},
-  {id:14,month:'2026-01',date:'2026/01/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
-  {id:15,month:'2026-01',date:'2026/01/12',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Ээлжит шалгалтанд бэлдэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ЗТТА','ДА','АЗА','АТА','ХТЛА'],dl:'2026/01/19'},
-  {id:16,month:'2026-01',date:'2026/01/19',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'2026 оны материалын захиалга ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','ЗТТА','ДА','АЗА','АТА','ХТЛА','НАХ'],dl:'2026/01/19'},
-  {id:17,month:'2026-01',date:'2026/01/19',dept:'ТБТХ',giver:'ТБТХ',person:'Р.Батням',name:'Машин механизмийн бэлэн байдал хангах',units:['АТА'],dl:'Байнга'},
-  {id:18,month:'2026-01',date:'2026/01/19',dept:'ТБТХ',giver:'ТБТХ',person:'Р.Батням',name:'Цаг агаар хүйтэрч байгаа тул үзлэг хийх',units:['ЖС','ХС','СС','ЗС','АЗА','ЗТТА','ХҮТ'],dl:'тухай бүр'},
-  {id:19,month:'2026-01',date:'2026/01/19',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын төлөвлөгөө ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ','АЗА'],dl:'2026/01/31'},
-  {id:20,month:'2026-01',date:'2026/01/26',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2025 оны ирсэн бичигнүүдийг хаах',units:['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ББТХ','МТХ','ХЭМАБА','НАХ','ХНХ','ХТЛА','АТА','ЗТТА','ДА','АЗА'],dl:'2026/01/31'},
+  {id:1,month:'2026-01',date:'2026/01/05',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Мэдээ тайлан ирүүлэх',units:[],dl:''},
+  {id:2,month:'2026-01',date:'2026/01/05',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:3,month:'2026-01',date:'2026/01/05',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Тооцоо нийлсэн акт ирүүлэх',units:[],dl:''},
+  {id:4,month:'2026-01',date:'2026/01/05',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Дансны үлдэгдлийн баталгаа ирүүлэх',units:[],dl:''},
+  {id:5,month:'2026-01',date:'2026/01/05',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Календарчилсан төлөвлөгөө ирүүлэх',units:[],dl:''},
+  {id:6,month:'2026-01',date:'2026/01/05',dept:'ХНХ',giver:'ХНХ',person:'Б.Соёлзул',name:'Ээлжийн амралтын төлөвлөгөө ирүүлэх',units:[],dl:''},
+  {id:7,month:'2026-01',date:'2026/01/05',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'Ганхүү',name:'ГАУС мэдээлэл явуулсан салбарууд тайлан ирүүлэх, ГАУС  үзлэг зохион байгуулах',units:[],dl:''},
+  {id:8,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'ЕRP дээр бичиг хаагдахгүй байна засварлах',units:[],dl:''},
+  {id:9,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын гэрчилгээний тайлан ирүүлэх',units:[],dl:''},
+  {id:10,month:'2026-01',date:'2026/01/06',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Нэгжүүд Улаанбаатар явах ажлаа нийлүүлээд нэг явах',units:[],dl:''},
+  {id:11,month:'2026-01',date:'2026/01/12',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:12,month:'2026-01',date:'2026/01/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Илүү цагийг амрааж дуусгах',units:[],dl:''},
+  {id:13,month:'2026-01',date:'2026/01/12',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Архивт материалаа өгөх',units:[],dl:''},
+  {id:14,month:'2026-01',date:'2026/01/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:15,month:'2026-01',date:'2026/01/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Шөнийн тарифийн хөнгөлөлтөд өөрчлөлт орж байгаа анхаарах',units:[],dl:''},
+  {id:16,month:'2026-01',date:'2026/01/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Ухаалаг тоолуур суурилуулсан тохиолдолд бүртгээд явах',units:[],dl:''},
+  {id:17,month:'2026-01',date:'2026/01/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'ХТЛА ухаалаг тоолуур, концентратор суурьлуулахдаа сим карт хийх зэрэг шалгаад явах',units:[],dl:''},
+  {id:18,month:'2026-01',date:'2026/01/12',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Ээлжит шалгалтанд бэлдэх',units:[],dl:''},
+  {id:19,month:'2026-01',date:'2026/01/12',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'2026 оны материалын захиалга ирүүлэх',units:[],dl:''},
+  {id:20,month:'2026-01',date:'2026/01/13',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Цайны газрийн программ ажиллуулах эсэх',units:[],dl:''},
+  {id:21,month:'2026-01',date:'2026/01/13',dept:'ТБТА',giver:'ТБТА',person:'Э.Эрдэнэбат',name:'Сумдуудын техникч нартай холбогдож тень халаагууруудад анхаарах',units:[],dl:''},
+  {id:22,month:'2026-01',date:'2026/01/16',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Шөнийн тарифийн хөнгөлөлт эдэлж байгаа станцууд дээр анхаарах',units:[],dl:''},
+  {id:23,month:'2026-01',date:'2026/01/19',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Гэрээний төлөвлөгөө ирүүлэх',units:[],dl:''},
+  {id:24,month:'2026-01',date:'2026/01/19',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:25,month:'2026-01',date:'2026/01/19',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Захирлын зөвлөлийн хурлаар хэлэлцүүлэх асуудлаа ирүүлэх',units:[],dl:''},
+  {id:26,month:'2026-01',date:'2026/01/19',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын төлөвлөгөө ирүүлэх',units:[],dl:''},
+  {id:27,month:'2026-01',date:'2026/01/19',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'АТП-108 тулгуур мөргөсөн тулгуур унах эрсдэлтэй тулгуурыг буулгах',units:[],dl:''},
+  {id:28,month:'2026-01',date:'2026/01/19',dept:'ТБТХ',giver:'ТБТХ',person:'Р.Батням',name:'Цаг агаар хүйтэрч байгаа тул үзлэг хийх',units:[],dl:''},
+  {id:29,month:'2026-01',date:'2026/01/19',dept:'ТБТХ',giver:'ТБТХ',person:'Р.Батням',name:'Машин механизмийн бэлэн байдал хангах',units:[],dl:''},
+  {id:30,month:'2026-01',date:'2026/01/19',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Гандолгор',name:'Ээлжит шалгалтанд бэлдэх',units:[],dl:''},
+  {id:31,month:'2026-01',date:'2026/01/19',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Гандолгор',name:'Ээжит бус зааварчилгааны тайлан ирүүлэх',units:[],dl:''},
+  {id:32,month:'2026-01',date:'2026/01/19',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Шугамын утас чангарч байгаа шугамуудыг танилцуулах',units:[],dl:''},
+  {id:33,month:'2026-01',date:'2026/01/21',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'6 кВ-ын РП-8 ХХБ-ын оролтын КШ-ын гэмтэлийг яаралтай тодорхойлох',units:[],dl:''},
+  {id:34,month:'2026-01',date:'2026/01/21',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Захирлын зөвлөлийн хурлаар гэмтлүүдээ оруулах /гал хамгаалагч яагаад дийлэхгүй байгаа, дулаан байхад трансформатороо солиогүй тухай/',units:[],dl:''},
+  {id:35,month:'2026-01',date:'2026/01/21',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хязгаарлалт хийгдсэний дараа зарим тоноглол залгагдахгүй байна анхаарах',units:[],dl:''},
+  {id:36,month:'2026-01',date:'2026/01/21',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'35 кВ-ын Ил хуваарилах байгууламжийн халаагууруудын тайлан ирүүлэх',units:[],dl:''},
+  {id:37,month:'2026-01',date:'2026/01/21',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Цаг агаар хүйтэрч байгаа тул хөлдөхгүй байх дээр анхаарах ДА шуурхай мэдээ явуулах ачаалал ихсэж байгаа дэд станцын ачааллыг ухаалаг тоолуураар хянах, гал хамгаалах тохирч байгаа эсэх дэд станц ХБ-ын таслуурын халаагуурууд шалгах, тайлан ирүүлэх',units:[],dl:''},
+  {id:38,month:'2026-01',date:'2026/01/21',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хязгаарлалт удаан хийгдэж байна албан бичиг явуулах',units:[],dl:''},
+  {id:39,month:'2026-01',date:'2026/01/21',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хязгаарлалт удаан хийгдвэл хязгаарлалт хийсэн орон сууцны байруудыг залгах ажил хийх',units:[],dl:''},
+  {id:40,month:'2026-01',date:'2026/01/21',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'СЭХ-ий тоног төхөөрөмжийг айл өрхөд борлуулах тооцоог танилцуулах',units:[],dl:''},
+  {id:41,month:'2026-01',date:'2026/01/22',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Цаг агаар хүйтэрч машин механизмийн бэлэн байдал хангах дизель машинуудын болон үүсгүүрүүдийн шатахуун дүүргэх',units:[],dl:''},
+  {id:42,month:'2026-01',date:'2026/01/26',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:43,month:'2026-01',date:'2026/01/26',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:44,month:'2026-01',date:'2026/01/26',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2025 оны ирсэн бичигнүүдийг хаах',units:[],dl:''},
+  {id:45,month:'2026-01',date:'2026/01/26',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Ээлжит шалгалтанд ажилтнуудаа бүрэн хамруулдах',units:[],dl:''},
+  {id:46,month:'2026-01',date:'2026/01/26',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хязгаарлалтын үед том хороолол орон сууцны байруудыг хөлдөөхгүй байх, гэр хорооллын айлуудыг таслах',units:[],dl:''},
+  {id:47,month:'2026-01',date:'2026/01/26',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Машин механизмууд гадаа унтраагаад асахгүй тул гадаа асаалттай байлгах',units:[],dl:''},
+  {id:48,month:'2026-01',date:'2026/01/26',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Машин механизм шугам тоноглолын шуурхай ажиллагааны бэлэн байдал хангаж ажиллах',units:[],dl:''},
+  {id:49,month:'2026-01',date:'2026/01/26',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Дарга нарт тусгайлан зааварчилгаа өгөх',units:[],dl:''},
+  {id:50,month:'2026-01',date:'2026/01/26',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Ажилчдын автобусыг эрт явуулах шуурхайд цагтаа орох',units:[],dl:''},
+  {id:51,month:'2026-01',date:'2026/01/26',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хөтөл салбарт гэмтэл гарвал АТА-нд хариуцлага тооцох, Хөтөл салбарлуу үзлэг хийх машин явуулах',units:[],dl:''},
+  {id:52,month:'2026-01',date:'2026/01/27',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:53,month:'2026-01',date:'2026/01/27',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Шалгалтанд сайн бэлдэх',units:[],dl:''},
+  {id:54,month:'2026-01',date:'2026/01/28',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын төлөвлөгөө оруулсан танилцах',units:[],dl:''},
+  {id:55,month:'2026-01',date:'2026/01/29',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:56,month:'2026-01',date:'2026/01/29',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'ДДС-ээс ирүүлсэн бичгийн хариу өгөх үзлэг зохион байгуулах',units:[],dl:''},
+  {id:57,month:'2026-01',date:'2026/01/29',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хязгаарлалт хийхэд бэлэн байх хэр их гомдол гарч байна бүргэж авах',units:[],dl:''},
+  {id:58,month:'2026-02',date:'2026/02/02',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Борлуулалтын мэдээ ирүүлэх',units:[],dl:''},
+  {id:59,month:'2026-02',date:'2026/02/02',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Шинэ тарифд тогтоолоор өөрчлөлт орно анхаарч ажиллах',units:[],dl:''},
+  {id:60,month:'2026-02',date:'2026/02/02',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:61,month:'2026-02',date:'2026/02/02',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'ХАБЭА нийт ажилтны сургалттай  төлөвлөгөө оруулах',units:[],dl:''},
+  {id:62,month:'2026-02',date:'2026/02/02',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Спортын наадамын төлөвлөгөө оруулах',units:[],dl:''},
+  {id:63,month:'2026-02',date:'2026/02/02',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2026 оны 02 дугаар сарын нэгжийн төлөвлөгөө ирүүлэх',units:[],dl:''},
+  {id:64,month:'2026-02',date:'2026/02/02',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Төлөвлөгөөт бус төлөвлөгөөт хяналт шалгалтанд илэрсэн зөрчил устгасан тайлан ирүүлэх',units:[],dl:''},
+  {id:65,month:'2026-02',date:'2026/02/02',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын тайлан ирүүлэх',units:[],dl:''},
+  {id:66,month:'2026-02',date:'2026/02/02',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Аrcgis дээр хаягын бүртгэл хийж дуусгах',units:[],dl:''},
+  {id:67,month:'2026-02',date:'2026/02/02',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Баярын өмнөх эргүүл үзлэг хийх, тоноглолын эргүүл үзлэг сайн хийх, Баяраар ЦЭХ-ээр таслахгүй байх',units:[],dl:''},
+  {id:68,month:'2026-02',date:'2026/02/02',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хязгаарлалтад бэлэн байдалд байх',units:[],dl:''},
+  {id:69,month:'2026-02',date:'2026/02/02',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Цаг агаарын байдлыг мэдээллэх',units:[],dl:''},
+  {id:70,month:'2026-02',date:'2026/02/03',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'НӨАТ-ийн баримтын бүртгэл дээр анхаарах',units:[],dl:''},
+  {id:71,month:'2026-02',date:'2026/02/03',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Шалгалтанд сайн бэлдэх',units:[],dl:''},
+  {id:72,month:'2026-02',date:'2026/02/03',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Аrcgis дээр хаягын бүртгэлийг зөв, дэлгэрэнгүй оруулах gazar.mn дээр дутуу бас илүү байгаа 2-ланг нь тулгалт хийж оруулах мэдээллээ 1 стандартаар зөв оруулах',units:[],dl:''},
+  {id:73,month:'2026-02',date:'2026/02/04',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Тусгай зөвшөөрлын нөхцөл шаардлагын тайлан ирүүлэх',units:[],dl:''},
+  {id:74,month:'2026-02',date:'2026/02/04',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'ДДС-ээс ирүүлсэн орон сууцнуудын байруудын КШ-уудын зөрчил ирүүлсэн ажил зохион байгуулах',units:[],dl:''},
+  {id:75,month:'2026-02',date:'2026/02/05',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:76,month:'2026-02',date:'2026/02/05',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Аюулгүй ажиллагаа хариуцагчийн сургалтанд суух ажилтны нэрсийг ирүүлэх',units:[],dl:''},
+  {id:77,month:'2026-02',date:'2026/02/05',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Шалгалтанд сайн бэлдэх',units:[],dl:''},
+  {id:78,month:'2026-02',date:'2026/02/05',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Гараашд гадны машин оруулахгүй байх',units:[],dl:''},
+  {id:79,month:'2026-02',date:'2026/02/06',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2025/02/16 өдрийг амралтын өдөр болгох ажлаа зохицуулах',units:[],dl:''},
+  {id:80,month:'2026-02',date:'2026/02/09',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:81,month:'2026-02',date:'2026/02/09',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Гараас оруулж байгаа бичилтийг шалгах',units:[],dl:''},
+  {id:82,month:'2026-02',date:'2026/02/09',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Дизель машиныг хойд клонкоос цэнэглэх',units:[],dl:''},
+  {id:83,month:'2026-02',date:'2026/02/09',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:84,month:'2026-02',date:'2026/02/09',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2026/02/16 өдөр амралтын өдрийг амрааж дараа нь нөхөж ажиллах',units:[],dl:''},
+  {id:85,month:'2026-02',date:'2026/02/09',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Цаг ашиглалтын зааварт өөрчлөлт орсон ажилтнууддаа танилцуулах',units:[],dl:''},
+  {id:86,month:'2026-02',date:'2026/02/09',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'2026/03/01-ээс уян цагийг хэвийн цагруу шийлжүүлэх',units:[],dl:''},
+  {id:87,month:'2026-02',date:'2026/02/09',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Заалт авах тухай видео хичээл хийж оруулах',units:[],dl:''},
+  {id:88,month:'2026-02',date:'2026/02/09',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Эрүүл үзлэг сайн хийх илэрсэн зөрчлийг энэ 7 хоногт дуусгах',units:[],dl:''},
+  {id:89,month:'2026-02',date:'2026/02/09',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Аваарийн бригадын хуваарь ирүүлэх',units:[],dl:''},
+  {id:90,month:'2026-02',date:'2026/02/09',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Аваарийн нөөц сайн бүрдүүлэх хариуцсан байрны ус дулаанд үзлэг хийх',units:[],dl:''},
+  {id:91,month:'2026-02',date:'2026/02/09',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Нийт ажилтны сургалтанд бүрэн хамраглах',units:[],dl:''},
+  {id:92,month:'2026-02',date:'2026/02/09',dept:'ДА',giver:'ДА',person:'Ж.Ариунаа',name:'Гэмтлүүдээ устгах',units:[],dl:''},
+  {id:93,month:'2026-02',date:'2026/02/09',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Шалгалт амжилттай өгч дуусгах',units:[],dl:''},
+  {id:94,month:'2026-02',date:'2026/02/09',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Сар шинийн ачааллыг давах зөрчлүүдээ яаралтай устгах, тасралт гаргахгүй байх',units:[],dl:''},
+  {id:95,month:'2026-02',date:'2026/02/09',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Нийт ажилтны сургалтанд бүрэн хамраглах',units:[],dl:''},
+  {id:96,month:'2026-02',date:'2026/02/09',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Баярын үеийн үзлэг шалгалт сайн хийх, аваарийн бригадын хуваарь явуулах',units:[],dl:''},
+  {id:97,month:'2026-02',date:'2026/02/09',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Тендерийн материал бэлдэх явуулах',units:[],dl:''},
+  {id:98,month:'2026-02',date:'2026/02/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:99,month:'2026-02',date:'2026/02/12',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Нөхөн бичилт хийсэн ажилтанд урамшуулал өгөх хувь нэмэгдсэн нөхөн бичилтээр оруулахгүй өөр бичилтээр оруулах',units:[],dl:''},
+  {id:100,month:'2026-02',date:'2026/02/12',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Батеррейн станцуудыг баярын үеэр анхаарах',units:[],dl:''},
+  {id:101,month:'2026-02',date:'2026/02/12',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Галын аюулгүй байдлыг хангаж ажиллах',units:[],dl:''},
+  {id:102,month:'2026-02',date:'2026/02/12',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Аваарийн бригалдын тушаал гарсан ажилтнууддаа танилцуулах зааварчилгаа өгөх',units:[],dl:''},
+  {id:103,month:'2026-02',date:'2026/02/12',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'ХАБЭА өдөрлөг 2026/02/23-нд хийх',units:[],dl:''},
+  {id:104,month:'2026-02',date:'2026/02/12',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Цасаар шуурах тул аваарийн бригад материал сэлбэгийн бэлэн байдал хангах',units:[],dl:''},
+  {id:105,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Ачаалал нэмэгдэж байгаа тиймээс ахуйн хэрэглээ дээр анхаарах, эргүүл үзлэгээр илэрсэн зөрчлийн тайлан ирүүлэх',units:[],dl:''},
+  {id:106,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Тасралт гаргахгүй байх',units:[],dl:''},
+  {id:107,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Дулаан хангамжтай холбоотой тасралт үүсэхгүй байх, Дараа жил дулаан хангамжтай холбоотой тасралт гаргахгүй байх',units:[],dl:''},
+  {id:108,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хариуцлагатай бэлэн байдалд орж ажиллах',units:[],dl:''},
+  {id:109,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Аваарийн бригалд цуглах цаг 40 мин болгож схем батлуулах',units:[],dl:''},
+  {id:110,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Шуурхай ажиллагааг маш хурдан зохион байгуулах, хүчдэл залгах боломжгүй бол генератор асаах',units:[],dl:''},
+  {id:111,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Баяраар ажилласан тайлан ирүүлэх',units:[],dl:''},
+  {id:112,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хариуцлагатай жижүүрийн хуваарь батлуулаад мэдээлэл солилцох баярын дараа дээд байгууллагаруу явуулах',units:[],dl:''},
+  {id:113,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Диспетчерүүд хэрэглэгчтэй зөв боловсон харьцах, санал гомдолыг бүртгээд хүлээн аваад танилцуулах',units:[],dl:''},
+  {id:114,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Хязгаарлалт хийхэд бэлэн байх, Хязгаарлалт хийхгүй байх дээр диспетчерүүд анхаарах',units:[],dl:''},
+  {id:115,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Урт хугацааны амралтаар хол явахдаа  зам тээвэрт болгоомжтой оролцох, согтуу хөлдхөөс болгоомжлох',units:[],dl:''},
+  {id:116,month:'2026-02',date:'2026/02/12',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Батеррейн станцуудал баярын үеэр хянах асуудал гарвал сэргээгдхийн инженерүүдрүү мэдэгдэх',units:[],dl:''},
+  {id:117,month:'2026-02',date:'2026/02/13',dept:'ТБТХ',giver:'ТБТХ',person:'Р.Батням',name:'ТП-17 дээр жижүүрэлж байгаа бригад багаж хэрэгсэлээ бүрэн бүтэн авч явах',units:[],dl:''},
+  {id:118,month:'2026-02',date:'2026/02/13',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'15-19 цагийн хооронд ерөнхий сайд иргэдтэй уулзалт хийнэ бэлэн байдал хангах',units:[],dl:''},
+  {id:119,month:'2026-02',date:'2026/02/13',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Бэлэн байдал хангаж ажиллах тасралт гаргахгүй байх',units:[],dl:''},
+  {id:120,month:'2026-02',date:'2026/02/13',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Театрт суух хүмүүсээ оруулах',units:[],dl:''},
+  {id:121,month:'2026-02',date:'2026/02/13',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:122,month:'2026-02',date:'2026/02/13',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Ажил эхлэхээр бүх салбаруудаар тойроод явах',units:[],dl:''},
+  {id:123,month:'2026-02',date:'2026/02/13',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Батерей хуримтлуурын станцын цэвэр цэмцгэр байдлыг хангах',units:[],dl:''},
+  {id:124,month:'2026-02',date:'2026/02/26',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:125,month:'2026-02',date:'2026/02/26',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын тайлан ирүүлэх',units:[],dl:''},
+  {id:126,month:'2026-02',date:'2026/02/26',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Спортын наадмаар ар дааж ажиллаж байгаа ажилчид бэлэн байдал сайн хангаж ажиллах аваарийн бригад батлуулах',units:[],dl:''},
+  {id:127,month:'2026-02',date:'2026/02/26',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Тэмцээний зохион байгуулалт сайн хийх бие халаалт сайн хийх зааварчилгаа өгөх',units:[],dl:''},
+  {id:128,month:'2026-03',date:'2026/03/02',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Дэд станц, Иж бүрдмэл хуваарилах байгууламжийн зай завсрыг битүүлэх. /Цасаар чигжиж гэмтэл гарч байсан/',units:[],dl:''},
+  {id:129,month:'2026-03',date:'2026/03/02',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Дэд станц, Хуваарилах байгууламжид дээврээс ус орж байгаа эсэхэд хяналт тавих',units:[],dl:''},
+  {id:130,month:'2026-03',date:'2026/03/02',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Агаарын шугамын дамжуулагч утас салхинд хавирч богино залгаа үүсгэх нөхцөл бүрдсэн бол унжилт тохируулах ажлыг зохион байгуулах',units:[],dl:''},
+  {id:131,month:'2026-03',date:'2026/03/02',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Шар усны үер буудаг цэгүүдэд анхаарах',units:[],dl:''},
+  {id:132,month:'2026-03',date:'2026/03/02',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'0 тасарч айл өрхийн цахилгаан хэрэгсэл шатах тохиолдол гарч байна үзлэг сайн хийх',units:[],dl:''},
+  {id:133,month:'2026-03',date:'2026/03/02',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Буух шугамын судалгааг энэ 7 хоногт ирүүлэх. гадуур явахад шинэ шугамын хажуугаар хуучин хазгай утас нь унжсан модон тулгуурууд их байна',units:[],dl:''},
+  {id:134,month:'2026-03',date:'2026/03/03',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Шугам тасарсан анхаарах, гал хамгаалагч складанд байхгүй бол захиалах, хүний өөрийн бүх станцын гал хамгаалагчийг солих',units:[],dl:''},
+  {id:135,month:'2026-03',date:'2026/03/03',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Энэ жил том бүтээн байгуулалт болон газрын албанаас газар олголтуудыг асууж урьдчилан мэдэж кабель гэмтэхээс сэргийлэх, нэмэлт зааварчилгаа өгж зөвшөөрлийн хуудсан дээр нь тусгах, уулзалт зохион байгуулах',units:[],dl:''},
+  {id:136,month:'2026-03',date:'2026/03/04',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Дуудлага өргөдөл гомдол интеграци хийдэг болсонтой холбоотой яриа бичлэг хийгдэж байгаа тул дуудлага дээрээ яриагаа анхаарах, програм дээр өргөдөл гомдлоо бүрэн хааж байх.',units:[],dl:''},
+  {id:137,month:'2026-03',date:'2026/03/04',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'2026 оны ээлжит шалгалтад тэнцээгүй болон жинхлэх ажилтнуудаас 2026оны 3-р сарын 9нд өргөтөгсөн шуурхайн дараа сургалтын өрөөнд авна. Шалгалтанд орох ажилчдаа шалгалтыг бэлдүүлэх',units:[],dl:''},
+  {id:138,month:'2026-03',date:'2026/03/04',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Яамнаас ирсэн иргэдийн хөнгөлөлттэй холбоотой бичгийг яаралтай судалж хариуг нь өгөх.',units:[],dl:''},
+  {id:139,month:'2026-03',date:'2026/03/06',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'АЗА-д өмнө жил салхи шуургатай үед  хамгийн их тасардаг шугамуудын судалгаан дээр анхаарах, Утасны унжилтуудаа салхи шуурганаас өмнө шалгаж янзлах, Халалт хэмжих багаж байгаа тэрийгээ ашигла',units:[],dl:''},
+  {id:140,month:'2026-03',date:'2026/03/06',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Монгол бичгийн бланкаа яаралтай янзлах баталгаажуулах',units:[],dl:''},
+  {id:141,month:'2026-03',date:'2026/03/06',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Дараагын хийгдэх төслийн газарт хотоос болон дарханаас яаж очих маршрутыг нь дэлгэрэнгүй гаргах',units:[],dl:''},
+  {id:142,month:'2026-03',date:'2026/03/09',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэлт дээр анхаарах, Өртэй газруудад мэдэгдлээ хуулийн хугацаанд нь өгч таслах,',units:[],dl:''},
+  {id:143,month:'2026-03',date:'2026/03/09',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Програмд шинээр хийгдэж байгаа гэрээнүүдийн материалуудыг бүрэн оруулж байх,',units:[],dl:''},
+  {id:144,month:'2026-03',date:'2026/03/09',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Хамгаалалтын зурвасд орсон хэрэглэгчийн гэрээнүүдийг ялгаж байх',units:[],dl:''},
+  {id:148,month:'2026-03',date:'2026/03/09',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Жилийн эцсийн үндсэн хөрөнгийн тооллогоор актласан материал багаж тоног төхөөрөмжүүдээ яаралтай материалын няравт хүлээлгэн өгөх. Нэгдсэн журмаараа устгалд оруулна',units:[],dl:''},
+  {id:151,month:'2026-03',date:'2026/03/09',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'Анхааруулах зүйл хоцролтууд шууд цалингаас хасаж байгаа тул ажилтнуудддаа анхааруулах',units:[],dl:''},
+  {id:152,month:'2026-03',date:'2026/03/09',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Ээлжинд гарч байгаа диспетчерүүд дуудлага бичигдэж байгаа тул харилцаа хандлага дээрээ анхаарах,',units:[],dl:''},
+  {id:153,month:'2026-03',date:'2026/03/09',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Өргөдөл гомдлуудаа цаг тухайд нь хааж байх. Дуудлагыг дор дор нь хааж ажиллах',units:[],dl:''},
+  {id:154,month:'2026-03',date:'2026/03/09',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Утасны унжилтуудыг салхи шуурганаас өмнө янзлах анхаарах, шар усны үер өмнө нь гарч байсан газруудуд анхаарах, урьдчилан сэргийлэх',units:[],dl:''},
+  {id:155,month:'2026-03',date:'2026/03/09',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Цаг агаарын мэдээллээ цаг тухайд нь мэдээллээд явах',units:[],dl:''},
+  {id:156,month:'2026-03',date:'2026/03/10',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'2025 оны тасарсан шугамын судалгаа оруулсан энэ шугамууд дээр РХА дээр ажиллах тавил тооцоо дээр анхаарах',units:[],dl:''},
+  {id:157,month:'2026-03',date:'2026/03/10',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Хуулийн зөвлөх АЗА хамтраад айлд очих',units:[],dl:''},
+  {id:158,month:'2026-03',date:'2026/03/10',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Айлын тухай захирагчийн албаруу бичиг явуулах',units:[],dl:''},
+  {id:159,month:'2026-03',date:'2026/03/10',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Салбаруудаар явах /Мастер дарга борлуулалттынн ажилтнуудтай уулзах хяналт байнга явуулах илэрсэн зөрчлийг устгах үүрэг даалгавар өгөх ажил хийгдэхгүй бол шагнал цалин хасах',units:[],dl:''},
+  {id:160,month:'2026-03',date:'2026/03/10',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Засварын ажлыг маш богино хугацаанд хийх',units:[],dl:''},
+  {id:161,month:'2026-03',date:'2026/03/10',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Орон сууцны үндсэн болон бэлтгэл КШ-ын жагсаалт судалгаа гаргах',units:[],dl:''},
+  {id:162,month:'2026-03',date:'2026/03/10',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'35кВ-ын Энхталын агаарын шугамаас тэжээлтэй хэрэглэгч рүү албан бичиг явуулах',units:[],dl:''},
+  {id:163,month:'2026-03',date:'2026/03/10',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Зүүнбүрэнд РХА дээр асуудал гарсан хүчдэл нэмэгдүүлээд тасраад байсан иймэрхүү асуудалд үндэслэлээ бичээд албан бичиг явуулах РХА-ийн хүмүүсийг дуудаж шалгуулж байх',units:[],dl:''},
+  {id:164,month:'2026-03',date:'2026/03/11',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Цас орно аваарийн бригад машин механизмийн бэлэн байдал хангах',units:[],dl:''},
+  {id:165,month:'2026-03',date:'2026/03/11',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Гражийн машинуудыг цэгцлэх өөрсдийн зогсоолд зогсох гражийн зохион байгуулалт дээр анхаарах',units:[],dl:''},
+  {id:166,month:'2026-03',date:'2026/03/11',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Бланкний загвар гаргах',units:[],dl:''},
+  {id:167,month:'2026-03',date:'2026/03/16',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:168,month:'2026-03',date:'2026/03/16',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Өртэй хэрэглэгчтэй тооцоо нийлэх',units:[],dl:''},
+  {id:169,month:'2026-03',date:'2026/03/16',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:170,month:'2026-03',date:'2026/03/16',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Тооцоо нийлсэн акт хийх',units:[],dl:''},
+  {id:171,month:'2026-03',date:'2026/03/16',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'ДҮТ-тэй интеграц хийж байгаатай холбоотой өргөлдөл гомдолын хугацаанд нь шийдвэрлэх',units:[],dl:''},
+  {id:172,month:'2026-03',date:'2026/03/16',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'С.Одончимэг',name:'Шалгалтанд тэнцээгүй 4 ажилтан шалгалтанд бэлдэх',units:[],dl:''},
+  {id:173,month:'2026-03',date:'2026/03/16',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Шар усны үерээс сэргийлэх',units:[],dl:''},
+  {id:174,month:'2026-03',date:'2026/03/16',dept:'Гүйцэтгэх захирал',giver:'Гүйцэтгэх захирал',person:'Ц.Хангай',name:'Салбаруудаар яваад бүх ажилд асуудал байна дараагын явалтанд асуудлаа цэгцлэх',units:[],dl:''},
+  {id:175,month:'2026-03',date:'2026/03/19',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:176,month:'2026-03',date:'2026/03/23',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх төлбөр төлөгдөөгүй хэрэглэгчийг ЦЭХ-ийг таслах',units:[],dl:''},
+  {id:177,month:'2026-03',date:'2026/03/23',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Үзлэг хийж шалгаад гүйцэтгэлийн тайлан 7 хоног бүр тайлан ирүүлэх',units:[],dl:''},
+  {id:178,month:'2026-03',date:'2026/03/23',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Программ дээр тоолуул төвлөрсөн хайрцагны мэдээлэл оруулах',units:[],dl:''},
+  {id:179,month:'2026-03',date:'2026/03/23',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Станцууд дээр фазын тэнцүүлэг хийх',units:[],dl:''},
+  {id:180,month:'2026-03',date:'2026/03/23',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'HES-8.0 шалгах',units:[],dl:''},
+  {id:181,month:'2026-03',date:'2026/03/23',dept:'СЭЗХ',giver:'СЭЗХ',person:'Л.Эрдэнэсугар',name:'Орлого төвлөрүүлэх',units:[],dl:''},
+  {id:182,month:'2026-03',date:'2026/03/23',dept:'ХНХ',giver:'ХНХ',person:'Ч.Чинцогт',name:'1-р улиралын тайланг 2026.04.03-ны дотор ирүүлэх',units:[],dl:''},
+  {id:183,month:'2026-03',date:'2026/03/23',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Тоолуур баталгаажуулах тавих хугацааг 7 хоногт багтаах',units:[],dl:''},
+  {id:184,month:'2026-03',date:'2026/03/23',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Хамгаалалтын зурвасын тайлан ирүүлэх',units:[],dl:''},
+  {id:185,month:'2026-03',date:'2026/03/23',dept:'ДХХ',giver:'ДХХ',person:'В.Болормаа',name:'Борлуулалтын ажилчид хэрэглээ өндөр гарч байгаа ААН-үүд дээр анхаарч ажиллах',units:[],dl:''},
+  {id:186,month:'2026-03',date:'2026/03/23',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'Arcgis хаягийн баяжуулалт хийх',units:[],dl:''},
+  {id:187,month:'2026-03',date:'2026/03/23',dept:'ТБТХ',giver:'ТБТХ',person:'Э.Эрдэнэбат',name:'2025 оны 3-5 дугаар сарын тасарсан шугамын судалгаа оруулсан огт ажиллахгүй байна анхаарах',units:[],dl:''},
+  {id:188,month:'2026-03',date:'2026/03/23',dept:'ХЭМАБА',giver:'ХЭМАБА',person:'Э.Эрдэнэбат',name:'Шалгалттан тэнцээгүй 2 ажилтанг бэлдүүлж  ирүүлэх',units:[],dl:''},
+  {id:189,month:'2026-03',date:'2026/03/23',dept:'ДА',giver:'ДА',person:'Ж.Ариунаа',name:'Жимс дэд станцын хүчдэлийн трансформаторын гал хамгаалагч солих',units:[],dl:''},
+  {id:190,month:'2026-03',date:'2026/03/23',dept:'ДА',giver:'ДА',person:'Ж.Ариунаа',name:'Энхталын АШ-ын КШ-г солих',units:[],dl:''},
+  {id:191,month:'2026-03',date:'2026/03/23',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Үерийн ус дэд станц ХБ-руу орхоос сэргийлэх',units:[],dl:''},
+  {id:192,month:'2026-03',date:'2026/03/23',dept:'Ерөнхий инженер',giver:'Ерөнхий инженер',person:'Б.Батжаргал',name:'Гэмтлүүдээ устгах',units:[],dl:''},
 ];
 
 let cu=null,tasks=[],prog={},empList=[],nid=300;
-let decisions=[],decRows=[],fbLoaded=false;
-const DCOL=()=>db.collection('meeting_decisions');
-let bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[];
-let dC=null,uCC=null,trendC=null,saveT=null;
+let bFilter='бүгд',actMonths=[],subTab='all',selUnits=[],taskTypeFilter='шуурхай';
+let dC=null,uCC=null,pctC2=null,saveT=null;
 
 // ===== UTILS =====
 function syncUI(s,m){const el=document.getElementById('sync');el.textContent=m;el.className='sync show '+(s||'');if(s!=='saving')setTimeout(()=>el.classList.remove('show'),2200);}
@@ -507,47 +720,81 @@ function getDelay(tid,u){const p=prog[tid];return(p&&p['d_'+u]!==undefined)?p['d
 function setDelay(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid]['d_'+u]=v;}
 
 // ===== FIREBASE =====
+let fbLoaded=false;
+// Decision state
+let decisions=[],decFilter='бүгд',decRows=[];
+
 async function fbLoad(){
+  fbLoaded=false;
   try{
     const[ts,ps,es]=await Promise.all([TDOC.get(),PDOC.get(),EDOC.get()]);
-    if(ts.exists&&ts.data().list&&ts.data().list.length>0){
-      tasks=ts.data().list;nid=Math.max(...tasks.map(t=>t.id),299)+1;
-    } else {
-      // Firestore-д өгөгдөл байхгүй бол INIT-ээс сэргээнэ
-      tasks=[...INIT];nid=301;
-      try{await TDOC.set({list:tasks});}catch(e){}
+    if(ts.exists&&ts.data().list){
+      tasks=ts.data().list;
+      nid=Math.max(...tasks.map(t=>t.id),299)+1;
+    }else{
+      tasks=[...INIT];
+      await TDOC.set({list:tasks});
     }
+    // progress-г зөвхөн Firebase-аас ачааллана — хэзээ ч дарж бичихгүй
     prog=ps.exists?ps.data().data||{}:{};
     empList=es.exists?es.data().list||[]:[...new Set(INIT.map(t=>t.person))];
-  }catch(e){tasks=[...INIT];prog={};empList=[...new Set(INIT.map(t=>t.person))];nid=301;}
+    fbLoaded=true;
+  }catch(e){
+    console.error('fbLoad error:',e.message);
+    // Алдаа гарвал tasks зөвхөн санах ойд, prog-г хэзээ ч устгахгүй
+    if(!tasks.length)tasks=[...INIT];
+    if(!empList.length)empList=[...new Set(INIT.map(t=>t.person))];
+  }
 }
-
-// Admin хэрэглэгч INIT өгөгдөл сэргээх
-async function restoreInitTasks(){
-  if(!cu||!cu.isAdmin){alert('Зөвхөн Admin хийж болно');return;}
-  if(!confirm('20 анхны даалгаварыг Firestore-д сэргээх үү? Одоогийн өгөгдөл хадгалагдана.'))return;
-  syncUI('saving','Сэргээж байна...');
+function saveTasks(){
+  if(!fbLoaded){console.warn('Firebase ачаалагдаагүй — хадгалахгүй');return;}
+  syncUI('saving','Хадгалж байна...');
+  clearTimeout(saveT);
+  saveT=setTimeout(async()=>{
+    try{await TDOC.set({list:tasks});syncUI('ok','✓ Хадгалагдлаа');}
+    catch(e){syncUI('err','⚠ Алдаа');}
+  },700);
+}
+async function saveProgress(){
+  syncUI('saving','Хадгалж байна...');
   try{
-    const snap=await TDOC.get();
-    const existing=snap.exists&&snap.data().list?snap.data().list:[];
-    // Existing tasks-ийг хадгалаад INIT-ийг нэмнэ (давхардахгүй)
-    const existingIds=new Set(existing.map(t=>t.id));
-    const toAdd=INIT.filter(t=>!existingIds.has(t.id));
-    const merged=[...existing,...toAdd];
-    nid=Math.max(...merged.map(t=>t.id),299)+1;
-    await TDOC.set({list:merged});
-    tasks=merged;
-    syncUI('ok','✓ '+toAdd.length+' даалгавар сэргээгдлээ');
-    renderTopPills();updateKPI();renderDashboard();
-    if(document.getElementById('view-admin').classList.contains('active')){
-      renderAdminPills();renderAdminList();
+    // Firebase-аас ачаалагдаагүй бол эхлээд унша — хуучин өгөгдлийг устгахгүй
+    if(!fbLoaded){
+      const ps=await PDOC.get();
+      const existing=ps.exists?ps.data().data||{}:{};
+      // Одоогийн prog-г existing дээр нэмэх (merge)
+      prog=Object.assign(existing,prog);
     }
-  }catch(e){syncUI('err','⚠ Алдаа: '+e.message);}
+    await PDOC.set({data:prog});
+    fbLoaded=true;
+    syncUI('ok','✓ Хадгалагдлаа');
+  }catch(e){syncUI('err','⚠ Алдаа');console.error('saveProgress:',e);}
 }
-function saveTasks(){syncUI('saving','Хадгалж байна...');clearTimeout(saveT);saveT=setTimeout(async()=>{try{await TDOC.set({list:tasks});syncUI('ok','✓ Хадгалагдлаа');}catch(e){syncUI('err','⚠ Алдаа');}},700);}
-async function saveProgress(){syncUI('saving','Хадгалж байна...');try{await PDOC.set({data:prog});syncUI('ok','✓ Хадгалагдлаа');}catch(e){syncUI('err','⚠ Алдаа');}}
 async function saveEmpList(){try{await EDOC.set({list:empList});}catch(e){}}
 function updateEmpDatalist(){const dl=document.getElementById('emp-list');if(dl)dl.innerHTML=empList.map(e=>`<option value="${e}">`).join('');}
+
+// ===== USERS =====
+const USERS={
+  '31079':{unit:'СЭЗХ',person:'Л.Эрдэнэсугар',pass:'1079',seeAll:true,isAdmin:false},
+  '31853':{unit:'ДХХ',person:'В.Болормаа',pass:'1853',seeAll:true,isAdmin:false},
+  '31072':{unit:'ТБТХ',person:'Э.Эрдэнэбат',pass:'1072',seeAll:true,isAdmin:false},
+  '31066':{unit:'ХНХ',person:'Ч.Чинцогт',pass:'1066',seeAll:true,isAdmin:false},
+  '31234':{unit:'ББТХ',person:'С.Батбаатар',pass:'1234',seeAll:true,isAdmin:false},
+  '31029':{unit:'НҮА',person:'Ц.Даваасамбуу',pass:'1029',seeAll:true,isAdmin:false},
+  '31056':{unit:'МТХ',person:'О.Сэр-Од',pass:'1056',seeAll:true,isAdmin:false},
+  '31089':{unit:'ХЭМАБА',person:'С.Одончимэг',pass:'1089',seeAll:false,isAdmin:false},
+  '31476':{unit:'ДА',person:'Ж.Ариунаа',pass:'1476',seeAll:false,isAdmin:false},
+  '31805':{unit:'ХТЛА',person:'Т.Гэрэлт-Од',pass:'1805',seeAll:false,isAdmin:false},
+  '31808':{unit:'ЗТТА',person:'Д.Батсайхан',pass:'1808',seeAll:false,isAdmin:false},
+  '31712':{unit:'АТА',person:'Д.Гансүх',pass:'1712',seeAll:false,isAdmin:false},
+  '31871':{unit:'ХҮТ',person:'Б.Болдсүх',pass:'1871',seeAll:false,isAdmin:false},
+  '31408':{unit:'АЗА',person:'Б.Оюундэлгэр',pass:'1408',seeAll:false,isAdmin:false},
+  '31901':{unit:'ЖС',person:'С.Ариунбаяр',pass:'1901',seeAll:false,isAdmin:false},
+  '32589':{unit:'СС',person:'Э.Сувдаа',pass:'2589',seeAll:false,isAdmin:false},
+  '31002':{unit:'ХС',person:'Ц.Содбаяр',pass:'1002',seeAll:false,isAdmin:false},
+  '32141':{unit:'ЗС',person:'М.Энх-Амгалан',pass:'2141',seeAll:false,isAdmin:false},
+  '31870':{unit:'ADMIN',person:'Э.Ичинхорлоо',pass:'1870',seeAll:true,isAdmin:true},
+};
 
 // ===== AUTH =====
 async function doLogin(){
@@ -562,26 +809,39 @@ async function doLogin(){
   btn.disabled=true;btn.textContent='Ачаалж байна...';
   cu={unit:user.unit,name:user.person,isAdmin:user.isAdmin,seeAll:user.seeAll};
   try{localStorage.setItem(SK,JSON.stringify(cu));}catch(e){}
-  try{await fbLoad();}catch(e){}
+  await fbLoad();
   btn.disabled=false;btn.textContent='Нэвтрэх →';
   showApp();
 }
 function doLogout(){
   try{localStorage.removeItem(SK);}catch(e){}
-  cu=null;tasks=[];prog=[];decisions=[];
+  cu=null;tasks=[];prog=[];
   document.getElementById('main-app').style.display='none';
   document.getElementById('login-page').style.display='flex';
+  document.getElementById('nav-admin').style.display='none';
   document.getElementById('login-user').value='';
   document.getElementById('login-pass').value='';
-  document.getElementById('login-err').style.display='none';
-  document.getElementById('login-btn').disabled=false;
-  document.getElementById('login-btn').textContent='Нэвтрэх →';
-  document.getElementById('nav-admin').style.display='none';
-  var nr=document.getElementById('nav-restore');if(nr)nr.style.display='none';
 }
 
 // ===== HELPERS =====
 function getMonths(){const ms=new Set(tasks.map(t=>t.month));return MALL.filter(m=>ms.has(m));}
+function getActTasks(){
+  // Сараар шүүх
+  let ts=actMonths.length>0?tasks.filter(t=>actMonths.includes(t.month)):tasks;
+  return ts;
+}
+function getUnitTasks(){
+  const ts=getActTasks();
+  if(!cu)return ts;
+  // Admin эсвэл seeAll нэгж: бүх даалгавар харна
+  if(cu.isAdmin||cu.seeAll)return ts;
+  // Бусад: зөвхөн өөрийн нэгжийн даалгавар
+  return ts.filter(t=>t.units.includes(cu.unit)||t.giver===cu.unit);
+}
+function getMonthLabel(){
+  if(actMonths.length===0)return 'Бүгд сар';
+  return actMonths.map(m=>ML[m]).join(' + ');
+}
 function getPct(tid,u){const p=prog[tid];return(p&&p[u]!==undefined)?p[u]:0;}
 function setPct(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid][u]=Math.max(0,Math.min(100,v));}
 function getNote(tid,u){const p=prog[tid];return(p&&p['n_'+u]!==undefined)?p['n_'+u]:'';}
@@ -616,12 +876,15 @@ function showApp(){
   document.getElementById('user-unit-lbl').textContent=cu.unit;
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
   if(cu.isAdmin){
-    document.getElementById('nav-admin').style.display='flex';
-    document.getElementById('nav-restore').style.display='flex';
+    document.getElementById('dec-add-btn-wrap').style.display='block';
+    document.getElementById('admin-list-bar').style.display='block';
+    const addBtn=document.getElementById('admin-add-toggle');
+    if(addBtn)addBtn.style.display='block';
     initUchk();
   }
-  document.getElementById('sub-tabs-wrap').style.display=(cu.isAdmin||cu.seeAll)?'none':'flex';
-  const ms=getMonths();actMonth=ms[ms.length-1]||'2026-01';
+  document.getElementById('sub-tabs-wrap').style.display=(cu.isAdmin||cu.seeAll)?'flex':'none';
+  subTab=cu.isAdmin||cu.seeAll?'all':'received';
+  actMonths=[];
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
   showDeadlineToast();
@@ -631,46 +894,66 @@ function showTab(name,el){
   if(el)el.classList.add('active');
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',admin:'Нэмэх'};
+  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',decision:'Хурлын шийдвэр'};
   document.getElementById('topbar-title').textContent=t[name];
   if(name==='dashboard'){updateKPI();renderDashboard();}
-  else if(name==='mine'){updateKPI();renderMyTasks();}
-  else if(name==='admin'){renderAdminPills();renderAdminList();updateEmpDatalist();}
-  else if(name==='decisions'){loadDecisions().then(renderDecisions);}
+  else if(name==='mine'){updateKPI();renderMyTasks();if(cu&&cu.isAdmin){renderAdminPills();renderAdminList();updateEmpDatalist();}}
+  else if(name==='decision'){
+    document.getElementById('kpi-row').style.display='none';
+    document.getElementById('month-section').style.display='none';
+    loadAndRenderDecisions();
+  }
+  if(name!=='decision'){
+    document.getElementById('kpi-row').style.display='';
+    document.getElementById('month-section').style.display='flex';
+  }
+  const addBtn=document.getElementById('admin-add-toggle');
+  if(addBtn)addBtn.style.display=(name==='mine'&&cu&&cu.isAdmin)?'block':'none';
 }
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderMyTasks();}
-function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
+function setSubTab(s,btn){subTab=s;document.querySelectorAll('#sub-tabs-wrap .stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
+function setTaskType(t,btn){taskTypeFilter=t;document.querySelectorAll('.sub-tabs:not(#sub-tabs-wrap) .stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
 function renderTopPills(){
   const ms=getMonths();
-  document.getElementById('top-month-pills').innerHTML=ms.map(m=>`<button class="mpill has${m===actMonth?' active':''}" onclick="setMonth('${m}',this)">${ML[m]}</button>`).join('');
+  const allAct=actMonths.length===0;
+  const pills=`<button class="mpill${allAct?' all-act':''}" onclick="setAllMonths()">${allAct?'✓ ':''} Бүгд</button>`
+    +ms.map(m=>`<button class="mpill has${actMonths.includes(m)?' active':''}" onclick="toggleMonth('${m}')">${ML[m]}</button>`).join('');
+  document.getElementById('top-month-pills').innerHTML=pills;
+  document.getElementById('topbar-month-label').textContent=getMonthLabel();
 }
-function setMonth(m,btn){
-  actMonth=m;document.querySelectorAll('#top-month-pills .mpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  updateKPI();
+function setAllMonths(){
+  actMonths=[];renderTopPills();updateKPI();
   if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
   else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
 }
-function updateKPI(){
-  const ts=tasks.filter(t=>t.month===actMonth);
+function toggleMonth(m){
+  if(actMonths.includes(m))actMonths=actMonths.filter(x=>x!==m);
+  else actMonths.push(m);
+  if(actMonths.length===0||actMonths.length===getMonths().length)actMonths=[];
+  renderTopPills();updateKPI();
+  if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
+  else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
+}
+function updateKPI(customTs){
+  const ts=customTs||(cu&&!cu.isAdmin?getUnitTasks():getActTasks());
   const done=ts.filter(t=>calcAvg(t)>=100).length;
   const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
   const none=ts.filter(t=>calcAvg(t)===0).length;
   const avg=ts.length?Math.round(ts.reduce((s,t)=>s+calcAvg(t),0)/ts.length):0;
   const ovd=ts.filter(t=>isOverdue(t)).length;
-  const soon=ts.filter(t=>isDueSoon(t,7)).length;
   document.getElementById('kpi-total').textContent=ts.length;
   document.getElementById('kpi-done').textContent=done;
   document.getElementById('kpi-partial').textContent=par;
   document.getElementById('kpi-none').textContent=none;
   document.getElementById('kpi-avg').textContent=avg+'%';
   document.getElementById('kpi-overdue').textContent=ovd;
-  document.getElementById('kpi-soon').textContent=soon;
-  document.getElementById('print-month-label').textContent=(ML[actMonth]||actMonth)+' | Бэлтгэсэн: '+new Date().toLocaleDateString('mn-MN');
+  document.getElementById('print-month-label').textContent=getMonthLabel()+' | Бэлтгэсэн: '+new Date().toLocaleDateString('mn-MN');
 }
 
 // ===== DASHBOARD =====
 function renderDashboard(){
-  const ts=tasks.filter(t=>t.month===actMonth);
+  // Admin: бүх даалгавар, Нэгж: зөвхөн өөрийнх
+  const ts=cu&&!cu.isAdmin?getUnitTasks():getActTasks();
   const done=ts.filter(t=>calcAvg(t)>=100).length;
   const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
   const none=ts.filter(t=>calcAvg(t)===0).length;
@@ -679,28 +962,44 @@ function renderDashboard(){
   if(dC)dC.destroy();
   dC=new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['Хийгдсэн','Дутуу','Хийгдээгүй'],datasets:[{data:[done,par,none],backgroundColor:['#27ae60','#f39c12','#e74c3c'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>{const p=Math.round(c.parsed/(done+par+none||1)*100);return` ${c.parsed} даалгавар (${p}%)`;}}}}}});
 
-  // Combined combo chart
-  const uc=AU.map(u=>ts.filter(t=>t.units.includes(u)).length);
-  const up=AU.map(u=>{const ut=ts.filter(t=>t.units.includes(u));return ut.length?Math.round(ut.reduce((s,t)=>s+getPct(t.id,u),0)/ut.length):0;});
+  // 3-bar grouped chart: нийт / хийж дууссан / дутуу хийгдсэн
+  const ucTotal=AU.map(u=>ts.filter(t=>t.units.includes(u)).length);
+  const ucDone=AU.map(u=>ts.filter(t=>t.units.includes(u)&&getPct(t.id,u)>=100).length);
+  const ucPart=AU.map(u=>ts.filter(t=>t.units.includes(u)&&getPct(t.id,u)>0&&getPct(t.id,u)<100).length);
   if(uCC)uCC.destroy();
   uCC=new Chart(document.getElementById('unitComboChart'),{
     type:'bar',
     data:{labels:AU,datasets:[
-      {type:'bar',label:'Даалгаварын тоо',data:uc,backgroundColor:'#1a1a2e',borderRadius:3,borderSkipped:false,yAxisID:'y',order:2},
-      {type:'line',label:'Биелэлт %',data:up,borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.08)',borderWidth:2.5,pointRadius:4,pointBackgroundColor:up.map(p=>p>=100?'#27ae60':p>0?'#f39c12':'#e74c3c'),pointBorderColor:'#fff',pointBorderWidth:1.5,fill:true,yAxisID:'y1',order:1,tension:0.3}
+      {label:'Нийт',data:ucTotal,backgroundColor:'#1a1a2e',borderRadius:3,borderSkipped:false},
+      {label:'Хийж дууссан',data:ucDone,backgroundColor:'#27ae60',borderRadius:3,borderSkipped:false},
+      {label:'Дутуу хийгдсэн',data:ucPart,backgroundColor:'#f39c12',borderRadius:3,borderSkipped:false}
     ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>c.datasetIndex===0?` ${c.parsed.y} даалгавар`:` ${c.parsed.y}% биелэлт`}}},scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},y:{type:'linear',position:'left',ticks:{font:{size:10},color:'#555',stepSize:2},grid:{color:'rgba(0,0,0,0.05)'},title:{display:true,text:'Тоо',color:'#555',font:{size:10}}},y1:{type:'linear',position:'right',min:0,max:100,ticks:{font:{size:10},color:'#e74c3c',callback:v=>v+'%'},grid:{drawOnChartArea:false},title:{display:true,text:'%',color:'#e74c3c',font:{size:10}}}}}
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.dataset.label}: ${c.parsed.y}`}}},
+      scales:{x:{ticks:{font:{size:10},color:'#aaa',maxRotation:45,autoSkip:false},grid:{display:false}},
+        y:{ticks:{font:{size:10},color:'#aaa',stepSize:1},grid:{color:'rgba(0,0,0,0.05)'}}}
+    }
   });
 
-  // Monthly trend line chart
-  const months=getMonths();
-  const trendData=months.map(m=>{const mt=tasks.filter(t=>t.month===m);return mt.length?Math.round(mt.reduce((s,t)=>s+calcAvg(t),0)/mt.length):0;});
-  if(trendC)trendC.destroy();
-  trendC=new Chart(document.getElementById('trendChart'),{
-    type:'line',
-    data:{labels:months.map(m=>ML[m]),datasets:[{label:'Дундаж биелэлт %',data:trendData,borderColor:'#3498db',backgroundColor:'rgba(52,152,219,0.1)',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#3498db',pointBorderColor:'#fff',pointBorderWidth:2,fill:true,tension:0.3}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.parsed.y}% дундаж биелэлт`}}},scales:{x:{ticks:{font:{size:10},color:'#aaa'},grid:{display:false}},y:{min:0,max:100,ticks:{font:{size:10},color:'#aaa',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}}}}
+  // Тусдаа биелэлтийн хувийн график (horizontal bar)
+  const up=AU.map(u=>{const ut=ts.filter(t=>t.units.includes(u));return ut.length?Math.round(ut.reduce((s,t)=>s+getPct(t.id,u),0)/ut.length):0;});
+  const pctC=document.getElementById('unitPctChart');
+  if(pctC._chartInstance)pctC._chartInstance.destroy();
+  const pctChart=new Chart(pctC,{
+    type:'bar',
+    data:{labels:AU,datasets:[{
+      label:'Биелэлт %',data:up,
+      backgroundColor:'rgba(52,152,219,0.8)',
+      borderRadius:4,borderSkipped:false
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>` ${c.parsed.x}%`}},
+        datalabels:{display:false}},
+      scales:{x:{min:0,max:100,ticks:{font:{size:10},color:'#aaa',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}},
+        y:{ticks:{font:{size:10},color:'#444',font:{weight:'600'}},grid:{display:false}}}
+    }
   });
+  pctC._chartInstance=pctChart;
 
   // Unit ranking
   const ranking=AU.map(u=>{
@@ -725,29 +1024,67 @@ function renderDashboard(){
   document.getElementById('overdue-table').innerHTML=ovdUnits.length?ovdUnits.map(x=>`
     <div class="ovd-row">
       <span style="font-size:15px">🚨</span>
-      <span style="font-weight:700;min-width:44px;color:#8e44ad">${x.unit}</span>
-      <span style="flex:1;color:#555">${x.tasks.map(t=>t.name).join(', ').slice(0,50)}${x.tasks.map(t=>t.name).join(', ').length>50?'...':''}</span>
-      <span style="font-size:11px;font-weight:700;color:#8e44ad;white-space:nowrap">${x.count} даалгавар</span>
+      <span style="font-weight:500;min-width:50px;color:#8e44ad">${x.unit}</span>
+      <div style="flex:1;height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin:0 8px"><div style="height:100%;background:#8e44ad;border-radius:4px;width:${Math.min(100,x.count*20)}%"></div></div>
+      <span style="font-size:12px;font-weight:700;color:#8e44ad;white-space:nowrap">${x.count} даалгавар</span>
     </div>`).join(''):'<div style="text-align:center;padding:12px;color:#27ae60;font-size:13px">✅ Хугацаа хэтэрсэн даалгавар байхгүй</div>';
 
   // Dept & all tasks
   const depts=[...new Set(ts.map(t=>t.dept))];
   document.getElementById('dept-list').innerHTML=depts.map(d=>{const dt=ts.filter(t=>t.dept===d);const p=Math.round(dt.reduce((s,t)=>s+calcAvg(t),0)/dt.length);return`<div class="dept-row"><div style="display:flex;align-items:center"><div class="ddot" style="background:${DEPTS[d]||'#607d8b'}"></div><div><div class="dnm">${d}</div><div class="dcnt">${dt.length} даалгавар</div></div></div><span style="font-size:13px;font-weight:700;color:${pColor(p)}">${p}%</span></div>`;}).join('');
-  document.getElementById('all-tasks-db').innerHTML=ts.map(t=>{const p=calcAvg(t);const ovd=isOverdue(t);return`<div class="all-task-row"><span style="font-size:11px;color:#bbb;width:18px">${t.id}</span><span style="font-size:12px;flex:1;color:#333">${ovd?'🚨 ':''}<b>${t.name}</b></span><span class="badge bdept" style="font-size:10px">${t.dept}</span><span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:${pColor(p)}">${p}%</span></div>`;}).join('');
+  // Хийгдээгүй (0%) даалгаварын жагсаалт
+  const notDone=ts.filter(t=>calcAvg(t)===0);
+  document.getElementById('notdone-list').innerHTML=notDone.length
+    ?notDone.map(t=>`<div class="all-task-row">
+        <span style="font-size:11px;color:#4a6080;width:18px">${t.id}</span>
+        <span style="font-size:12px;flex:1;color:#e2e8f0;font-weight:500">${t.name}</span>
+        <span class="badge bdept" style="font-size:10px">${t.dept}</span>
+        <span style="font-size:11px;color:#7890a8;margin-left:4px">👤 ${t.person||'—'}</span>
+        ${t.dl?`<span class="badge bdl" style="font-size:10px;margin-left:4px">🕐 ${t.dl}</span>`:''}
+        <span style="font-size:12px;font-weight:700;min-width:34px;text-align:right;color:#e74c3c">0%</span>
+      </div>`).join('')
+    :'<div style="text-align:center;padding:12px;color:#27ae60;font-size:13px">✅ Хийгдээгүй даалгавар байхгүй байна</div>';
 }
 
 // ===== MY TASKS =====
+function updateTabCounts(){
+  const all=getActTasks();
+  const myRecv=all.filter(t=>t.units.includes(cu.unit));
+  const myGiven=all.filter(t=>t.giver===cu.unit||t.dept===cu.unit);
+  const allAvg=all.length?Math.round(all.reduce((s,t)=>s+calcAvg(t),0)/all.length):0;
+  const recvAvg=myRecv.length?Math.round(myRecv.reduce((s,t)=>s+getPct(t.id,cu.unit),0)/myRecv.length):0;
+  const givenAvg=myGiven.length?Math.round(myGiven.reduce((s,t)=>s+calcAvg(t),0)/myGiven.length):0;
+  const ac=document.getElementById('tab-all-cnt');
+  const rc=document.getElementById('tab-recv-cnt');
+  const gc=document.getElementById('tab-given-cnt');
+  if(ac)ac.textContent=`${all.length} • ${allAvg}%`;
+  if(rc)rc.textContent=`${myRecv.length} • ${recvAvg}%`;
+  if(gc)gc.textContent=`${myGiven.length} • ${givenAvg}%`;
+}
 function renderMyTasks(){
   if(!cu)return;
-  let ts=tasks.filter(t=>t.month===actMonth);
-  if(!cu.isAdmin){ts=subTab==='received'?ts.filter(t=>t.units.includes(cu.unit)):ts.filter(t=>t.giver===cu.unit);}
+  if(cu.isAdmin||cu.seeAll)updateTabCounts();
+  let ts=getActTasks();
+  // Таб шүүлт
+  if(subTab==='received'){
+    ts=ts.filter(t=>t.units.includes(cu.unit));
+  }else if(subTab==='given'){
+    ts=ts.filter(t=>t.giver===cu.unit||t.dept===cu.unit);
+  }else if(subTab==='all'){
+    if(!cu.isAdmin&&!cu.seeAll)ts=ts.filter(t=>t.units.includes(cu.unit)||t.giver===cu.unit);
+  }else{
+    if(!cu.isAdmin&&!cu.seeAll)ts=ts.filter(t=>t.units.includes(cu.unit)||t.giver===cu.unit);
+  }
+  // KPI-г таб-ын filtered tasks-аар шинэчлэх
+  updateKPI(ts);
+  // Даалгаврын төрлийн шүүлт
+  ts=ts.filter(t=>(t.taskType||'шуурхай')===(taskTypeFilter));
   ts=ts.filter(t=>{
     const p=calcAvg(t);
     if(bFilter==='биелээгүй')return p===0;
     if(bFilter==='явцтай')return p>0&&p<100;
     if(bFilter==='дууссан')return p>=100;
-    if(bFilter==='яаралтай')return isDueSoon(t,7);
-    if(bFilter==='хэтэрсэн')return isOverdue(t);
+    if(bFilter==='яаралтай')return isDueSoon(t,7);    if(bFilter==='хэтэрсэн')return isOverdue(t);
     return true;
   });
   if(!ts.length){document.getElementById('my-tasks').innerHTML='<div class="empty">Энэ сард үүрэг даалгавар байхгүй байна</div>';return;}
@@ -778,21 +1115,20 @@ function renderMyTasks(){
   document.getElementById('my-tasks').innerHTML=ts.map(t=>{
     const avg=calcAvg(t);const cls=avg>=100?'done':avg>0?'inprog':'notdone';
     const ovd=isOverdue(t);
-    const visibleUnits=cu.isAdmin?t.units:t.units.filter(u=>u===cu.unit);
+    // seeAll нэгж: бүх нэгжийн мөр харна; бусад: зөвхөн өөрийнх
+    const visibleUnits=(cu.isAdmin||cu.seeAll)?t.units:t.units.filter(u=>u===cu.unit);
     const rows=visibleUnits.map(u=>{
       const v=getPct(t.id,u);const n=getNote(t.id,u);const delay=getDelay(t.id,u);
-      const ok=true;
-      const unitOvd=isOverdue(t)&&v<100;
+      // Admin болон өөрийн нэгж л засах боломжтой
+      const ok=cu.isAdmin||(u===cu.unit);
       return`<div class="unit-row">
         <span class="unit-nm">${u}</span>
         <input type="number" min="0" max="100" value="${v}" id="inp-${t.id}-${u}" class="pct-inp" style="border-color:${pColor(v)}" oninput="this.style.borderColor=pColor(parseInt(this.value)||0)">
         <span style="font-size:11px;font-weight:700;color:${pColor(v)};flex-shrink:0">%</span>
-        <input type="text" value="${n}" id="note-${t.id}-${u}" class="note-inp" placeholder="Тайлбар...">
-        <button class="save-btn" onclick="saveU(${t.id},'${u}')">Хадгалах</button>
-        <span class="saved-ok" id="sok-${t.id}-${u}">✓</span>
-      </div>
-      ${unitOvd?`<input type="text" value="${delay}" id="delay-${t.id}-${u}" class="delay-inp" placeholder="🚨 Хоцрогдлын шалтгаан бичнэ үү...">`:''}`;
-    }).join('');
+        <input type="text" value="${n}" id="note-${t.id}-${u}" class="note-inp" placeholder="Тайлбар..." ${!ok?'disabled':''}>
+        ${ok?`<button class="save-btn" onclick="saveU(${t.id},'${u}')">Хадгалах</button>
+        <span class="saved-ok" id="sok-${t.id}-${u}">✓</span>`:`<span style="font-size:10px;color:#374151;flex-shrink:0">🔒</span>`}
+      </div>`;    }).join('');
 
     const myPct=cu.isAdmin?avg:getPct(t.id,cu.unit);
     return`<div class="task-card ${ovd?'overdue-card':cls}" id="tc-${t.id}">
@@ -802,11 +1138,11 @@ function renderMyTasks(){
         ${t.dl?`<span class="badge ${ovd?'bovd':'bdl'}">🕐 ${t.dl}${ovd?' ⚠️':''}</span>`:''}
         ${t.giver&&t.giver!==t.dept?`<span class="badge bgiver">📤 ${t.giver}</span>`:''}
       </div>
-      <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px;line-height:1.4">${ovd?'🚨 ':''} ${t.name}</div>
-      <div style="font-size:12px;color:#888;margin-bottom:6px">Хариуцагч: ${t.person||'—'}</div>
+      <div style="font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:4px;line-height:1.4">${ovd?'🚨 ':''} ${t.name}</div>
+      <div style="font-size:12px;color:#7890a8;margin-bottom:6px">Хариуцагч: ${t.person||'—'}</div>
       <div class="unit-rows">${rows}</div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid #f5f5f5">
-        <span style="font-size:11px;color:#aaa;min-width:80px">${cu.isAdmin?'Нийт дундаж':'Миний биелэлт'}</span>
+        <span style="font-size:11px;color:#4a6080;min-width:80px">${cu.isAdmin?'Нийт дундаж':'Миний биелэлт'}</span>
         <div class="pbar" style="flex:1"><div class="pfill" id="pf-${t.id}" style="width:${myPct}%;background:${pColor(myPct)}"></div></div>
         <span style="font-size:13px;font-weight:700;min-width:36px;text-align:right;color:${pColor(myPct)}" id="pv-${t.id}">${myPct}%</span>
       </div>
@@ -820,7 +1156,6 @@ async function saveU(tid,u){
   i.value=v;i.style.borderColor=pColor(v);
   setPct(tid,u,v);
   const nt=document.getElementById('note-'+tid+'-'+u);if(nt)setNote(tid,u,nt.value.trim());
-  const dt=document.getElementById('delay-'+tid+'-'+u);if(dt)setDelay(tid,u,dt.value.trim());
   await saveProgress();
   const t=tasks.find(x=>x.id===tid);const avg=calcAvg(t);
   const myPct=cu&&!cu.isAdmin?getPct(tid,cu.unit):avg;
@@ -833,31 +1168,320 @@ async function saveU(tid,u){
   updateKPI();
 }
 
-// ===== EXPORT EXCEL =====
-function exportExcel(){
-  const ts=tasks.filter(t=>t.month===actMonth);
-  const rows=[['#','Нэр','Хэлтэс','Хариуцагч','Огноо','Дуусах','Нэгжүүд','Дундаж %']];
-  ts.forEach(t=>{
-    rows.push([t.id,t.name,t.dept,t.person||'',t.date||'',t.dl||'',t.units.join(', '),calcAvg(t)+'%']);
-    // Detail rows per unit
-    t.units.forEach(u=>{
-      rows.push(['',`  └ ${u}`,t.dept,'','','','',getPct(t.id,u)+'%']);
-    });
+function toggleAddSection(){
+  const s=document.getElementById('admin-add-section');
+  const isOpen=s.style.display!=='none';
+  s.style.display=isOpen?'none':'block';
+  if(!isOpen){
+    // Нэмэх хэсэг нээхэд огноо тохируулах
+    document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
+  }
+}
+async function loadAndRenderDecisions(){
+  try{
+    const snap=await DCOL.orderBy('createdAt','desc').get();
+    decisions=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){console.error('Decision load:',e);}
+  renderDecisions();
+}
+function setDecFilter(f,btn){decFilter=f;document.querySelectorAll('#view-decision .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDecisions();}
+function renderDecisions(){
+  let ds=decisions;
+  // Admin бус хэрэглэгч: зөвхөн өөрийн нэгжид шилжүүлсэн шийдвэр харна
+  if(!cu.isAdmin&&!cu.seeAll){
+    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)||(r.resp||'')===(cu.unit)||(r.respUnits||[]).includes(cu.unit)));
+  }
+  if(decFilter==='миний'){
+    ds=ds.filter(d=>(d.rows||[]).some(r=>(r.units||[]).includes(cu.unit)||(r.resp||'')===(cu.unit)||(r.respUnits||[]).includes(cu.unit)));
+  }else if(decFilter==='шинэ'){
+    const last=localStorage.getItem('dec_view_'+cu.unit)||'';
+    ds=ds.filter(d=>d.createdAt>last);
+  }
+  const el=document.getElementById('decision-list');
+  if(!ds.length){el.innerHTML='<div class="empty">📋 Шийдвэр байхгүй байна</div>';return;}
+  el.innerHTML=ds.map(d=>renderDecCard(d)).join('');
+  try{localStorage.setItem('dec_view_'+cu.unit,new Date().toISOString());}catch(e){}
+}
+function renderDecCard(d){
+  const allRows=d.rows||[];
+  const myRows=cu.isAdmin||cu.seeAll?allRows:allRows.filter(r=>(r.units||[]).includes(cu.unit)||(r.resp||'')===(cu.unit)||(r.respUnits||[]).includes(cu.unit));
+  const last=localStorage.getItem('dec_view_'+cu.unit)||'';
+  const isNew=d.createdAt>last;
+  return`<div id="dc-${d.id}" style="background:#0f1520;border:1px solid #1a2540;border-radius:10px;margin-bottom:10px;overflow:hidden;transition:border-color .15s">
+    <div style="padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="toggleDecCard('${d.id}')">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap">
+          <span style="background:#1e3a5f;color:#93c5fd;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700">${d.num||'—'}</span>
+          ${isNew?`<span style="background:rgba(231,76,60,.2);color:#f87171;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700">ШИНЭ</span>`:''}
+          <span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📅 ${d.date||'—'}</span>
+          ${d.loc?`<span style="background:#1a2540;color:#7890a8;padding:3px 8px;border-radius:6px;font-size:11px">📍 ${d.loc}</span>`:''}
+          ${!cu.isAdmin&&!cu.seeAll&&myRows.length?`<span style="background:rgba(231,76,60,.15);color:#fca5a5;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600">📌 ${myRows.length} шийдвэр</span>`:''}
+        </div>
+        <div style="font-size:15px;font-weight:600;color:#e2e8f0;line-height:1.4">${d.title||'—'}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;align-items:center" onclick="event.stopPropagation()">
+        <button onclick="printDecisionById('${d.id}')" style="padding:5px 10px;background:rgba(39,174,96,.15);color:#4ade80;border:1px solid rgba(39,174,96,.3);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">🖨</button>
+        ${cu.isAdmin?`<button class="btn-outline" onclick="openDecEdit('${d.id}')">✏️</button><button class="del-btn" onclick="deleteDecision('${d.id}')">🗑</button>`:''}
+        <span id="dc-arrow-${d.id}" style="color:#4a6080;font-size:16px;transition:transform .2s">▼</span>
+      </div>
+    </div>
+    <div id="dc-body-${d.id}" style="display:none;border-top:1px solid #131c2e;overflow-x:auto">
+      ${myRows.length?`<table style="width:100%;border-collapse:collapse">
+        <thead><tr style="background:#080d18">
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;width:36px;border-bottom:1px solid #131c2e">№</th>
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;width:24%;border-bottom:1px solid #131c2e">Хэлэлцсэн асуудал</th>
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;border-bottom:1px solid #131c2e">Гарсан шийдвэр</th>
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;width:140px;border-bottom:1px solid #131c2e">Хариуцагч</th>
+          <th style="padding:10px 12px;font-size:10px;font-weight:700;color:#4a6080;text-align:left;width:150px;border-bottom:1px solid #131c2e">Шилжүүлэх нэгж</th>
+        </tr></thead>
+        <tbody>
+          ${myRows.map((r,i)=>`<tr style="border-bottom:1px solid #0b0f1a;${(r.units||[]).includes(cu.unit)?'background:rgba(30,58,95,.2)':''}">
+            <td style="padding:10px 12px;color:#4a6080;font-weight:700">${i+1}</td>
+            <td style="padding:10px 12px;color:#a8b8d0;font-size:13px;vertical-align:top">${r.topic||''}</td>
+            <td style="padding:10px 12px;color:#e2e8f0;font-size:13px;vertical-align:top;line-height:1.5">${r.decision||''}</td>
+            <td style="padding:10px 12px;vertical-align:top">
+              ${(r.respUnits&&r.respUnits.length?r.respUnits:[r.resp].filter(Boolean)).map(ru=>`<div style="padding:3px 8px;background:#1e3a5f;color:#93c5fd;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:3px;display:inline-block">🏢 ${ru}</div>`).join('')}
+              ${r.person?`<div style="font-size:11px;color:#c8d5e8;margin-top:2px">👤 ${r.person}</div>`:''}
+            </td>
+            <td style="padding:10px 12px;vertical-align:top">
+              <div style="display:flex;flex-wrap:wrap;gap:3px">
+                ${(r.units||[]).map(u=>`<span style="padding:2px 7px;background:${u===cu.unit?'rgba(231,76,60,.2)':'#1a2540'};color:${u===cu.unit?'#f87171':'#7890a8'};border-radius:4px;font-size:10px;font-weight:${u===cu.unit?'700':'400'}">${u}</span>`).join('')}
+              </div>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`:`<div style="padding:20px;text-align:center;color:#4a6080;font-size:13px">Таны нэгжид хамаарах шийдвэр байхгүй</div>`}
+    </div>
+  </div>`;
+}
+
+function toggleDecCard(id){
+  const body=document.getElementById('dc-body-'+id);
+  const arrow=document.getElementById('dc-arrow-'+id);
+  const card=document.getElementById('dc-'+id);
+  const isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'block';
+  arrow.style.transform=isOpen?'':'rotate(180deg)';
+  card.style.borderColor=isOpen?'#1a2540':'#2563eb';
+}
+
+function openDecDetail(id){toggleDecCard(id);}
+
+function printDecisionById(id){
+  const d=decisions.find(x=>x.id===id);if(!d)return;
+  const allRows=d.rows||[];
+  const rows=cu.isAdmin||cu.seeAll?allRows:allRows.filter(r=>(r.units||[]).includes(cu.unit));
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>${d.num} - Хурлын шийдвэр</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Times New Roman',serif}
+    body{padding:20px 30px;color:#000;font-size:11pt}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;border-bottom:2px solid #000;padding-bottom:10px}
+    .logo-area{display:flex;align-items:center;gap:10px}
+    .logo-triangle{width:0;height:0;border-left:22px solid transparent;border-right:22px solid transparent;border-bottom:38px solid #f90;margin-right:4px}
+    .company-name{font-size:14pt;font-weight:700;line-height:1.2}
+    .doc-num{font-size:10pt;color:#555;text-align:right}
+    .main-title{text-align:center;margin:14px 0 6px;font-size:13pt;font-weight:700;text-transform:uppercase;line-height:1.4}
+    .sub-info{display:flex;justify-content:space-between;margin-bottom:16px;font-size:10pt}
+    .sub-info span{color:#333}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th{border:1px solid #000;padding:8px 10px;background:#f5f5f5;font-weight:700;font-size:10pt;text-align:center;vertical-align:middle}
+    td{border:1px solid #000;padding:8px 10px;font-size:10pt;vertical-align:top;line-height:1.5}
+    .td-num{text-align:center;width:36px}
+    .footer{margin-top:30px;display:flex;justify-content:space-between;font-size:10pt}
+    @media print{body{padding:10px 20px}}
+  </style></head><body>
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-triangle"></div>
+      <div>
+        <div class="company-name">Хурлын шийдвэрийн маягт</div>
+        <div style="font-size:9pt;color:#555">ДСЦТС ХК</div>
+      </div>
+    </div>
+    <div class="doc-num">ДСЦТСХК-М-021-01</div>
+  </div>
+  <div class="main-title">${d.title||''}</div>
+  <div class="sub-info">
+    <span>${d.date||''}</span>
+    <span>${d.num||''}</span>
+    <span>${d.loc||''}</span>
+  </div>
+  <table>
+    <thead><tr>
+      <th class="td-num">№</th>
+      <th style="width:25%">Хэлэлцүүлсэн асуудал</th>
+      <th>Хурлаас гарсан шийдвэр</th>
+      <th style="width:18%">Хариуцах албан тушаалтан</th>
+    </tr></thead>
+    <tbody>
+      ${rows.map((r,i)=>`<tr>
+        <td class="td-num">${i+1}</td>
+        <td>${r.topic||''}</td>
+        <td>${r.decision||''}</td>
+        <td style="text-align:center">${r.resp?r.resp+'\n':''} ${r.person?'<br>'+r.person:''}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+  <div class="footer">
+    <div>Бэлтгэсэн: ${d.createdBy||''}</div>
+    <div>Огноо: ${d.date||''}</div>
+  </div>
+  <script>window.onload=()=>{window.print();}<\/script>
+  </body></html>`);
+  w.document.close();
+}
+function openDecEdit(id){
+  const d=decisions.find(x=>x.id===id);if(!d)return;
+  decRows=(d.rows||[]).map(r=>({...r,units:[...(r.units||[])],respUnits:[...(r.respUnits||[r.resp].filter(Boolean))]}));
+  const unitOpts=AU.map(u=>`<option value="${u}">${u}</option>`).join('');
+  document.getElementById('dec-add-modal').classList.add('open');
+  document.getElementById('dec-modal-title').textContent='✏️ Шийдвэр засах';
+  document.getElementById('dec-modal-body').innerHTML=`
+    <input type="hidden" id="df-edit-id" value="${id}">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Огноо</label>
+        <input type="date" id="df-date" value="${d.date||''}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+      <div><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Дугаар</label>
+        <input type="text" id="df-num" value="${d.num||''}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+    </div>
+    <div style="margin-bottom:10px"><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Гарчиг</label>
+      <input type="text" id="df-title" value="${(d.title||'').replace(/"/g,'&quot;')}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+    <div style="margin-bottom:12px"><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Байршил</label>
+      <input type="text" id="df-loc" value="${d.loc||''}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+    <div style="font-size:11px;font-weight:700;color:#4a6080;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Шийдвэрийн мөрүүд</div>
+    <div id="dec-rows-wrap"></div>
+    <button onclick="addDecRowModal()" style="width:100%;padding:7px;border:1.5px dashed #1e293b;border-radius:8px;background:none;color:#4a6080;cursor:pointer;font-size:12px;font-family:inherit;margin-top:4px">＋ Шийдвэр нэмэх</button>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #1a2540">
+      <button class="btn-outline" onclick="closeModal('dec-add-modal')">Болих</button>
+      <button class="btn-primary" onclick="saveDecision()">✓ Хадгалах</button>
+    </div>`;
+  renderDecRowsModal();
+}
+async function deleteDecision(id){
+  if(!confirm('Устгах уу?'))return;
+  syncUI('saving','Устгаж байна...');
+  try{await DCOL.doc(id).delete();decisions=decisions.filter(d=>d.id!==id);syncUI('ok','✓ Устгагдлаа');renderDecisions();}
+  catch(e){syncUI('err','⚠ Алдаа');}
+}
+function openDecModal(){
+  decRows=[{topic:'',decision:'',resp:''}];
+  const unitOptions=AU.map(u=>`<option value="${u}">${u}</option>`).join('');
+  const today=new Date().toISOString().slice(0,10);
+  document.getElementById('dec-modal-body').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Огноо</label>
+        <input type="date" id="df-date" value="${today}" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+      <div><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Дугаар</label>
+        <input type="text" id="df-num" placeholder="№2026/07" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+    </div>
+    <div style="margin-bottom:10px"><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Гарчиг</label>
+      <input type="text" id="df-title" placeholder="ЗАХИРЛЫН ЗӨВЛӨЛИЙН ... ХУРЛААС ГАРСАН ШИЙДВЭР" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+    <div style="margin-bottom:12px"><label style="font-size:11px;font-weight:700;color:#4a6080;display:block;margin-bottom:4px;text-transform:uppercase">Байршил</label>
+      <input type="text" id="df-loc" value="Дархан хот" style="width:100%;padding:8px 11px;border:1.5px solid #1e293b;border-radius:8px;font-size:13px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit"></div>
+    <div style="font-size:11px;font-weight:700;color:#4a6080;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Шийдвэрийн мөрүүд</div>
+    <div id="dec-rows-wrap"></div>
+    <button onclick="addDecRowModal()" style="width:100%;padding:7px;border:1.5px dashed #1e293b;border-radius:8px;background:none;color:#4a6080;cursor:pointer;font-size:12px;font-family:inherit;margin-top:4px">＋ Шийдвэр нэмэх</button>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #1a2540">
+      <button class="btn-outline" onclick="closeModal('dec-add-modal')">Болих</button>
+      <button class="btn-primary" onclick="saveDecision()">✓ Хадгалах</button>
+    </div>`;
+  renderDecRowsModal();
+  document.getElementById('dec-add-modal').classList.add('open');
+}
+function renderDecRowsModal(){
+  const unitOpts=AU.map(u=>`<option value="${u}">${u}</option>`).join('');
+  document.getElementById('dec-rows-wrap').innerHTML=decRows.map((r,i)=>`
+    <div style="background:#080d18;border:1px solid #1a2540;border-radius:8px;padding:12px;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:700;color:#4a6080;margin-bottom:8px;text-transform:uppercase">${i+1}-р асуудал</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <textarea placeholder="Хэлэлцсэн асуудал..." id="dr-topic-${i}" rows="2" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit;resize:vertical">${r.topic||''}</textarea>
+        <textarea placeholder="Гарсан шийдвэр..." id="dr-dec-${i}" rows="3" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit;resize:vertical">${r.decision||''}</textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div>
+            <div style="font-size:10px;color:#4a6080;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцагч (нэр/албан тушаал)</div>
+            <input type="text" id="dr-person-${i}" placeholder="Хариуцагчийн нэр..." value="${r.person||''}" style="width:100%;padding:7px 10px;border:1.5px solid #1e293b;border-radius:8px;font-size:12px;color:#c8d5e8;background:#0b0f1a;outline:none;font-family:inherit">
+          </div>
+          <div>
+            <div style="font-size:10px;color:#4a6080;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцах нэгж (олон сонгоно)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px" id="dr-resp-units-${i}">${AU.map(u=>`<div onclick="toggleRespUnit(${i},'${u}',this)" style="padding:3px 9px;border:1.5px solid ${(r.respUnits||[r.resp].filter(Boolean)).includes(u)?'#7c3aed':'#1e293b'};border-radius:6px;font-size:11px;cursor:pointer;background:${(r.respUnits||[r.resp].filter(Boolean)).includes(u)?'#2e1065':'#131c2e'};color:${(r.respUnits||[r.resp].filter(Boolean)).includes(u)?'#c4b5fd':'#64748b'};user-select:none;transition:all .15s;font-weight:${(r.respUnits||[r.resp].filter(Boolean)).includes(u)?'700':'400'}">${u}</div>`).join('')}</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#4a6080;margin-bottom:6px;font-weight:600;text-transform:uppercase">Шилжүүлэх нэгжүүд (олон сонгоно)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px" id="dr-units-${i}">
+            ${AU.map(u=>`<div onclick="toggleDecUnit(${i},'${u}',this)" style="padding:3px 9px;border:1.5px solid ${(r.units||[]).includes(u)?'#2563eb':'#1e293b'};border-radius:6px;font-size:11px;cursor:pointer;background:${(r.units||[]).includes(u)?'#1e3a5f':'#131c2e'};color:${(r.units||[]).includes(u)?'#93c5fd':'#64748b'};user-select:none;transition:all .15s;font-weight:${(r.units||[]).includes(u)?'700':'400'}">${u}</div>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px">
+        <button onclick="removeDecRowModal(${i})" style="padding:5px 10px;border:1px solid #1e293b;border-radius:6px;background:none;color:#4a6080;cursor:pointer;font-size:12px;font-family:inherit">× Хасах</button>
+      </div>
+    </div>`).join('');
+  // Set values
+  decRows.forEach((_,i)=>{
+    const rs=document.getElementById('dr-resp-'+i);
+    if(rs&&decRows[i].resp)rs.value=decRows[i].resp;
   });
-  const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:4},{wch:50},{wch:10},{wch:16},{wch:12},{wch:12},{wch:40},{wch:10}];
-  XLSX.utils.book_append_sheet(wb,ws,(ML[actMonth]||actMonth)+' тайлан');
-  XLSX.writeFile(wb,'DSEDN_'+actMonth+'_tайлан.xlsx');
 }
-
-// ===== EXPORT PDF (print) =====
-function exportPDF(){
-  const monthLabel=ML[actMonth]||actMonth;
-  document.getElementById('print-month-label').textContent=monthLabel+' | Бэлтгэсэн: '+new Date().toLocaleDateString('mn-MN');
-  window.print();
+function addDecRowModal(){decRows.push({topic:'',decision:'',resp:'',respUnits:[],person:'',units:[]});renderDecRowsModal();}
+function toggleRespUnit(i,u,el){
+  if(!decRows[i].respUnits)decRows[i].respUnits=decRows[i].resp?[decRows[i].resp]:[];
+  if(decRows[i].respUnits.includes(u)){
+    decRows[i].respUnits=decRows[i].respUnits.filter(x=>x!==u);
+    el.style.background='#131c2e';el.style.borderColor='#1e293b';el.style.color='#64748b';el.style.fontWeight='400';
+  }else{
+    decRows[i].respUnits.push(u);
+    el.style.background='#2e1065';el.style.borderColor='#7c3aed';el.style.color='#c4b5fd';el.style.fontWeight='700';
+  }
+  // resp field: first selected unit for backward compat
+  decRows[i].resp=decRows[i].respUnits[0]||'';
 }
-
+function removeDecRowModal(i){decRows.splice(i,1);renderDecRowsModal();}
+function toggleDecUnit(i,u,el){
+  if(!decRows[i].units)decRows[i].units=[];
+  if(decRows[i].units.includes(u)){
+    decRows[i].units=decRows[i].units.filter(x=>x!==u);
+    el.style.background='#131c2e';el.style.borderColor='#1e293b';el.style.color='#64748b';el.style.fontWeight='400';
+  }else{
+    decRows[i].units.push(u);
+    el.style.background='#1e3a5f';el.style.borderColor='#2563eb';el.style.color='#93c5fd';el.style.fontWeight='700';
+  }
+}
+async function saveDecision(){
+  const title=document.getElementById('df-title').value.trim();
+  const num=document.getElementById('df-num').value.trim();
+  const date=document.getElementById('df-date').value;
+  const loc=document.getElementById('df-loc').value.trim();
+  if(!title||!num){alert('Гарчиг болон дугаарыг оруулна уу!');return;}
+  decRows.forEach((_,i)=>{
+    const t=document.getElementById('dr-topic-'+i);
+    const d=document.getElementById('dr-dec-'+i);
+    const p=document.getElementById('dr-person-'+i);
+    if(t)decRows[i].topic=t.value.trim();
+    if(d)decRows[i].decision=d.value.trim();
+    if(p)decRows[i].person=p.value.trim();
+    // respUnits tracked via toggleRespUnit; ensure resp is first for backward compat
+    if(!decRows[i].respUnits)decRows[i].respUnits=decRows[i].resp?[decRows[i].resp]:[];
+    decRows[i].resp=decRows[i].respUnits[0]||'';
+    // units are tracked via toggleDecUnit
+  });
+  const rows=decRows.filter(r=>r.decision);
+  if(!rows.length){alert('Дор хаяж нэг шийдвэр оруулна уу!');return;}
+  syncUI('saving','Хадгалж байна...');
+  try{
+    const editId=document.getElementById('df-edit-id')?.value;
+    if(editId){
+      await DCOL.doc(editId).update({title,num,date,loc,rows,updatedAt:new Date().toISOString()});
+    }else{
+      await DCOL.add({title,num,date,loc,rows,createdAt:new Date().toISOString(),createdBy:cu.name});
+    }
+    syncUI('ok','✓ Хадгалагдлаа');
+    closeModal('dec-add-modal');
+    await loadAndRenderDecisions();
+  }catch(e){syncUI('err','⚠ Алдаа');console.error(e);}
+}
 // ===== ADMIN =====
 function initUchk(){document.getElementById('units-check').innerHTML=AU.map(u=>`<div class="uchk" onclick="tu('${u}',this)">${u}</div>`).join('');selUnits=[];}
 function tu(u,el){el.classList.toggle('sel');selUnits=selUnits.includes(u)?selUnits.filter(x=>x!==u):[...selUnits,u];}
@@ -871,15 +1495,18 @@ async function addTask(){
   const person=document.getElementById('a-person').value.trim();
   const name=document.getElementById('a-name').value.trim();
   const dl=document.getElementById('a-dl').value.trim();
+  const taskType=(document.getElementById('a-tasktype')||{value:'шуурхай'}).value||'шуурхай';
   if(!name||!person||!selUnits.length){alert('Даалгавар, ажилтны нэр, нэгжүүдийг оруулна уу!');return;}
-  tasks.push({id:nid++,month,date,dept,giver:dept,person,name,units:[...selUnits],dl});
+  tasks.push({id:nid++,month,date,dept,giver:dept,person,name,units:[...selUnits],dl,taskType});
   if(person&&!empList.includes(person)){empList.push(person);await saveEmpList();updateEmpDatalist();}
   saveTasks();
   ['a-name','a-dl'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('a-person').value='';
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
   selUnits=[];document.querySelectorAll('.uchk').forEach(el=>el.classList.remove('sel'));
-  renderAdminPills();renderAdminList();renderTopPills();
+  // Хэвийн нэмэхийн дараа хаах
+  document.getElementById('admin-add-section').style.display='none';
+  renderAdminPills();renderAdminList();renderTopPills();renderMyTasks();
   alert('✓ Үүрэг даалгавар амжилттай нэмэгдлээ!');
 }
 
@@ -899,7 +1526,7 @@ function openEditTask(id){
       <div class="form-field"><label>Огноо</label><input type="date" id="edit-date" value="${(t.date||'').replace(/\//g,'-')}"></div>
     </div>
     <div class="form-row" style="margin-bottom:10px">
-      <div class="form-field"><label>Хэлтэс</label><select id="edit-dept">${['ДХХ','ББТХ','СЭЗХ','ХНХ','ХЭМАБА','ТБТХ','Ер.Инженер','Бусад'].map(d=>`<option ${d===t.dept?'selected':''}>${d}</option>`).join('')}</select></div>
+      <div class="form-field"><label>Хэлтэс</label><select id="edit-dept">${['СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','ДА','ХТЛА','ЗТТА','АТА','НҮА','ХҮТ','АЗА','ЗС','ЖС','ХС','СС','Бусад'].map(d=>`<option ${d===t.dept?'selected':''}>${d}</option>`).join('')}</select></div>
       <div class="form-field"><label>Ажилтны нэр</label><input type="text" id="edit-person" value="${t.person||''}" list="emp-list2"><datalist id="emp-list2">${empList.map(e=>`<option value="${e}">`).join('')}</datalist></div>
     </div>
     <div class="form-field" style="margin-bottom:10px"><label>Даалгаварын нэр</label><textarea id="edit-name">${t.name||''}</textarea></div>
@@ -933,16 +1560,16 @@ async function saveEditTask(){
 
 function renderAdminPills(){
   const ms=getMonths();
-  document.getElementById('admin-month-pills').innerHTML=ms.map(m=>`<button class="fpill${m===actMonth?' active':''}" onclick="setAdminM('${m}',this)">${ML[m]}</button>`).join('');
+  document.getElementById('admin-month-pills').innerHTML=ms.map(m=>`<button class="fpill${actMonths.includes(m)||(!actMonths.length&&m===ms[0])?' active':''}" onclick="setAdminM('${m}',this)">${ML[m]}</button>`).join('');
   document.getElementById('admin-list-title').textContent=`${ML[actMonth]||actMonth} — даалгаварын жагсаалт`;
 }
 function setAdminM(m,btn){
-  actMonth=m;document.getElementById('a-month').value=m;
+  actMonths=[m];document.getElementById('a-month').value=m;
   document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
 }
 function renderAdminList(){
-  const ts=tasks.filter(t=>t.month===actMonth);
+  const ts=getActTasks();
   if(!ts.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
   document.getElementById('admin-task-list').innerHTML=ts.map(t=>{
     const p=calcAvg(t);const ovd=isOverdue(t);const soon=isDueSoon(t,7);
@@ -954,354 +1581,39 @@ function renderAdminList(){
         <button class="edit-btn" style="margin-left:auto" onclick="openEditTask(${t.id})">✏️ Засах</button>
         <button class="del-btn" onclick="deleteTask(${t.id})">🗑</button>
       </div>
-      <div style="font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:6px">${ovd?'🚨 ':soon?'⚡ ':''}${t.name}</div>
-      <div style="font-size:11px;color:#bbb;margin-bottom:6px">📅 ${t.date||''} | Нэгжүүд: ${t.units.join(', ')}</div>
+      <div style="font-size:14px;font-weight:600;color:#e2e8f0;margin-bottom:6px">${ovd?'🚨 ':soon?'⚡ ':''}${t.name}</div>
+      <div style="font-size:11px;color:#374151;margin-bottom:6px">📅 ${t.date||''} | Нэгжүүд: ${t.units.join(', ')}</div>
       <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:11px;color:#aaa;min-width:80px">Дундаж биелэлт</span>
+        <span style="font-size:11px;color:#4a6080;min-width:80px">Дундаж биелэлт</span>
         <div class="pbar" style="flex:1"><div class="pfill" style="width:${p}%;background:${pColor(p)}"></div></div>
         <span style="font-size:13px;font-weight:700;min-width:36px;text-align:right;color:${pColor(p)}">${p}%</span>
       </div>
     </div>`;}).join('');
 }
 
-document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
-
-// ===== ХУРЛЫН ШИЙДВЭР =====
-var decDetailId=null;
-
-function showTab_decisions(){
-  var dc=document.getElementById('decisions-container');
-  if(dc)renderDecisions();
-}
-
-function renderDecisions(){
-  var dc=document.getElementById('decisions-container');
-  if(!dc)return;
-  var h='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">';
-  h+='<div style="font-size:15px;font-weight:700;color:#1a1a2e">Хурлын шийдвэр</div>';
-  if(cu&&cu.isAdmin){
-    h+='<button class="btn-primary" onclick="openDecModal()" style="font-size:13px;padding:8px 16px">+ Шийдвэр нэмэх</button>';
-  }
-  h+='</div>';
-  if(!decisions.length){
-    h+='<div class="empty">Хурлын шийдвэр байхгүй байна</div>';
-  } else {
-    decisions.sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
-    for(var i=0;i<decisions.length;i++){
-      h+=renderDecCard(decisions[i]);
-    }
-  }
-  dc.innerHTML=h;
-}
-
-function renderDecCard(d){
-  var myRows=[];
-  if(cu&&cu.isAdmin){myRows=d.rows||[];}
-  else{myRows=(d.rows||[]).filter(function(r){return (r.units||[]).indexOf(cu&&cu.unit)>=0;});}
-  var rowCount=(d.rows||[]).length;
-  var isNew=d.createdAt&&(Date.now()-d.createdAt<7*86400000);
-  var h='<div class="task-card" style="cursor:pointer;margin-bottom:10px" onclick="openDecDetail(\''+d.id+'\')">';
-  h+='<div class="task-header" style="flex-wrap:wrap">';
-  h+='<span class="badge" style="background:#1a1a2e;color:#fff">'+escH(d.date||'')+'</span>';
-  if(d.num){h+='<span class="badge" style="background:#27ae60;color:#fff">'+escH(d.num)+'</span>';}
-  if(isNew){h+='<span class="badge" style="background:#e74c3c;color:#fff">ШИНЭ</span>';}
-  if(d.loc){h+='<span style="font-size:11px;color:#888">📍 '+escH(d.loc)+'</span>';}
-  if(cu&&cu.isAdmin){
-    h+='<button onclick="event.stopPropagation();deleteDecision(\''+d.id+'\')" class="del-btn" style="margin-left:auto">🗑</button>';
-  }
-  h+='</div>';
-  h+='<div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;line-height:1.4">'+escH(d.title||'')+'</div>';
-  h+='<div style="font-size:12px;color:#aaa;margin-bottom:8px">Нийт '+rowCount+' шийдвэр';
-  if(myRows.length&&!cu.isAdmin){h+=' | Миний: '+myRows.length;}
-  h+='</div>';
-  if(myRows.length&&!cu.isAdmin){
-    h+='<div style="display:flex;flex-wrap:wrap;gap:4px">';
-    for(var i=0;i<Math.min(myRows.length,3);i++){
-      var r=myRows[i];
-      h+='<div style="font-size:11px;background:#f0f4ff;color:#3a5fc8;padding:2px 8px;border-radius:4px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escH(r.decision||r.topic||'')+'</div>';
-    }
-    if(myRows.length>3){h+='<div style="font-size:11px;color:#aaa">+'+( myRows.length-3)+'</div>';}
-    h+='</div>';
-  }
-  h+='</div>';
-  return h;
-}
-
-function escH(s){
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function openDecDetail(id){
-  var d=decisions.find(function(x){return x.id===id;});
-  if(!d)return;
-  decDetailId=id;
-  document.getElementById('dec-detail-modal').classList.add('open');
-  document.getElementById('dec-detail-title').textContent=d.title||'Шийдвэр';
-  var btn=document.getElementById('dec-edit-btn');
-  if(btn)btn.style.display=(cu&&cu.isAdmin)?'block':'none';
-
-  var allRows=d.rows||[];
-  var myRows=cu.isAdmin?allRows:allRows.filter(function(r){return (r.units||[]).indexOf(cu.unit)>=0;});
-
-  var h='<div style="padding:4px 0 12px">';
-  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">';
-  if(d.date)h+='<span class="badge" style="background:#1a1a2e;color:#fff">'+escH(d.date)+'</span>';
-  if(d.num)h+='<span class="badge" style="background:#27ae60;color:#fff">'+escH(d.num)+'</span>';
-  if(d.loc)h+='<span class="badge" style="background:#f0f0f0;color:#555">📍 '+escH(d.loc)+'</span>';
-  h+='</div>';
-  if(d.createdBy)h+='<div style="font-size:11px;color:#aaa;margin-bottom:12px">Бэлтгэсэн: '+escH(d.createdBy)+'</div>';
-
-  if(!myRows.length){
-    h+='<div style="text-align:center;padding:2rem;color:#bbb;font-size:13px">Танай нэгжид шилжүүлсэн шийдвэр байхгүй байна</div>';
-  } else {
-    h+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
-    h+='<thead><tr style="background:#f5f5f5">';
-    h+='<th style="padding:8px 10px;text-align:left;border-bottom:2px solid #eee;font-weight:700;color:#555">№</th>';
-    h+='<th style="padding:8px 10px;text-align:left;border-bottom:2px solid #eee;font-weight:700;color:#555">Хэлэлцсэн асуудал</th>';
-    h+='<th style="padding:8px 10px;text-align:left;border-bottom:2px solid #eee;font-weight:700;color:#555">Гарсан шийдвэр</th>';
-    h+='<th style="padding:8px 10px;text-align:left;border-bottom:2px solid #eee;font-weight:700;color:#555">Хариуцагч</th>';
-    h+='</tr></thead><tbody>';
-    for(var i=0;i<myRows.length;i++){
-      var r=myRows[i];
-      var bg=i%2===0?'#fff':'#fafafa';
-      h+='<tr style="background:'+bg+'">';
-      h+='<td style="padding:8px 10px;border-bottom:1px solid #eee;color:#aaa;font-size:11px">'+(i+1)+'</td>';
-      h+='<td style="padding:8px 10px;border-bottom:1px solid #eee;line-height:1.4">'+escH(r.topic||'')+'</td>';
-      h+='<td style="padding:8px 10px;border-bottom:1px solid #eee;line-height:1.4;color:#1a6b3a;font-weight:500">'+escH(r.decision||'')+'</td>';
-      h+='<td style="padding:8px 10px;border-bottom:1px solid #eee">';
-      if(r.person)h+='<div style="font-weight:600">'+escH(r.person)+'</div>';
-      if(r.resp)h+='<div style="font-size:10px;color:#888">'+escH(r.resp)+'</div>';
-      h+='</td></tr>';
-    }
-    h+='</tbody></table>';
-  }
-  h+='<div style="display:flex;justify-content:flex-end;margin-top:16px;gap:8px">';
-  h+='<button onclick="printDecisionById(\''+id+'\')" style="padding:7px 14px;background:#3498db;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🖨 Хэвлэх</button>';
-  h+='<button onclick="closeModal(\'dec-detail-modal\')" class="btn-outline" style="font-size:13px">Хаах</button>';
-  h+='</div></div>';
-  document.getElementById('dec-detail-body').innerHTML=h;
-}
-
-function openDecEditFromDetail(){
-  if(decDetailId)openDecEdit(decDetailId);
-  closeModal('dec-detail-modal');
-}
-
-function openDecModal(){
-  decRows=[{topic:'',decision:'',resp:'',person:'',units:[]}];
-  var today=new Date().toISOString().slice(0,10);
-  var is='width:100%;padding:8px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:13px;color:#1a1a2e;background:#fff;outline:none;font-family:inherit';
-  var lbl='font-size:11px;font-weight:700;color:#666;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px';
-  document.getElementById('dec-add-modal').classList.add('open');
-  document.getElementById('dec-modal-title').textContent='Шинэ хурлын шийдвэр';
-  document.getElementById('dec-modal-body').innerHTML=
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'+
-      '<div><label style="'+lbl+'">Огноо</label>'+
-      '<input type="date" id="df-date" value="'+today+'" style="'+is+'"></div>'+
-      '<div><label style="'+lbl+'">Дугаар</label>'+
-      '<input type="text" id="df-num" placeholder="2026/07" style="'+is+'"></div>'+
-    '</div>'+
-    '<div style="margin-bottom:10px"><label style="'+lbl+'">Гарчиг</label>'+
-    '<input type="text" id="df-title" placeholder="ЗАХИРЛЫН ЗӨВЛӨЛИЙН ХУРЛААС ГАРСАН ШИЙДВЭР" style="'+is+'"></div>'+
-    '<div style="margin-bottom:12px"><label style="'+lbl+'">Байршил</label>'+
-    '<input type="text" id="df-loc" value="Дархан хот" style="'+is+'"></div>'+
-    '<div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;margin-bottom:8px">Шийдвэрийн мөрүүд</div>'+
-    '<div id="dec-rows-wrap"></div>'+
-    '<button onclick="addDecRowModal()" style="width:100%;padding:7px;border:1.5px dashed #ccc;border-radius:8px;background:none;color:#888;cursor:pointer;font-size:12px;font-family:inherit;margin-top:4px">+ Шийдвэр нэмэх</button>'+
-    '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #eee">'+
-      '<button class="btn-outline" onclick="closeModal(\'dec-add-modal\')">Болих</button>'+
-      '<button class="btn-primary" onclick="saveDecision()">Хадгалах</button>'+
-    '</div>';
-  renderDecRowsModal();
-}
-
-function openDecEdit(id){
-  var d=decisions.find(function(x){return x.id===id;});if(!d)return;
-  decRows=(d.rows||[]).map(function(r){return {topic:r.topic||'',decision:r.decision||'',resp:r.resp||'',person:r.person||'',units:(r.units||[]).slice()};});
-  var is='width:100%;padding:8px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:13px;color:#1a1a2e;background:#fff;outline:none;font-family:inherit';
-  var lbl='font-size:11px;font-weight:700;color:#666;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px';
-  document.getElementById('dec-add-modal').classList.add('open');
-  document.getElementById('dec-modal-title').textContent='Шийдвэр засах';
-  document.getElementById('dec-modal-body').innerHTML=
-    '<input type="hidden" id="df-edit-id" value="'+escH(id)+'">'+
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'+
-      '<div><label style="'+lbl+'">Огноо</label>'+
-      '<input type="date" id="df-date" value="'+escH(d.date||'')+'" style="'+is+'"></div>'+
-      '<div><label style="'+lbl+'">Дугаар</label>'+
-      '<input type="text" id="df-num" value="'+escH(d.num||'')+'" style="'+is+'"></div>'+
-    '</div>'+
-    '<div style="margin-bottom:10px"><label style="'+lbl+'">Гарчиг</label>'+
-    '<input type="text" id="df-title" value="'+escH(d.title||'')+'" style="'+is+'"></div>'+
-    '<div style="margin-bottom:12px"><label style="'+lbl+'">Байршил</label>'+
-    '<input type="text" id="df-loc" value="'+escH(d.loc||'')+'" style="'+is+'"></div>'+
-    '<div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;margin-bottom:8px">Шийдвэрийн мөрүүд</div>'+
-    '<div id="dec-rows-wrap"></div>'+
-    '<button onclick="addDecRowModal()" style="width:100%;padding:7px;border:1.5px dashed #ccc;border-radius:8px;background:none;color:#888;cursor:pointer;font-size:12px;font-family:inherit;margin-top:4px">+ Шийдвэр нэмэх</button>'+
-    '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #eee">'+
-      '<button class="btn-outline" onclick="closeModal(\'dec-add-modal\')">Болих</button>'+
-      '<button class="btn-primary" onclick="saveDecision()">Хадгалах</button>'+
-    '</div>';
-  renderDecRowsModal();
-}
-
-function renderDecRowsModal(){
-  var unitOpts=AU.map(function(u){return '<option value="'+u+'">'+u+'</option>';}).join('');
-  var is='width:100%;padding:7px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:12px;color:#1a1a2e;background:#fff;outline:none;font-family:inherit';
-  var html=decRows.map(function(r,i){
-    var unitDivs=AU.map(function(u){
-      var sel=(r.units||[]).indexOf(u)>=0;
-      return '<div data-ri="'+i+'" data-ru="'+u+'" onclick="toggleDecUnitBtn(this)" style="padding:3px 9px;border:1.5px solid '+(sel?'#3498db':'#e0e0e0')+';border-radius:6px;font-size:11px;cursor:pointer;background:'+(sel?'#eaf4fd':'#fff')+';color:'+(sel?'#2980b9':'#999')+';user-select:none;transition:all .15s;font-weight:'+(sel?'700':'400')+'">'+u+'</div>';
-    }).join('');
-    return '<div style="background:#f9f9f9;border:1.5px solid #eee;border-radius:8px;padding:12px;margin-bottom:8px">'+
-      '<div style="font-size:11px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase">'+(i+1)+'-р асуудал</div>'+
-      '<textarea placeholder="Хэлэлцсэн асуудал..." id="dr-topic-'+i+'" rows="2" style="'+is+';resize:vertical;margin-bottom:6px;display:block">'+escH(r.topic||'')+'</textarea>'+
-      '<textarea placeholder="Гарсан шийдвэр..." id="dr-dec-'+i+'" rows="3" style="'+is+';resize:vertical;margin-bottom:6px;display:block">'+escH(r.decision||'')+'</textarea>'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'+
-        '<div><div style="font-size:10px;color:#888;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцагч</div>'+
-        '<input type="text" id="dr-person-'+i+'" placeholder="Нэр..." value="'+escH(r.person||'')+'" style="'+is+'"></div>'+
-        '<div><div style="font-size:10px;color:#888;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцах нэгж</div>'+
-        '<select id="dr-resp-'+i+'" style="'+is+'">'+
-          '<option value="">Нэгж сонгох...</option>'+unitOpts+
-        '</select></div>'+
-      '</div>'+
-      '<div style="font-size:10px;color:#888;margin-bottom:6px;font-weight:600;text-transform:uppercase">Шилжүүлэх нэгжүүд</div>'+
-      '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">'+unitDivs+'</div>'+
-      '<div style="display:flex;justify-content:flex-end">'+
-        '<button data-ri="'+i+'" onclick="removeDecRowByBtn(this)" style="padding:5px 10px;border:1px solid #e0e0e0;border-radius:6px;background:none;color:#aaa;cursor:pointer;font-size:12px;font-family:inherit">Хасах</button>'+
-      '</div>'+
-    '</div>';
-  }).join('');
-  document.getElementById('dec-rows-wrap').innerHTML=html;
-  decRows.forEach(function(r,i){
-    var rs=document.getElementById('dr-resp-'+i);
-    if(rs&&r.resp)rs.value=r.resp;
-  });
-}
-
-function toggleDecUnitBtn(el){
-  var i=parseInt(el.dataset.ri);
-  var u=el.dataset.ru;
-  var r=decRows[i];
-  var idx=(r.units||[]).indexOf(u);
-  if(!r.units)r.units=[];
-  if(idx>=0){r.units.splice(idx,1);el.style.border='1.5px solid #e0e0e0';el.style.background='#fff';el.style.color='#999';el.style.fontWeight='400';}
-  else{r.units.push(u);el.style.border='1.5px solid #3498db';el.style.background='#eaf4fd';el.style.color='#2980b9';el.style.fontWeight='700';}
-}
-function addDecRowModal(){decRows.push({topic:'',decision:'',resp:'',person:'',units:[]});renderDecRowsModal();}
-function removeDecRowModal(i){decRows.splice(i,1);renderDecRowsModal();}
-function removeDecRowByBtn(el){removeDecRowModal(parseInt(el.dataset.ri));}
-
-function collectDecRows(){
-  return decRows.map(function(r,i){
-    return {
-      topic:(document.getElementById('dr-topic-'+i)||{}).value||'',
-      decision:(document.getElementById('dr-dec-'+i)||{}).value||'',
-      person:(document.getElementById('dr-person-'+i)||{}).value||'',
-      resp:(document.getElementById('dr-resp-'+i)||{}).value||'',
-      units:r.units||[]
-    };
-  });
-}
-
-async function saveDecision(){
-  var rows=collectDecRows();
-  var editId=(document.getElementById('df-edit-id')||{}).value||'';
-  var date=(document.getElementById('df-date')||{}).value||'';
-  var num=(document.getElementById('df-num')||{}).value||'';
-  var title=(document.getElementById('df-title')||{}).value||'';
-  var loc=(document.getElementById('df-loc')||{}).value||'';
-  if(!title){alert('Гарчиг оруулна уу');return;}
-  syncUI('saving','Хадгалж байна...');
-  var data={date:date,num:num,title:title,loc:loc,rows:rows,createdBy:cu.name,createdAt:Date.now()};
-  try{
-    if(editId){
-      await DCOL().doc(editId).update(data);
-      var idx=decisions.findIndex(function(d){return d.id===editId;});
-      if(idx>=0)decisions[idx]=Object.assign({id:editId},data);
-    } else {
-      var ref=await DCOL().add(data);
-      decisions.unshift(Object.assign({id:ref.id},data));
-    }
-    syncUI('ok','✓ Хадгалагдлаа');
-    closeModal('dec-add-modal');
-    renderDecisions();
-  }catch(e){syncUI('err','⚠ Алдаа: '+e.message);}
-}
-
-async function deleteDecision(id){
-  if(!confirm('Устгах уу?'))return;
-  syncUI('saving','Устгаж байна...');
-  try{
-    await DCOL().doc(id).delete();
-    decisions=decisions.filter(function(d){return d.id!==id;});
-    syncUI('ok','✓ Устгагдлаа');
-    renderDecisions();
-  }catch(e){syncUI('err','⚠ Алдаа');}
-}
-
-async function loadDecisions(){
-  try{
-    var snap=await DCOL().orderBy('createdAt','desc').get();
-    decisions=snap.docs.map(function(doc){return Object.assign({id:doc.id},doc.data());});
-  }catch(e){decisions=[];}
-}
-
-function printDecisionById(id){
-  var d=decisions.find(function(x){return x.id===id;});
-  if(!d)return;
-  var rows=d.rows||[];
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+escH(d.num||'')+'</title>';
-  html+='<style>body{font-family:"Times New Roman",serif;padding:20px;font-size:12px;color:#000}';
-  html+='.header{text-align:center;margin-bottom:20px;border-bottom:2px solid #000;padding-bottom:12px}';
-  html+='.main-title{font-size:16px;font-weight:bold;margin-bottom:6px;text-transform:uppercase}';
-  html+='.sub-info{font-size:12px;color:#444}table{width:100%;border-collapse:collapse;margin-top:16px}';
-  html+='th,td{border:1px solid #000;padding:6px 8px;text-align:left;font-size:11px;vertical-align:top}';
-  html+='th{background:#f0f0f0;font-weight:bold}@media print{body{margin:0}}</style></head><body>';
-  html+='<div class="header">';
-  html+='<div style="font-size:11px;color:#555">ДСЦТС ХК</div>';
-  html+='<div style="font-size:11px;color:#555">ДСЦТСХК-М-021-01</div>';
-  html+='<div class="main-title">Хурлын шийдвэрийн маягт</div>';
-  html+='<div class="sub-info">';
-  if(d.title)html+=escH(d.title)+'<br>';
-  var info=[];
-  if(d.date)info.push('Огноо: '+escH(d.date));
-  if(d.num)info.push('Дугаар: '+escH(d.num));
-  if(d.loc)info.push('Байршил: '+escH(d.loc));
-  html+=info.join(' | ');
-  html+='</div></div>';
-  if(rows.length){
-    html+='<table><thead><tr><th style="width:4%">№</th><th style="width:28%">Хэлэлцсэн асуудал</th><th style="width:38%">Гарсан шийдвэр</th><th style="width:16%">Хариуцагч</th><th style="width:14%">Нэгж</th></tr></thead><tbody>';
-    for(var i=0;i<rows.length;i++){
-      var r=rows[i];
-      html+='<tr><td>'+(i+1)+'</td><td>'+escH(r.topic||'')+'</td><td>'+escH(r.decision||'')+'</td><td>'+escH(r.person||'')+'</td><td>'+escH((r.units||[]).join(', '))+'</td></tr>';
-    }
-    html+='</tbody></table>';
-  }
-  if(d.createdBy){html+='<div style="margin-top:16px;font-size:11px;color:#555">Бэлтгэсэн: '+escH(d.createdBy)+'</div>';}
-  html+='</body></html>';
-  var blob=new Blob([html],{type:'text/html'});
-  var url=URL.createObjectURL(blob);
-  var w=window.open(url,'_blank');
-  if(w)setTimeout(function(){w.print();URL.revokeObjectURL(url);},800);
-}
-
-// ===== INIT =====
+// Enter товч
+document.addEventListener('DOMContentLoaded',()=>{
+  const lp=document.getElementById('login-pass');
+  if(lp)lp.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  const lu=document.getElementById('login-user');
+  if(lu)lu.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('login-pass').focus();});
+});
 (async function init(){
   const ls=document.getElementById('loading-screen');
   const hideLS=()=>{ls.classList.add('hide');setTimeout(()=>ls.style.display='none',400);}
-  const timer=setTimeout(()=>{hideLS();document.getElementById('login-page').style.display='flex';},3000);
+  const timer=setTimeout(()=>{hideLS();document.getElementById('login-page').style.display='flex';},5000);
   try{
     const saved=localStorage.getItem(SK);
     if(saved){
       const p=JSON.parse(saved);
       if(p&&p.unit&&p.name){
         cu=p;
-        try{await fbLoad();}catch(e){}
+        await fbLoad();
         clearTimeout(timer);hideLS();showApp();return;
       }
     }
-  }catch(e){}
+  }catch(e){console.error('Init error:',e);}
   clearTimeout(timer);hideLS();
   document.getElementById('login-page').style.display='flex';
 })();
