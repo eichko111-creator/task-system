@@ -201,27 +201,10 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
       <div style="font-size:20px;font-weight:700;color:#1a1a2e">Үүрэг даалгавар</div>
       <div style="font-size:13px;color:#888;margin-top:4px">2026 оны хяналтын систем</div>
     </div>
-    <div class="field"><label>Имэйл хаяг</label><input type="email" id="auth-email" placeholder="dsedn2026@gmail.com" autocomplete="email"></div>
-    <div class="field"><label>Нууц үг</label><input type="password" id="auth-password" placeholder="Нууц үгээ оруулна уу" autocomplete="current-password"></div>
-    <div class="login-err" id="auth-err">Имэйл эсвэл нууц үг буруу байна</div>
-    <div id="unit-section" style="display:none;margin-bottom:0">
-      <div class="field"><label>Нэгж</label>
-        <select id="login-unit">
-          <option value="">-- сонгоно уу --</option>
-          <optgroup label="Нэгжүүд">
-            <option>ЖС</option><option>ХС</option><option>СС</option><option>ЗС</option>
-            <option>ХҮТ</option><option>СЭЗХ</option><option>ДХХ</option><option>ТБТХ</option>
-            <option>ХНХ</option><option>ББТХ</option><option>МТХ</option><option>ХЭМАБА</option>
-            <option>НАХ</option><option>ЗТТА</option><option>ДА</option><option>АЗА</option>
-            <option>АТА</option><option>ХТЛА</option>
-          </optgroup>
-          <optgroup label="Удирдлага"><option value="ADMIN">Админ</option></optgroup>
-        </select>
-      </div>
-      <div class="field"><label>Нэр</label><input type="text" id="login-name" placeholder="Нэрээ оруулна уу..."></div>
-      <button class="login-btn" onclick="doEnter()">Орох →</button>
-    </div>
-    <button class="login-btn" id="auth-btn" onclick="doAuthLogin()">Нэвтрэх →</button>
+    <div class="field"><label>Нэвтрэх нэр</label><input type="text" id="login-user" placeholder="Жишээ: 31870" autocomplete="username"></div>
+    <div class="field"><label>Нууц үг</label><input type="password" id="login-pass" placeholder="Нууц үгээ оруулна уу" autocomplete="current-password"></div>
+    <div class="login-err" id="login-err"></div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Нэвтрэх →</button>
   </div>
 </div>
 
@@ -237,6 +220,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
       <div class="nav-item active" onclick="showTab('dashboard',this)"><div class="nav-dot" style="background:#e74c3c"></div>НҮҮ Р</div>
       <div class="nav-item" onclick="showTab('mine',this)"><div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР</div>
       <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin',this)"><div class="nav-dot" style="background:#f39c12"></div>НЭМЭХ</div>
+      <div class="nav-item" onclick="showTab('decisions',this)"><div class="nav-dot" style="background:#3498db"></div>ХУРЛЫН ШИЙДВЭР</div>
     </nav>
     <div class="sidebar-footer">
       <div class="user-chip">
@@ -345,6 +329,11 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
         <div id="my-tasks"></div>
       </div>
 
+      <!-- ХУРЛЫН ШИЙДВЭР -->
+      <div class="view" id="view-decisions">
+        <div id="decisions-container"></div>
+      </div>
+
       <!-- НЭМЭХ -->
       <div class="view" id="view-admin">
         <div class="admin-form">
@@ -387,6 +376,28 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
   </div>
 </div>
 
+<!-- DECISIONS VIEW (injected by JS) -->
+<!-- DECISIONS MODAL -->
+<div class="modal-bg" id="dec-add-modal">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-head"><h3 id="dec-modal-title">Шинэ хурлын шийдвэр</h3><button class="modal-close" onclick="closeModal('dec-add-modal')">×</button></div>
+    <div id="dec-modal-body" style="max-height:70vh;overflow-y:auto"></div>
+  </div>
+</div>
+<!-- DECISION DETAIL MODAL -->
+<div class="modal-bg" id="dec-detail-modal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-head">
+      <h3 id="dec-detail-title">Шийдвэрийн дэлгэрэнгүй</h3>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="dec-edit-btn" style="display:none;padding:6px 12px;background:#3498db;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit" onclick="openDecEditFromDetail()">✏️ Засах</button>
+        <button class="modal-close" onclick="closeModal('dec-detail-modal')">×</button>
+      </div>
+    </div>
+    <div id="dec-detail-body" style="max-height:75vh;overflow-y:auto"></div>
+  </div>
+</div>
+
 <!-- EDIT TASK MODAL -->
 <div class="modal-bg" id="edit-modal">
   <div class="modal">
@@ -399,7 +410,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-heig
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<!-- Firebase Auth removed; using USERS object -->
 <script>
 firebase.initializeApp({
   apiKey:"AIzaSyCDBVVt_rEY7tb96ZBDY4a_FZEa_-q4cUw",
@@ -420,6 +431,27 @@ const DEPTS={'ДХХ':'#2196F3','ББТХ':'#9c27b0','СЭЗХ':'#f44336','ХН�
 const ML={'2026-01':'1-р сар','2026-02':'2-р сар','2026-03':'3-р сар','2026-04':'4-р сар','2026-05':'5-р сар','2026-06':'6-р сар','2026-07':'7-р сар','2026-08':'8-р сар','2026-09':'9-р сар','2026-10':'10-р сар','2026-11':'11-р сар','2026-12':'12-р сар'};
 const MALL=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
 const SK='uurdeg_session_v2';
+const USERS={
+  '31079':{unit:'СЭЗХ',person:'Л.Эрдэнэсугар',pass:'1079',seeAll:true,isAdmin:false},
+  '31853':{unit:'ДХХ',person:'В.Болормаа',pass:'1853',seeAll:true,isAdmin:false},
+  '31072':{unit:'ТБТХ',person:'Э.Эрдэнэбат',pass:'1072',seeAll:true,isAdmin:false},
+  '31066':{unit:'ХНХ',person:'Ч.Чинцогт',pass:'1066',seeAll:true,isAdmin:false},
+  '31234':{unit:'ББТХ',person:'С.Батбаатар',pass:'1234',seeAll:true,isAdmin:false},
+  '31029':{unit:'НҮА',person:'Ц.Даваасамбуу',pass:'1029',seeAll:true,isAdmin:false},
+  '31056':{unit:'МТХ',person:'О.Сэр-Од',pass:'1056',seeAll:true,isAdmin:false},
+  '31089':{unit:'ХЭМАБА',person:'С.Одончимэг',pass:'1089',seeAll:false,isAdmin:false},
+  '31476':{unit:'ДА',person:'Ж.Ариунаа',pass:'1476',seeAll:false,isAdmin:false},
+  '31805':{unit:'ХТЛА',person:'Т.Гэрэлт-Од',pass:'1805',seeAll:false,isAdmin:false},
+  '31808':{unit:'ЗТТА',person:'Д.Батсайхан',pass:'1808',seeAll:false,isAdmin:false},
+  '31712':{unit:'АТА',person:'Д.Гансүх',pass:'1712',seeAll:false,isAdmin:false},
+  '31871':{unit:'ХҮТ',person:'Б.Болдсүх',pass:'1871',seeAll:false,isAdmin:false},
+  '31408':{unit:'АЗА',person:'Б.Оюундэлгэр',pass:'1408',seeAll:false,isAdmin:false},
+  '31901':{unit:'ЖС',person:'С.Ариунбаяр',pass:'1901',seeAll:false,isAdmin:false},
+  '32589':{unit:'СС',person:'Э.Сувдаа',pass:'2589',seeAll:false,isAdmin:false},
+  '31002':{unit:'ХС',person:'Ц.Содбаяр',pass:'1002',seeAll:false,isAdmin:false},
+  '32141':{unit:'ЗС',person:'М.Энх-Амгалан',pass:'2141',seeAll:false,isAdmin:false},
+  '31870':{unit:'ADMIN',person:'Э.Ичинхорлоо',pass:'1870',seeAll:true,isAdmin:true},
+};
 const INIT=[
   {id:1,month:'2026-01',date:'2026/01/05',dept:'ДХХ',giver:'ДХХ',person:'Э.Эрдэнэбат',name:'Мэдээ тайлан ирүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
   {id:2,month:'2026-01',date:'2026/01/05',dept:'ББТХ',giver:'ББТХ',person:'С.Батбаатар',name:'Орлого төвлөрүүлэх',units:['ЖС','ХС','СС','ЗС','ХҮТ'],dl:'2026/01/31'},
@@ -444,6 +476,8 @@ const INIT=[
 ];
 
 let cu=null,tasks=[],prog={},empList=[],nid=300;
+let decisions=[],decRows=[],fbLoaded=false;
+const DCOL=()=>db.collection('meeting_decisions');
 let bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[];
 let dC=null,uCC=null,trendC=null,saveT=null;
 
@@ -487,45 +521,32 @@ async function saveEmpList(){try{await EDOC.set({list:empList});}catch(e){}}
 function updateEmpDatalist(){const dl=document.getElementById('emp-list');if(dl)dl.innerHTML=empList.map(e=>`<option value="${e}">`).join('');}
 
 // ===== AUTH =====
-async function doAuthLogin(){
-  const email=document.getElementById('auth-email').value.trim();
-  const pw=document.getElementById('auth-password').value;
-  const btn=document.getElementById('auth-btn');
-  if(!email||!pw){showAuthErr('Имэйл болон нууц үгээ оруулна уу');return;}
-  btn.disabled=true;btn.textContent='Нэвтэрч байна...';
-  try{
-    await auth.signInWithEmailAndPassword(email,pw);
-    document.getElementById('auth-err').style.display='none';
-    btn.style.display='none';
-    document.getElementById('auth-email').disabled=true;
-    document.getElementById('auth-password').disabled=true;
-    document.getElementById('unit-section').style.display='block';
-  }catch(e){showAuthErr('Имэйл эсвэл нууц үг буруу байна');btn.disabled=false;btn.textContent='Нэвтрэх →';}
-}
-function showAuthErr(msg){const el=document.getElementById('auth-err');el.textContent=msg;el.style.display='block';}
-async function doEnter(){
-  const unit=document.getElementById('login-unit').value;
-  const name=document.getElementById('login-name').value.trim();
-  if(!unit){alert('Нэгжээ сонгоно уу');return;}
-  if(!name){alert('Нэрээ оруулна уу');return;}
-  cu={unit,name,isAdmin:unit==='ADMIN'};
+async function doLogin(){
+  const uname=document.getElementById('login-user').value.trim();
+  const pass=document.getElementById('login-pass').value.trim();
+  const err=document.getElementById('login-err');
+  const btn=document.getElementById('login-btn');
+  if(!uname||!pass){err.textContent='Нэвтрэх нэр болон нууц үгийг оруулна уу';err.style.display='block';return;}
+  const user=USERS[uname];
+  if(!user||user.pass!==pass){err.textContent='Нэвтрэх нэр эсвэл нууц үг буруу байна';err.style.display='block';return;}
+  err.style.display='none';
+  btn.disabled=true;btn.textContent='Ачаалж байна...';
+  cu={unit:user.unit,name:user.person,isAdmin:user.isAdmin,seeAll:user.seeAll};
   try{localStorage.setItem(SK,JSON.stringify(cu));}catch(e){}
-  await fbLoad();showApp();
+  try{await fbLoad();}catch(e){}
+  btn.disabled=false;btn.textContent='Нэвтрэх →';
+  showApp();
 }
-async function doLogout(){
+function doLogout(){
   try{localStorage.removeItem(SK);}catch(e){}
-  await auth.signOut();cu=null;tasks=[];prog=[];
+  cu=null;tasks=[];prog=[];decisions=[];
   document.getElementById('main-app').style.display='none';
   document.getElementById('login-page').style.display='flex';
-  document.getElementById('auth-btn').style.display='block';
-  document.getElementById('auth-btn').disabled=false;
-  document.getElementById('auth-btn').textContent='Нэвтрэх →';
-  document.getElementById('auth-email').disabled=false;
-  document.getElementById('auth-password').disabled=false;
-  document.getElementById('auth-email').value='';
-  document.getElementById('auth-password').value='';
-  document.getElementById('unit-section').style.display='none';
-  document.getElementById('auth-err').style.display='none';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-err').style.display='none';
+  document.getElementById('login-btn').disabled=false;
+  document.getElementById('login-btn').textContent='Нэвтрэх →';
   document.getElementById('nav-admin').style.display='none';
 }
 
@@ -565,7 +586,7 @@ function showApp(){
   document.getElementById('user-unit-lbl').textContent=cu.unit;
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
   if(cu.isAdmin){document.getElementById('nav-admin').style.display='flex';initUchk();}
-  document.getElementById('sub-tabs-wrap').style.display=cu.isAdmin?'none':'flex';
+  document.getElementById('sub-tabs-wrap').style.display=(cu.isAdmin||cu.seeAll)?'none':'flex';
   const ms=getMonths();actMonth=ms[ms.length-1]||'2026-01';
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
@@ -581,6 +602,7 @@ function showTab(name,el){
   if(name==='dashboard'){updateKPI();renderDashboard();}
   else if(name==='mine'){updateKPI();renderMyTasks();}
   else if(name==='admin'){renderAdminPills();renderAdminList();updateEmpDatalist();}
+  else if(name==='decisions'){loadDecisions().then(renderDecisions);}
 }
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderMyTasks();}
 function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
@@ -908,28 +930,346 @@ function renderAdminList(){
     </div>`;}).join('');
 }
 
-document.getElementById('auth-password').addEventListener('keydown',e=>{if(e.key==='Enter')doAuthLogin();});
+document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+
+// ===== ХУРЛЫН ШИЙДВЭР =====
+var decDetailId=null;
+
+function showTab_decisions(){
+  var dc=document.getElementById('decisions-container');
+  if(dc)renderDecisions();
+}
+
+function renderDecisions(){
+  var dc=document.getElementById('decisions-container');
+  if(!dc)return;
+  var h='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">';
+  h+='<div style="font-size:15px;font-weight:700;color:#1a1a2e">Хурлын шийдвэр</div>';
+  if(cu&&cu.isAdmin){
+    h+='<button class="btn-primary" onclick="openDecModal()" style="font-size:13px;padding:8px 16px">+ Шийдвэр нэмэх</button>';
+  }
+  h+='</div>';
+  if(!decisions.length){
+    h+='<div class="empty">Хурлын шийдвэр байхгүй байна</div>';
+  } else {
+    decisions.sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+    for(var i=0;i<decisions.length;i++){
+      h+=renderDecCard(decisions[i]);
+    }
+  }
+  dc.innerHTML=h;
+}
+
+function renderDecCard(d){
+  var myRows=[];
+  if(cu&&cu.isAdmin){myRows=d.rows||[];}
+  else{myRows=(d.rows||[]).filter(function(r){return (r.units||[]).indexOf(cu&&cu.unit)>=0;});}
+  var rowCount=(d.rows||[]).length;
+  var isNew=d.createdAt&&(Date.now()-d.createdAt<7*86400000);
+  var h='<div class="task-card" style="cursor:pointer;margin-bottom:10px" onclick="openDecDetail(\''+d.id+'\')">';
+  h+='<div class="task-header" style="flex-wrap:wrap">';
+  h+='<span class="badge" style="background:#1a1a2e;color:#fff">'+escH(d.date||'')+'</span>';
+  if(d.num){h+='<span class="badge" style="background:#27ae60;color:#fff">'+escH(d.num)+'</span>';}
+  if(isNew){h+='<span class="badge" style="background:#e74c3c;color:#fff">ШИНЭ</span>';}
+  if(d.loc){h+='<span style="font-size:11px;color:#888">📍 '+escH(d.loc)+'</span>';}
+  if(cu&&cu.isAdmin){
+    h+='<button onclick="event.stopPropagation();deleteDecision(\''+d.id+'\')" class="del-btn" style="margin-left:auto">🗑</button>';
+  }
+  h+='</div>';
+  h+='<div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;line-height:1.4">'+escH(d.title||'')+'</div>';
+  h+='<div style="font-size:12px;color:#aaa;margin-bottom:8px">Нийт '+rowCount+' шийдвэр';
+  if(myRows.length&&!cu.isAdmin){h+=' | Миний: '+myRows.length;}
+  h+='</div>';
+  if(myRows.length&&!cu.isAdmin){
+    h+='<div style="display:flex;flex-wrap:wrap;gap:4px">';
+    for(var i=0;i<Math.min(myRows.length,3);i++){
+      var r=myRows[i];
+      h+='<div style="font-size:11px;background:#f0f4ff;color:#3a5fc8;padding:2px 8px;border-radius:4px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escH(r.decision||r.topic||'')+'</div>';
+    }
+    if(myRows.length>3){h+='<div style="font-size:11px;color:#aaa">+'+( myRows.length-3)+'</div>';}
+    h+='</div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+function escH(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function openDecDetail(id){
+  var d=decisions.find(function(x){return x.id===id;});
+  if(!d)return;
+  decDetailId=id;
+  document.getElementById('dec-detail-modal').classList.add('open');
+  document.getElementById('dec-detail-title').textContent=d.title||'Шийдвэр';
+  var btn=document.getElementById('dec-edit-btn');
+  if(btn)btn.style.display=(cu&&cu.isAdmin)?'block':'none';
+
+  var allRows=d.rows||[];
+  var myRows=cu.isAdmin?allRows:allRows.filter(function(r){return (r.units||[]).indexOf(cu.unit)>=0;});
+
+  var h='<div style="padding:4px 0 12px">';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">';
+  if(d.date)h+='<span class="badge" style="background:#1a1a2e;color:#fff">'+escH(d.date)+'</span>';
+  if(d.num)h+='<span class="badge" style="background:#27ae60;color:#fff">'+escH(d.num)+'</span>';
+  if(d.loc)h+='<span class="badge" style="background:#f0f0f0;color:#555">📍 '+escH(d.loc)+'</span>';
+  h+='</div>';
+  if(d.createdBy)h+='<div style="font-size:11px;color:#aaa;margin-bottom:12px">Бэлтгэсэн: '+escH(d.createdBy)+'</div>';
+
+  if(!myRows.length){
+    h+='<div style="text-align:center;padding:2rem;color:#bbb;font-size:13px">Танай нэгжид шилжүүлсэн шийдвэр байхгүй байна</div>';
+  } else {
+    h+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    h+='<thead><tr style="background:#f5f5f5">';
+    h+='<th style="padding:8px 10px;text-align:left;border-bottom:2px solid #eee;font-weight:700;color:#555">№</th>';
+    h+='<th style="padding:8px 10px;text-align:left;border-bottom:2px solid #eee;font-weight:700;color:#555">Хэлэлцсэн асуудал</th>';
+    h+='<th style="padding:8px 10px;text-align:left;border-bottom:2px solid #eee;font-weight:700;color:#555">Гарсан шийдвэр</th>';
+    h+='<th style="padding:8px 10px;text-align:left;border-bottom:2px solid #eee;font-weight:700;color:#555">Хариуцагч</th>';
+    h+='</tr></thead><tbody>';
+    for(var i=0;i<myRows.length;i++){
+      var r=myRows[i];
+      var bg=i%2===0?'#fff':'#fafafa';
+      h+='<tr style="background:'+bg+'">';
+      h+='<td style="padding:8px 10px;border-bottom:1px solid #eee;color:#aaa;font-size:11px">'+(i+1)+'</td>';
+      h+='<td style="padding:8px 10px;border-bottom:1px solid #eee;line-height:1.4">'+escH(r.topic||'')+'</td>';
+      h+='<td style="padding:8px 10px;border-bottom:1px solid #eee;line-height:1.4;color:#1a6b3a;font-weight:500">'+escH(r.decision||'')+'</td>';
+      h+='<td style="padding:8px 10px;border-bottom:1px solid #eee">';
+      if(r.person)h+='<div style="font-weight:600">'+escH(r.person)+'</div>';
+      if(r.resp)h+='<div style="font-size:10px;color:#888">'+escH(r.resp)+'</div>';
+      h+='</td></tr>';
+    }
+    h+='</tbody></table>';
+  }
+  h+='<div style="display:flex;justify-content:flex-end;margin-top:16px;gap:8px">';
+  h+='<button onclick="printDecisionById(\''+id+'\')" style="padding:7px 14px;background:#3498db;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🖨 Хэвлэх</button>';
+  h+='<button onclick="closeModal(\'dec-detail-modal\')" class="btn-outline" style="font-size:13px">Хаах</button>';
+  h+='</div></div>';
+  document.getElementById('dec-detail-body').innerHTML=h;
+}
+
+function openDecEditFromDetail(){
+  if(decDetailId)openDecEdit(decDetailId);
+  closeModal('dec-detail-modal');
+}
+
+function openDecModal(){
+  decRows=[{topic:'',decision:'',resp:'',person:'',units:[]}];
+  var today=new Date().toISOString().slice(0,10);
+  var is='width:100%;padding:8px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:13px;color:#1a1a2e;background:#fff;outline:none;font-family:inherit';
+  var lbl='font-size:11px;font-weight:700;color:#666;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px';
+  document.getElementById('dec-add-modal').classList.add('open');
+  document.getElementById('dec-modal-title').textContent='Шинэ хурлын шийдвэр';
+  document.getElementById('dec-modal-body').innerHTML=
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'+
+      '<div><label style="'+lbl+'">Огноо</label>'+
+      '<input type="date" id="df-date" value="'+today+'" style="'+is+'"></div>'+
+      '<div><label style="'+lbl+'">Дугаар</label>'+
+      '<input type="text" id="df-num" placeholder="2026/07" style="'+is+'"></div>'+
+    '</div>'+
+    '<div style="margin-bottom:10px"><label style="'+lbl+'">Гарчиг</label>'+
+    '<input type="text" id="df-title" placeholder="ЗАХИРЛЫН ЗӨВЛӨЛИЙН ХУРЛААС ГАРСАН ШИЙДВЭР" style="'+is+'"></div>'+
+    '<div style="margin-bottom:12px"><label style="'+lbl+'">Байршил</label>'+
+    '<input type="text" id="df-loc" value="Дархан хот" style="'+is+'"></div>'+
+    '<div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;margin-bottom:8px">Шийдвэрийн мөрүүд</div>'+
+    '<div id="dec-rows-wrap"></div>'+
+    '<button onclick="addDecRowModal()" style="width:100%;padding:7px;border:1.5px dashed #ccc;border-radius:8px;background:none;color:#888;cursor:pointer;font-size:12px;font-family:inherit;margin-top:4px">+ Шийдвэр нэмэх</button>'+
+    '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #eee">'+
+      '<button class="btn-outline" onclick="closeModal(\'dec-add-modal\')">Болих</button>'+
+      '<button class="btn-primary" onclick="saveDecision()">Хадгалах</button>'+
+    '</div>';
+  renderDecRowsModal();
+}
+
+function openDecEdit(id){
+  var d=decisions.find(function(x){return x.id===id;});if(!d)return;
+  decRows=(d.rows||[]).map(function(r){return {topic:r.topic||'',decision:r.decision||'',resp:r.resp||'',person:r.person||'',units:(r.units||[]).slice()};});
+  var is='width:100%;padding:8px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:13px;color:#1a1a2e;background:#fff;outline:none;font-family:inherit';
+  var lbl='font-size:11px;font-weight:700;color:#666;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px';
+  document.getElementById('dec-add-modal').classList.add('open');
+  document.getElementById('dec-modal-title').textContent='Шийдвэр засах';
+  document.getElementById('dec-modal-body').innerHTML=
+    '<input type="hidden" id="df-edit-id" value="'+escH(id)+'">'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'+
+      '<div><label style="'+lbl+'">Огноо</label>'+
+      '<input type="date" id="df-date" value="'+escH(d.date||'')+'" style="'+is+'"></div>'+
+      '<div><label style="'+lbl+'">Дугаар</label>'+
+      '<input type="text" id="df-num" value="'+escH(d.num||'')+'" style="'+is+'"></div>'+
+    '</div>'+
+    '<div style="margin-bottom:10px"><label style="'+lbl+'">Гарчиг</label>'+
+    '<input type="text" id="df-title" value="'+escH(d.title||'')+'" style="'+is+'"></div>'+
+    '<div style="margin-bottom:12px"><label style="'+lbl+'">Байршил</label>'+
+    '<input type="text" id="df-loc" value="'+escH(d.loc||'')+'" style="'+is+'"></div>'+
+    '<div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;margin-bottom:8px">Шийдвэрийн мөрүүд</div>'+
+    '<div id="dec-rows-wrap"></div>'+
+    '<button onclick="addDecRowModal()" style="width:100%;padding:7px;border:1.5px dashed #ccc;border-radius:8px;background:none;color:#888;cursor:pointer;font-size:12px;font-family:inherit;margin-top:4px">+ Шийдвэр нэмэх</button>'+
+    '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid #eee">'+
+      '<button class="btn-outline" onclick="closeModal(\'dec-add-modal\')">Болих</button>'+
+      '<button class="btn-primary" onclick="saveDecision()">Хадгалах</button>'+
+    '</div>';
+  renderDecRowsModal();
+}
+
+function renderDecRowsModal(){
+  var unitOpts=AU.map(function(u){return '<option value="'+u+'">'+u+'</option>';}).join('');
+  var is='width:100%;padding:7px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:12px;color:#1a1a2e;background:#fff;outline:none;font-family:inherit';
+  var html=decRows.map(function(r,i){
+    var unitDivs=AU.map(function(u){
+      var sel=(r.units||[]).indexOf(u)>=0;
+      return '<div data-ri="'+i+'" data-ru="'+u+'" onclick="toggleDecUnitBtn(this)" style="padding:3px 9px;border:1.5px solid '+(sel?'#3498db':'#e0e0e0')+';border-radius:6px;font-size:11px;cursor:pointer;background:'+(sel?'#eaf4fd':'#fff')+';color:'+(sel?'#2980b9':'#999')+';user-select:none;transition:all .15s;font-weight:'+(sel?'700':'400')+'">'+u+'</div>';
+    }).join('');
+    return '<div style="background:#f9f9f9;border:1.5px solid #eee;border-radius:8px;padding:12px;margin-bottom:8px">'+
+      '<div style="font-size:11px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase">'+(i+1)+'-р асуудал</div>'+
+      '<textarea placeholder="Хэлэлцсэн асуудал..." id="dr-topic-'+i+'" rows="2" style="'+is+';resize:vertical;margin-bottom:6px;display:block">'+escH(r.topic||'')+'</textarea>'+
+      '<textarea placeholder="Гарсан шийдвэр..." id="dr-dec-'+i+'" rows="3" style="'+is+';resize:vertical;margin-bottom:6px;display:block">'+escH(r.decision||'')+'</textarea>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'+
+        '<div><div style="font-size:10px;color:#888;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцагч</div>'+
+        '<input type="text" id="dr-person-'+i+'" placeholder="Нэр..." value="'+escH(r.person||'')+'" style="'+is+'"></div>'+
+        '<div><div style="font-size:10px;color:#888;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцах нэгж</div>'+
+        '<select id="dr-resp-'+i+'" style="'+is+'">'+
+          '<option value="">Нэгж сонгох...</option>'+unitOpts+
+        '</select></div>'+
+      '</div>'+
+      '<div style="font-size:10px;color:#888;margin-bottom:6px;font-weight:600;text-transform:uppercase">Шилжүүлэх нэгжүүд</div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">'+unitDivs+'</div>'+
+      '<div style="display:flex;justify-content:flex-end">'+
+        '<button data-ri="'+i+'" onclick="removeDecRowByBtn(this)" style="padding:5px 10px;border:1px solid #e0e0e0;border-radius:6px;background:none;color:#aaa;cursor:pointer;font-size:12px;font-family:inherit">Хасах</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('dec-rows-wrap').innerHTML=html;
+  decRows.forEach(function(r,i){
+    var rs=document.getElementById('dr-resp-'+i);
+    if(rs&&r.resp)rs.value=r.resp;
+  });
+}
+
+function toggleDecUnitBtn(el){
+  var i=parseInt(el.dataset.ri);
+  var u=el.dataset.ru;
+  var r=decRows[i];
+  var idx=(r.units||[]).indexOf(u);
+  if(!r.units)r.units=[];
+  if(idx>=0){r.units.splice(idx,1);el.style.border='1.5px solid #e0e0e0';el.style.background='#fff';el.style.color='#999';el.style.fontWeight='400';}
+  else{r.units.push(u);el.style.border='1.5px solid #3498db';el.style.background='#eaf4fd';el.style.color='#2980b9';el.style.fontWeight='700';}
+}
+function addDecRowModal(){decRows.push({topic:'',decision:'',resp:'',person:'',units:[]});renderDecRowsModal();}
+function removeDecRowModal(i){decRows.splice(i,1);renderDecRowsModal();}
+function removeDecRowByBtn(el){removeDecRowModal(parseInt(el.dataset.ri));}
+
+function collectDecRows(){
+  return decRows.map(function(r,i){
+    return {
+      topic:(document.getElementById('dr-topic-'+i)||{}).value||'',
+      decision:(document.getElementById('dr-dec-'+i)||{}).value||'',
+      person:(document.getElementById('dr-person-'+i)||{}).value||'',
+      resp:(document.getElementById('dr-resp-'+i)||{}).value||'',
+      units:r.units||[]
+    };
+  });
+}
+
+async function saveDecision(){
+  var rows=collectDecRows();
+  var editId=(document.getElementById('df-edit-id')||{}).value||'';
+  var date=(document.getElementById('df-date')||{}).value||'';
+  var num=(document.getElementById('df-num')||{}).value||'';
+  var title=(document.getElementById('df-title')||{}).value||'';
+  var loc=(document.getElementById('df-loc')||{}).value||'';
+  if(!title){alert('Гарчиг оруулна уу');return;}
+  syncUI('saving','Хадгалж байна...');
+  var data={date:date,num:num,title:title,loc:loc,rows:rows,createdBy:cu.name,createdAt:Date.now()};
+  try{
+    if(editId){
+      await DCOL().doc(editId).update(data);
+      var idx=decisions.findIndex(function(d){return d.id===editId;});
+      if(idx>=0)decisions[idx]=Object.assign({id:editId},data);
+    } else {
+      var ref=await DCOL().add(data);
+      decisions.unshift(Object.assign({id:ref.id},data));
+    }
+    syncUI('ok','✓ Хадгалагдлаа');
+    closeModal('dec-add-modal');
+    renderDecisions();
+  }catch(e){syncUI('err','⚠ Алдаа: '+e.message);}
+}
+
+async function deleteDecision(id){
+  if(!confirm('Устгах уу?'))return;
+  syncUI('saving','Устгаж байна...');
+  try{
+    await DCOL().doc(id).delete();
+    decisions=decisions.filter(function(d){return d.id!==id;});
+    syncUI('ok','✓ Устгагдлаа');
+    renderDecisions();
+  }catch(e){syncUI('err','⚠ Алдаа');}
+}
+
+async function loadDecisions(){
+  try{
+    var snap=await DCOL().orderBy('createdAt','desc').get();
+    decisions=snap.docs.map(function(doc){return Object.assign({id:doc.id},doc.data());});
+  }catch(e){decisions=[];}
+}
+
+function printDecisionById(id){
+  var d=decisions.find(function(x){return x.id===id;});
+  if(!d)return;
+  var rows=d.rows||[];
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+escH(d.num||'')+'</title>';
+  html+='<style>body{font-family:"Times New Roman",serif;padding:20px;font-size:12px;color:#000}';
+  html+='.header{text-align:center;margin-bottom:20px;border-bottom:2px solid #000;padding-bottom:12px}';
+  html+='.main-title{font-size:16px;font-weight:bold;margin-bottom:6px;text-transform:uppercase}';
+  html+='.sub-info{font-size:12px;color:#444}table{width:100%;border-collapse:collapse;margin-top:16px}';
+  html+='th,td{border:1px solid #000;padding:6px 8px;text-align:left;font-size:11px;vertical-align:top}';
+  html+='th{background:#f0f0f0;font-weight:bold}@media print{body{margin:0}}</style></head><body>';
+  html+='<div class="header">';
+  html+='<div style="font-size:11px;color:#555">ДСЦТС ХК</div>';
+  html+='<div style="font-size:11px;color:#555">ДСЦТСХК-М-021-01</div>';
+  html+='<div class="main-title">Хурлын шийдвэрийн маягт</div>';
+  html+='<div class="sub-info">';
+  if(d.title)html+=escH(d.title)+'<br>';
+  var info=[];
+  if(d.date)info.push('Огноо: '+escH(d.date));
+  if(d.num)info.push('Дугаар: '+escH(d.num));
+  if(d.loc)info.push('Байршил: '+escH(d.loc));
+  html+=info.join(' | ');
+  html+='</div></div>';
+  if(rows.length){
+    html+='<table><thead><tr><th style="width:4%">№</th><th style="width:28%">Хэлэлцсэн асуудал</th><th style="width:38%">Гарсан шийдвэр</th><th style="width:16%">Хариуцагч</th><th style="width:14%">Нэгж</th></tr></thead><tbody>';
+    for(var i=0;i<rows.length;i++){
+      var r=rows[i];
+      html+='<tr><td>'+(i+1)+'</td><td>'+escH(r.topic||'')+'</td><td>'+escH(r.decision||'')+'</td><td>'+escH(r.person||'')+'</td><td>'+escH((r.units||[]).join(', '))+'</td></tr>';
+    }
+    html+='</tbody></table>';
+  }
+  if(d.createdBy){html+='<div style="margin-top:16px;font-size:11px;color:#555">Бэлтгэсэн: '+escH(d.createdBy)+'</div>';}
+  html+='</body></html>';
+  var blob=new Blob([html],{type:'text/html'});
+  var url=URL.createObjectURL(blob);
+  var w=window.open(url,'_blank');
+  if(w)setTimeout(function(){w.print();URL.revokeObjectURL(url);},800);
+}
 
 // ===== INIT =====
 (async function init(){
-  auth.onAuthStateChanged(async function(user){
-    const ls=document.getElementById('loading-screen');
-    if(user){
-      try{
-        const saved=localStorage.getItem(SK);
-        if(saved){const p=JSON.parse(saved);if(p&&p.unit&&p.name){cu=p;cu.isAdmin=cu.unit==='ADMIN';await fbLoad();ls.classList.add('hide');setTimeout(()=>ls.style.display='none',400);showApp();return;}}
-      }catch(e){}
-      ls.classList.add('hide');
-      setTimeout(()=>{ls.style.display='none';document.getElementById('login-page').style.display='flex';
-        document.getElementById('auth-btn').style.display='none';
-        document.getElementById('auth-email').disabled=true;
-        document.getElementById('auth-password').disabled=true;
-        document.getElementById('unit-section').style.display='block';},400);
-    }else{
-      ls.classList.add('hide');
-      setTimeout(()=>{ls.style.display='none';document.getElementById('login-page').style.display='flex';},400);
+  const ls=document.getElementById('loading-screen');
+  const hideLS=()=>{ls.classList.add('hide');setTimeout(()=>ls.style.display='none',400);}
+  const timer=setTimeout(()=>{hideLS();document.getElementById('login-page').style.display='flex';},3000);
+  try{
+    const saved=localStorage.getItem(SK);
+    if(saved){
+      const p=JSON.parse(saved);
+      if(p&&p.unit&&p.name){
+        cu=p;
+        try{await fbLoad();}catch(e){}
+        clearTimeout(timer);hideLS();showApp();return;
+      }
     }
-  });
+  }catch(e){}
+  clearTimeout(timer);hideLS();
+  document.getElementById('login-page').style.display='flex';
 })();
 </script>
 </body>
