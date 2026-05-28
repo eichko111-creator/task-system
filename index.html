@@ -1169,8 +1169,20 @@ function toggleDecUnitBtn(el){
   if(idx>=0){r.units.splice(idx,1);el.style.border='1.5px solid #e0e0e0';el.style.background='#fff';el.style.color='#999';el.style.fontWeight='400';}
   else{r.units.push(u);el.style.border='1.5px solid #3498db';el.style.background='#eaf4fd';el.style.color='#2980b9';el.style.fontWeight='700';}
 }
-function addDecRowModal(){decRows.push({topic:'',decision:'',resp:'',person:'',units:[]});renderDecRowsModal();}
-function removeDecRowModal(i){decRows.splice(i,1);renderDecRowsModal();}
+function saveDecRowInputs(){
+  decRows.forEach(function(_,i){
+    var t=document.getElementById('dr-topic-'+i);
+    var d=document.getElementById('dr-dec-'+i);
+    var p=document.getElementById('dr-person-'+i);
+    var rs=document.getElementById('dr-resp-'+i);
+    if(t)decRows[i].topic=t.value;
+    if(d)decRows[i].decision=d.value;
+    if(p)decRows[i].person=p.value;
+    if(rs)decRows[i].resp=rs.value;
+  });
+}
+function addDecRowModal(){saveDecRowInputs();decRows.push({topic:'',decision:'',resp:'',person:'',units:[],respUnits:[]});renderDecRowsModal();}
+function removeDecRowModal(i){saveDecRowInputs();decRows.splice(i,1);renderDecRowsModal();}
 function removeDecRowByBtn(el){removeDecRowModal(parseInt(el.dataset.ri));}
 
 function collectDecRows(){
