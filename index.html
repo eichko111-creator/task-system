@@ -1098,7 +1098,16 @@ function openDecModal(){
 
 function openDecEdit(id){
   var d=decisions.find(function(x){return x.id===id;});if(!d)return;
-  decRows=(d.rows||[]).map(function(r){return {topic:r.topic||'',decision:r.decision||'',resp:r.resp||'',person:r.person||'',units:(r.units||[]).slice()};});
+  decRows=(d.rows||[]).map(function(r){
+    return {
+      topic:r.topic||'',
+      decision:r.decision||'',
+      person:r.person||'',
+      resp:r.resp||'',
+      respUnits:(r.respUnits&&r.respUnits.length)?r.respUnits.slice():(r.resp?[r.resp]:[]),
+      units:(r.units||[]).slice()
+    };
+  });
   var is='width:100%;padding:8px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:13px;color:#1a1a2e;background:#fff;outline:none;font-family:inherit';
   var lbl='font-size:11px;font-weight:700;color:#666;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px';
   document.getElementById('dec-add-modal').classList.add('open');
@@ -1206,6 +1215,8 @@ function collectDecRows(){
 }
 
 async function saveDecision(){
+  // Текст оролтуудыг decRows-д хадгална
+  saveDecRowInputs();
   var rows=collectDecRows();
   var editId=(document.getElementById('df-edit-id')||{}).value||'';
   var date=(document.getElementById('df-date')||{}).value||'';
@@ -1213,21 +1224,28 @@ async function saveDecision(){
   var title=(document.getElementById('df-title')||{}).value||'';
   var loc=(document.getElementById('df-loc')||{}).value||'';
   if(!title){alert('Гарчиг оруулна уу');return;}
+  if(!rows.length){alert('Дор хаяж нэг шийдвэр оруулна уу');return;}
   syncUI('saving','Хадгалж байна...');
-  var data={date:date,num:num,title:title,loc:loc,rows:rows,createdBy:cu.name,createdAt:Date.now()};
   try{
     if(editId){
-      await DCOL().doc(editId).update(data);
+      // edit: createdAt-г хэвээр үлдээнэ
+      var updateData={date:date,num:num,title:title,loc:loc,rows:rows,updatedAt:Date.now()};
+      await DCOL().doc(editId).update(updateData);
       var idx=decisions.findIndex(function(d){return d.id===editId;});
-      if(idx>=0)decisions[idx]=Object.assign({id:editId},data);
+      if(idx>=0)Object.assign(decisions[idx],updateData);
     } else {
-      var ref=await DCOL().add(data);
-      decisions.unshift(Object.assign({id:ref.id},data));
+      // new: createdAt шинэ тоо
+      var newData={date:date,num:num,title:title,loc:loc,rows:rows,createdBy:cu.name||'',createdAt:Date.now()};
+      var ref=await DCOL().add(newData);
+      decisions.unshift(Object.assign({id:ref.id},newData));
     }
     syncUI('ok','✓ Хадгалагдлаа');
     closeModal('dec-add-modal');
     renderDecisions();
-  }catch(e){syncUI('err','⚠ Алдаа: '+e.message);}
+  }catch(e){
+    console.error('saveDecision error:',e);
+    syncUI('err','⚠ Алдаа: '+(e.message||'Firebase error'));
+  }
 }
 
 async function deleteDecision(id){
@@ -1243,9 +1261,14 @@ async function deleteDecision(id){
 
 async function loadDecisions(){
   try{
-    var snap=await DCOL().orderBy('createdAt','desc').get();
+    var snap=await DCOL().get();
     decisions=snap.docs.map(function(doc){return Object.assign({id:doc.id},doc.data());});
-  }catch(e){decisions=[];}
+    decisions.sort(function(a,b){
+      var ta=typeof a.createdAt==='number'?a.createdAt:new Date(a.createdAt||0).getTime();
+      var tb=typeof b.createdAt==='number'?b.createdAt:new Date(b.createdAt||0).getTime();
+      return tb-ta;
+    });
+  }catch(e){console.error('loadDecisions:',e);decisions=[];}
 }
 
 function printDecisionById(id){
