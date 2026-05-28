@@ -310,6 +310,10 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
 
       <!-- ҮҮРЭГ ДААЛГАВАР -->
       <div class="view" id="view-mine">
+        <!-- Admin нэмэх товч -->
+        <div id="admin-add-btn-row" style="display:none;margin-bottom:12px">
+          <button class="btn-primary" onclick="openAddTaskModal()" style="font-size:13px">➕ Даалгавар нэмэх</button>
+        </div>
         <div class="sub-tabs" id="sub-tabs-wrap" style="display:none">
           <button class="stab active" onclick="setSubTab('received',this)">📥 Надад өгсөн</button>
           <button class="stab" onclick="setSubTab('given',this)">📤 Миний өгсөн</button>
@@ -607,8 +611,7 @@ function showApp(){
   document.getElementById('user-unit-lbl').textContent=cu.unit;
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
   if(cu.isAdmin){
-    const addRow=document.getElementById('admin-add-btn-row');
-    if(addRow)addRow.style.display='block';
+    const ar=document.getElementById('admin-add-btn-row');if(ar)ar.style.display='block';
     const decAddBtn=document.getElementById('dec-add-btn-wrap');
     if(decAddBtn)decAddBtn.style.display='block';
     initUchk();
@@ -771,9 +774,10 @@ function renderMyTasks(){
             ${t.dl?`<span class="badge ${ovd?'bovd':'bdl'}" style="font-size:10px">🕐 ${t.dl}</span>`:''}
           </div>
         </div>
-        <div style="text-align:right">
-          <div class="list-pct" style="color:${pColor(avg)}">${avg}%</div>
-          <div class="pbar" style="width:80px;margin-top:4px"><div class="pfill" style="width:${avg}%;background:${pColor(avg)}"></div></div>
+        <div style="text-align:right;display:flex;align-items:center;gap:8px">
+          ${cu.isAdmin?`<button class='edit-btn' onclick='openEditTask(${t.id})'>✏️</button><button class='del-btn' onclick='deleteTask(${t.id})'>🗑</button>`:''}
+          <div><div class="list-pct" style="color:${pColor(avg)}">${avg}%</div>
+          <div class="pbar" style="width:80px;margin-top:4px"><div class="pfill" style="width:${avg}%;background:${pColor(avg)}"></div></div></div>
         </div>
       </div>`;
     }).join('');
@@ -804,7 +808,7 @@ function renderMyTasks(){
         <span class="badge bdept">🏢 ${t.dept}</span>
         <span class="badge bdate">📅 ${t.date||''}</span>
         ${t.dl?`<span class="badge ${ovd?'bovd':'bdl'}">🕐 ${t.dl}${ovd?' ⚠️':''}</span>`:''}
-        ${t.giver&&t.giver!==t.dept?`<span class="badge bgiver">📤 ${t.giver}</span>`:''}
+        ${t.giver&&t.giver!==t.dept?`<span class="badge bgiver">📤 ${t.giver}</span>`:''}${cu.isAdmin?`<span style="margin-left:auto;display:flex;gap:4px"><button class="edit-btn" onclick="openEditTask(${t.id})">✏️</button><button class="del-btn" onclick="deleteTask(${t.id})">🗑</button></span>`:''}
       </div>
       <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px;line-height:1.4">${ovd?'🚨 ':''} ${t.name}</div>
       <div style="font-size:12px;color:#888;margin-bottom:6px">Хариуцагч: ${t.person||'—'}</div>
@@ -959,12 +963,7 @@ function showTab_decisions(){
 function renderDecisions(){
   var dc=document.getElementById('decision-list');
   if(!dc)return;
-  var h='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">';
-  h+='<div style="font-size:15px;font-weight:700;color:#1a1a2e">Хурлын шийдвэр</div>';
-  if(cu&&cu.isAdmin){
-    h+='<button class="btn-primary" onclick="openDecModal()" style="font-size:13px;padding:8px 16px">+ Шийдвэр нэмэх</button>';
-  }
-  h+='</div>';
+  var h='';
   if(!decisions.length){
     h+='<div class="empty">Хурлын шийдвэр байхгүй байна</div>';
   } else {
