@@ -627,7 +627,7 @@ function showApp(){
   // Default subTab
   subTab=(cu.seeAll&&!cu.isAdmin)?'received':'all';
   // Сар
-  actMonths=[];
+  actMonth=getMonths().slice(-1)[0]||'2026-01';
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
   showDeadlineToast();
@@ -646,7 +646,7 @@ function showTab(name,el){
   } else if(name==='mine'){
     document.getElementById('kpi-row').style.display='';
     document.getElementById('month-section').style.display='flex';
-    updateKPI();renderMyTasks();
+    renderMyTasks();
   } else if(name==='admin'){
     document.getElementById('kpi-row').style.display='';
     document.getElementById('month-section').style.display='flex';
@@ -778,8 +778,8 @@ function updateTabCounts(){updateSubTabCounts();}
 
 function renderMyTasks(){
   if(!cu)return;
-  // actMonths array ашиглан шүүх
-  var base=actMonths.length>0?tasks.filter(t=>actMonths.includes(t.month)):tasks;
+  // Сарын шүүлт
+  var base=actMonth?tasks.filter(t=>t.month===actMonth):tasks;
 
   // Sub-tab шүүлт
   var tabTs;
@@ -1504,7 +1504,7 @@ function openAddTaskModal(){
     '</div>';
   document.getElementById('add-task-modal').classList.add('open');
   selModalUnits=[];
-  const cur=actMonths.length>0?actMonths[actMonths.length-1]:(getMonths().slice(-1)[0]||'2026-01');
+  const cur=actMonth||getMonths().slice(-1)[0]||'2026-01';
   const sel=document.getElementById('am-month');if(sel)sel.value=cur;
 }
 
