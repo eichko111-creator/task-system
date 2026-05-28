@@ -1127,9 +1127,13 @@ function openDecEdit(id){
 }
 
 function renderDecRowsModal(){
-  var unitOpts=AU.map(function(u){return '<option value="'+u+'">'+u+'</option>';}).join('');
   var is='width:100%;padding:7px 10px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:12px;color:#1a1a2e;background:#fff;outline:none;font-family:inherit';
   var html=decRows.map(function(r,i){
+    var ru=r.respUnits||(r.resp?[r.resp]:[]);
+    var respDivs=AU.map(function(u){
+      var sel=ru.indexOf(u)>=0;
+      return '<div data-ri="'+i+'" data-ru="'+u+'" onclick="toggleDecRespBtn(this)" style="padding:3px 9px;border:1.5px solid '+(sel?'#7c3aed':'#e0e0e0')+';border-radius:6px;font-size:11px;cursor:pointer;background:'+(sel?'#f3f0ff':'#fff')+';color:'+(sel?'#6d28d9':'#999')+';user-select:none;transition:all .15s;font-weight:'+(sel?'700':'400')+'">'+u+'</div>';
+    }).join('');
     var unitDivs=AU.map(function(u){
       var sel=(r.units||[]).indexOf(u)>=0;
       return '<div data-ri="'+i+'" data-ru="'+u+'" onclick="toggleDecUnitBtn(this)" style="padding:3px 9px;border:1.5px solid '+(sel?'#3498db':'#e0e0e0')+';border-radius:6px;font-size:11px;cursor:pointer;background:'+(sel?'#eaf4fd':'#fff')+';color:'+(sel?'#2980b9':'#999')+';user-select:none;transition:all .15s;font-weight:'+(sel?'700':'400')+'">'+u+'</div>';
@@ -1138,15 +1142,15 @@ function renderDecRowsModal(){
       '<div style="font-size:11px;font-weight:700;color:#888;margin-bottom:8px;text-transform:uppercase">'+(i+1)+'-р асуудал</div>'+
       '<textarea placeholder="Хэлэлцсэн асуудал..." id="dr-topic-'+i+'" rows="2" style="'+is+';resize:vertical;margin-bottom:6px;display:block">'+escH(r.topic||'')+'</textarea>'+
       '<textarea placeholder="Гарсан шийдвэр..." id="dr-dec-'+i+'" rows="3" style="'+is+';resize:vertical;margin-bottom:6px;display:block">'+escH(r.decision||'')+'</textarea>'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'+
-        '<div><div style="font-size:10px;color:#888;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцагч</div>'+
-        '<input type="text" id="dr-person-'+i+'" placeholder="Нэр..." value="'+escH(r.person||'')+'" style="'+is+'"></div>'+
-        '<div><div style="font-size:10px;color:#888;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцах нэгж</div>'+
-        '<select id="dr-resp-'+i+'" style="'+is+'">'+
-          '<option value="">Нэгж сонгох...</option>'+unitOpts+
-        '</select></div>'+
+      '<div style="margin-bottom:8px">'+
+        '<div style="font-size:10px;color:#888;margin-bottom:4px;font-weight:600;text-transform:uppercase">Хариуцагч</div>'+
+        '<input type="text" id="dr-person-'+i+'" placeholder="Нэр..." value="'+escH(r.person||'')+'" style="'+is+'">'+
       '</div>'+
-      '<div style="font-size:10px;color:#888;margin-bottom:6px;font-weight:600;text-transform:uppercase">Шилжүүлэх нэгжүүд</div>'+
+      '<div style="margin-bottom:8px">'+
+        '<div style="font-size:10px;color:#888;margin-bottom:6px;font-weight:600;text-transform:uppercase">Хариуцах нэгж (олон сонгох боломжтой)</div>'+
+        '<div style="display:flex;flex-wrap:wrap;gap:4px" id="dr-resp-wrap-'+i+'">'+respDivs+'</div>'+
+      '</div>'+
+      '<div style="font-size:10px;color:#888;margin-bottom:6px;font-weight:600;text-transform:uppercase">Шилжүүлсэн нэгж</div>'+
       '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">'+unitDivs+'</div>'+
       '<div style="display:flex;justify-content:flex-end">'+
         '<button data-ri="'+i+'" onclick="removeDecRowByBtn(this)" style="padding:5px 10px;border:1px solid #e0e0e0;border-radius:6px;background:none;color:#aaa;cursor:pointer;font-size:12px;font-family:inherit">Хасах</button>'+
@@ -1154,10 +1158,6 @@ function renderDecRowsModal(){
     '</div>';
   }).join('');
   document.getElementById('dec-rows-wrap').innerHTML=html;
-  decRows.forEach(function(r,i){
-    var rs=document.getElementById('dr-resp-'+i);
-    if(rs&&r.resp)rs.value=r.resp;
-  });
 }
 
 function toggleDecUnitBtn(el){
@@ -1169,16 +1169,25 @@ function toggleDecUnitBtn(el){
   if(idx>=0){r.units.splice(idx,1);el.style.border='1.5px solid #e0e0e0';el.style.background='#fff';el.style.color='#999';el.style.fontWeight='400';}
   else{r.units.push(u);el.style.border='1.5px solid #3498db';el.style.background='#eaf4fd';el.style.color='#2980b9';el.style.fontWeight='700';}
 }
+function toggleDecRespBtn(el){
+  var i=parseInt(el.dataset.ri);
+  var u=el.dataset.ru;
+  var r=decRows[i];
+  if(!r.respUnits)r.respUnits=r.resp?[r.resp]:[];
+  var idx=r.respUnits.indexOf(u);
+  if(idx>=0){r.respUnits.splice(idx,1);el.style.border='1.5px solid #e0e0e0';el.style.background='#fff';el.style.color='#999';el.style.fontWeight='400';}
+  else{r.respUnits.push(u);el.style.border='1.5px solid #7c3aed';el.style.background='#f3f0ff';el.style.color='#6d28d9';el.style.fontWeight='700';}
+  r.resp=r.respUnits[0]||'';
+}
 function saveDecRowInputs(){
   decRows.forEach(function(_,i){
     var t=document.getElementById('dr-topic-'+i);
     var d=document.getElementById('dr-dec-'+i);
     var p=document.getElementById('dr-person-'+i);
-    var rs=document.getElementById('dr-resp-'+i);
     if(t)decRows[i].topic=t.value;
     if(d)decRows[i].decision=d.value;
     if(p)decRows[i].person=p.value;
-    if(rs)decRows[i].resp=rs.value;
+    // respUnits tracked via toggleDecRespBtn, units tracked via toggleDecUnitBtn
   });
 }
 function addDecRowModal(){saveDecRowInputs();decRows.push({topic:'',decision:'',resp:'',person:'',units:[],respUnits:[]});renderDecRowsModal();}
@@ -1187,13 +1196,13 @@ function removeDecRowByBtn(el){removeDecRowModal(parseInt(el.dataset.ri));}
 
 function collectDecRows(){
   return decRows.map(function(r,i){
-    return {
-      topic:(document.getElementById('dr-topic-'+i)||{}).value||'',
-      decision:(document.getElementById('dr-dec-'+i)||{}).value||'',
-      person:(document.getElementById('dr-person-'+i)||{}).value||'',
-      resp:(document.getElementById('dr-resp-'+i)||{}).value||'',
-      units:r.units||[]
-    };
+    var topic=(document.getElementById('dr-topic-'+i)||{}).value||'';
+    var decision=(document.getElementById('dr-dec-'+i)||{}).value||'';
+    var person=(document.getElementById('dr-person-'+i)||{}).value||'';
+    var respUnits=r.respUnits||[];
+    var resp=respUnits[0]||r.resp||'';
+    var units=r.units||[];
+    return {topic:topic,decision:decision,person:person,resp:resp,respUnits:respUnits,units:units};
   });
 }
 
