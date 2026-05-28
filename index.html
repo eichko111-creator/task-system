@@ -504,7 +504,7 @@ const INIT=[
 let cu=null,tasks=[],prog={},empList=[],nid=300;
 let decisions=[],decFilter='бүгд',decRows=[],fbLoaded=false;
 const DCOL=()=>db.collection('meeting_decisions');
-let bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[];
+let bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[],taskTypeFilter='шуурхай';
 let dC=null,uCC=null,trendC=null,saveT=null;
 
 // ===== UTILS =====
@@ -663,6 +663,14 @@ function showTab(name,el){
     loadDecisions().then(function(){renderDecisions();});
   }
 }
+
+function setTaskType(t,btn){
+  taskTypeFilter=t;
+  document.querySelectorAll('.sub-tabs:not(#sub-tabs-wrap) .stab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderMyTasks();
+}
+
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderMyTasks();}
 function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
 function renderTopPills(){
