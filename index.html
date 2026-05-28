@@ -337,8 +337,9 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
             <button class="fpill" onclick="setDecFilter('миний',this)">👤 Надад хамаарах</button>
             <button class="fpill" onclick="setDecFilter('шинэ',this)">🔴 Шинэ</button>
           </div>
-          <div id="dec-add-btn-wrap" style="display:none">
+  <div id="dec-add-btn-wrap" style="display:none;display:flex;gap:8px">
             <button class="btn-primary" onclick="openDecModal()">＋ Шийдвэр нэмэх</button>
+            <button id="fb-test-btn" onclick="testFirebaseWrite()" style="padding:9px 14px;background:rgba(39,174,96,.15);color:#166534;border:1px solid #86efac;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🔥 Firebase тест</button>
           </div>
         </div>
         <div id="decision-list"></div>
@@ -643,7 +644,13 @@ function showTab(name,el){
     renderAdminPills();renderAdminList();updateEmpDatalist();
   } else if(name==='decisions'){
     document.getElementById('kpi-row').style.display='none';
-    document.getElementById('month-section').style.display='none';
+    var ms=document.getElementById('month-section');
+    if(ms)ms.style.display='none';
+    decFilter='бүгд';
+    // Шүүлтийн товчнуудыг reset хийх
+    document.querySelectorAll('#view-decisions .fpill').forEach(function(b){b.classList.remove('active');});
+    var first=document.querySelector('#view-decisions .fpill');
+    if(first)first.classList.add('active');
     loadDecisions().then(function(){renderDecisions();});
   }
 }
@@ -958,6 +965,36 @@ var decDetailId=null;
 function showTab_decisions(){
   var dc=document.getElementById('decisions-container');
   if(dc)renderDecisions();
+}
+
+
+async function testFirebaseWrite(){
+  var btn=document.getElementById('fb-test-btn');
+  if(btn){btn.textContent='⏳ Шалгаж байна...';btn.disabled=true;}
+  try{
+    // Test write
+    var testRef=await db.collection('_test').add({t:Date.now(),u:cu&&cu.unit||'test'});
+    // Test read
+    var testSnap=await db.collection('_test').doc(testRef.id).get();
+    // Clean up
+    await db.collection('_test').doc(testRef.id).delete();
+    if(btn){btn.textContent='✅ Firebase ажиллаж байна';btn.style.background='rgba(39,174,96,.3)';}
+    // Now check meeting_decisions
+    var decSnap=await DCOL().get();
+    alert('✅ Firebase ажиллаж байна!\n\nmeeting_decisions дотор: '+decSnap.size+' бичлэг байна.\n\nХэрэв 0 бол шийдвэр оруулаагүй буюу өөр collection байна.');
+  }catch(e){
+    if(btn){btn.textContent='❌ Firebase алдаа';btn.style.background='rgba(231,76,60,.2)';}
+    var msg=e.message||'Тодорхойгүй алдаа';
+    var fix='';
+    if(msg.indexOf('permission')!==-1||msg.indexOf('PERMISSION_DENIED')!==-1){
+      fix='\n\n🔑 ЗАСАХ АРГА:\nFirebase Console → Firestore → Rules:\n\nrules_version = \'2\'\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if true;\n    }\n  }\n}';
+    }
+    alert('❌ Firebase алдаа:\n'+msg+fix);
+  }finally{
+    setTimeout(function(){
+      if(btn){btn.textContent='🔥 Firebase тест';btn.disabled=false;btn.style.background='';}
+    },3000);
+  }
 }
 
 function setDecFilter(f,btn){
@@ -1286,7 +1323,13 @@ async function saveDecision(){
   }catch(e){
     console.error('saveDecision error:',e);
     var msg=e.message||'Firebase холболтын алдаа';
-    alert('⚠ Хадгалах үед алдаа гарлаа:\n'+msg+'\n\nFirebase rules болон сүлжээгээ шалгана уу.');
+    var hint='';
+    if(msg.indexOf('permission')!==-1||msg.indexOf('PERMISSION_DENIED')!==-1){
+      hint='\n\n🔑 Firebase Console дээр Firestore Rules-г:\nallow read, write: if true\nболгох шаардлагатай.';
+    } else if(msg.indexOf('offline')!==-1||msg.indexOf('network')!==-1){
+      hint='\n\n📶 Интернэт холболтоо шалгана уу.';
+    }
+    alert('⚠ Хадгалах үед алдаа гарлаа:\n'+msg+hint);
     syncUI('err','⚠ Хадгалах алдаа');
   }finally{
     if(btn){btn.disabled=false;btn.textContent='✓ Хадгалах';}
@@ -1307,6 +1350,8 @@ async function deleteDecision(id){
 async function loadDecisions(){
   var el=document.getElementById('decision-list');
   if(el)el.innerHTML='<div style="text-align:center;padding:2rem;color:#888;font-size:13px">⏳ Ачаалж байна...</div>';
+  // Firebase холболт шалгах
+  try{await db.enableNetwork();}catch(e){}
   try{
     var snap=await DCOL().get();
     decisions=snap.docs.map(function(doc){
