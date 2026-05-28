@@ -315,8 +315,12 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
           <button class="btn-primary" onclick="openAddTaskModal()" style="font-size:13px">➕ Даалгавар нэмэх</button>
         </div>
         <div class="sub-tabs" id="sub-tabs-wrap" style="display:none">
-          <button class="stab active" onclick="setSubTab('received',this)">📥 Надад өгсөн</button>
-          <button class="stab" onclick="setSubTab('given',this)">📤 Миний өгсөн</button>
+          <button class="stab active" id="stab-received" onclick="setSubTab('received',this)">
+            📥 Надад өгсөн <span id="tab-recv-cnt" style="font-size:10px;opacity:.75;margin-left:3px"></span>
+          </button>
+          <button class="stab" id="stab-given" onclick="setSubTab('given',this)">
+            📤 Миний өгсөн <span id="tab-given-cnt" style="font-size:10px;opacity:.75;margin-left:3px"></span>
+          </button>
         </div>
         <div class="filter-row">
           <button class="fpill active" onclick="setFilter('бүгд',this)">Бүгд</button>
@@ -611,14 +615,19 @@ function showApp(){
   document.getElementById('user-name-lbl').textContent=cu.name;
   document.getElementById('user-unit-lbl').textContent=cu.unit;
   document.getElementById('user-avatar').textContent=cu.name.charAt(0).toUpperCase();
-  if(cu.isAdmin){
-    const ar=document.getElementById('admin-add-btn-row');if(ar)ar.style.display='block';
-    const decAddBtn=document.getElementById('dec-add-btn-wrap');
-    if(decAddBtn)decAddBtn.style.display='block';
-    initUchk();
-  }
-  document.getElementById('sub-tabs-wrap').style.display=(cu.isAdmin||cu.seeAll)?'none':'flex';
-  const ms=getMonths();actMonth=ms[ms.length-1]||'2026-01';
+  // Admin: нэмэх товч + шийдвэр нэмэх
+  const ar=document.getElementById('admin-add-btn-row');
+  if(ar)ar.style.display=cu.isAdmin?'block':'none';
+  const decAddBtn=document.getElementById('dec-add-btn-wrap');
+  if(decAddBtn)decAddBtn.style.display=cu.isAdmin?'block':'none';
+  if(cu.isAdmin)initUchk();
+  // seeAll (non-admin): Надад өгсөн / Миний өгсөн tab харна
+  const stWrap=document.getElementById('sub-tabs-wrap');
+  if(stWrap)stWrap.style.display=(cu.seeAll&&!cu.isAdmin)?'flex':'none';
+  // Default subTab
+  subTab=(cu.seeAll&&!cu.isAdmin)?'received':'all';
+  // Сар
+  actMonths=[];
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
   showDeadlineToast();
@@ -753,12 +762,52 @@ function renderDashboard(){
 }
 
 // ===== MY TASKS =====
+function updateSubTabCounts(){
+  if(!cu||(!cu.seeAll&&!cu.isAdmin))return;
+  var all=getActTasks();
+  var recv=all.filter(function(t){return t.units.includes(cu.unit);});
+  var given=all.filter(function(t){return t.giver===cu.unit||t.dept===cu.unit;});
+  var recvAvg=recv.length?Math.round(recv.reduce(function(s,t){return s+getPct(t.id,cu.unit);},0)/recv.length):0;
+  var givenAvg=given.length?Math.round(given.reduce(function(s,t){return s+calcAvg(t);},0)/given.length):0;
+  var rc=document.getElementById('tab-recv-cnt');
+  var gc=document.getElementById('tab-given-cnt');
+  if(rc)rc.textContent=recv.length+' | '+recvAvg+'%';
+  if(gc)gc.textContent=given.length+' | '+givenAvg+'%';
+}
+function updateTabCounts(){updateSubTabCounts();}
+
 function renderMyTasks(){
   if(!cu)return;
-  let ts=tasks.filter(t=>t.month===actMonth);
-  if(!cu.isAdmin){ts=subTab==='received'?ts.filter(t=>t.units.includes(cu.unit)):ts.filter(t=>t.giver===cu.unit);}
-  ts=ts.filter(t=>{
-    const p=calcAvg(t);
+  // actMonths array ашиглан шүүх
+  var base = actMonths.length>0 ? tasks.filter(function(t){return actMonths.includes(t.month);}) : tasks;
+
+  // Sub-tab: seeAll non-admin хэрэглэгч
+  var tabTs;
+  if(cu.isAdmin){
+    tabTs = base; // Admin: бүгд
+  } else if(cu.seeAll){
+    if(subTab==='received'){
+      tabTs = base.filter(function(t){return t.units.includes(cu.unit);});
+    } else if(subTab==='given'){
+      tabTs = base.filter(function(t){return t.giver===cu.unit||t.dept===cu.unit;});
+    } else {
+      tabTs = base;
+    }
+  } else {
+    // Энгийн хэрэглэгч: зөвхөн өөрийн нэгжид өгсөн
+    tabTs = base.filter(function(t){return t.units.includes(cu.unit);});
+  }
+
+  // KPI-г тухайн tab-ын filtered дата дээр update хийх
+  updateSubTabCounts();
+  updateKPI(tabTs);
+
+  // taskType шүүлт
+  var ts = tabTs.filter(function(t){return (t.taskType||'шуурхай')===taskTypeFilter;});
+
+  // Байдлын шүүлт
+  ts = ts.filter(function(t){
+    var p=calcAvg(t);
     if(bFilter==='биелээгүй')return p===0;
     if(bFilter==='явцтай')return p>0&&p<100;
     if(bFilter==='дууссан')return p>=100;
@@ -766,67 +815,72 @@ function renderMyTasks(){
     if(bFilter==='хэтэрсэн')return isOverdue(t);
     return true;
   });
-  if(!ts.length){document.getElementById('my-tasks').innerHTML='<div class="empty">Энэ сард үүрэг даалгавар байхгүй байна</div>';return;}
 
-  // Filtered views — compact list only
+  if(!ts.length){
+    document.getElementById('my-tasks').innerHTML='<div class="empty">Энэ сард үүрэг даалгавар байхгүй байна</div>';
+    return;
+  }
+
+  // Filtered view (compact list)
   if(bFilter!=='бүгд'){
-    document.getElementById('my-tasks').innerHTML=ts.map(t=>{
-      const avg=calcAvg(t);const cls=avg>=100?'done':avg>0?'inprog':'notdone';
-      const ovd=isOverdue(t);const soon=isDueSoon(t,7);
-      return`<div class="list-card ${cls}">
-        <div style="display:flex;flex-direction:column;flex:1;min-width:0">
-          <div class="list-name">${ovd?'🚨 ':soon?'⚡ ':''} ${t.name}</div>
-          <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap">
-            <span class="badge bdept" style="font-size:10px">🏢 ${t.dept}</span>
-            ${t.dl?`<span class="badge ${ovd?'bovd':'bdl'}" style="font-size:10px">🕐 ${t.dl}</span>`:''}
-          </div>
-        </div>
-        <div style="text-align:right;display:flex;align-items:center;gap:8px">
-          ${cu.isAdmin?`<button class='edit-btn' onclick='openEditTask(${t.id})'>✏️</button><button class='del-btn' onclick='deleteTask(${t.id})'>🗑</button>`:''}
-          <div><div class="list-pct" style="color:${pColor(avg)}">${avg}%</div>
-          <div class="pbar" style="width:80px;margin-top:4px"><div class="pfill" style="width:${avg}%;background:${pColor(avg)}"></div></div></div>
-        </div>
-      </div>`;
+    document.getElementById('my-tasks').innerHTML=ts.map(function(t){
+      var avg=calcAvg(t);var cls=avg>=100?'done':avg>0?'inprog':'notdone';
+      var ovd=isOverdue(t);var soon=isDueSoon(t,7);
+      return '<div class="list-card '+cls+'">'+
+        '<div style="display:flex;flex-direction:column;flex:1;min-width:0">'+
+          '<div class="list-name">'+(ovd?'🚨 ':soon?'⚡ ':'')+ t.name+'</div>'+
+          '<div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap">'+
+            '<span class="badge bdept" style="font-size:10px">🏢 '+t.dept+'</span>'+
+            (t.dl?'<span class="badge '+(ovd?'bovd':'bdl')+'" style="font-size:10px">🕐 '+t.dl+'</span>':'')+
+          '</div>'+
+        '</div>'+
+        '<div style="text-align:right;display:flex;align-items:center;gap:8px">'+
+          (cu.isAdmin?'<button class="edit-btn" onclick="openEditTask('+t.id+')">✏️</button><button class="del-btn" onclick="deleteTask('+t.id+')">🗑</button>':'')+
+          '<div><div class="list-pct" style="color:'+pColor(avg)+'">'+avg+'%</div>'+
+          '<div class="pbar" style="width:80px;margin-top:4px"><div class="pfill" style="width:'+avg+'%;background:'+pColor(avg)+'"></div></div></div>'+
+        '</div>'+
+      '</div>';
     }).join('');
     return;
   }
 
-  // Бүгд — compact editable rows
-  document.getElementById('my-tasks').innerHTML=ts.map(t=>{
-    const avg=calcAvg(t);const cls=avg>=100?'done':avg>0?'inprog':'notdone';
-    const ovd=isOverdue(t);
-    const visibleUnits=cu.isAdmin?t.units:t.units.filter(u=>u===cu.unit);
-    const rows=visibleUnits.map(u=>{
-      const v=getPct(t.id,u);const n=getNote(t.id,u);const ok=true;
-      return`<div class="unit-row">
-        <span class="unit-nm">${u}</span>
-        <input type="number" min="0" max="100" value="${v}" id="inp-${t.id}-${u}" class="pct-inp" style="border-color:${pColor(v)}" oninput="this.style.borderColor=pColor(parseInt(this.value)||0)">
-        <span style="font-size:11px;font-weight:700;color:${pColor(v)};flex-shrink:0">%</span>
-        <input type="text" value="${n}" id="note-${t.id}-${u}" class="note-inp" placeholder="Тайлбар...">
-        <button class="save-btn" onclick="saveU(${t.id},'${u}')">Хадгалах</button>
-        <span class="saved-ok" id="sok-${t.id}-${u}">✓</span>
-      </div>
-      `;
+  // Бүгд view - editable rows
+  document.getElementById('my-tasks').innerHTML=ts.map(function(t){
+    var avg=calcAvg(t);var cls=avg>=100?'done':avg>0?'inprog':'notdone';var ovd=isOverdue(t);
+    var visibleUnits=(cu.isAdmin||cu.seeAll)?t.units:t.units.filter(function(u){return u===cu.unit;});
+    var rows=visibleUnits.map(function(u){
+      var v=getPct(t.id,u);var n=getNote(t.id,u);
+      var ok=cu.isAdmin||(u===cu.unit);
+      return '<div class="unit-row">'+
+        '<span class="unit-nm">'+u+'</span>'+
+        '<input type="number" min="0" max="100" value="'+v+'" id="inp-'+t.id+'-'+u+'" class="pct-inp" style="border-color:'+pColor(v)+'" oninput="this.style.borderColor=pColor(parseInt(this.value)||0)">'+
+        '<span style="font-size:11px;font-weight:700;color:'+pColor(v)+';flex-shrink:0">%</span>'+
+        '<input type="text" value="'+escHtml(n)+'" id="note-'+t.id+'-'+u+'" class="note-inp" placeholder="Тайлбар..."'+(ok?'':' disabled')+'>'+
+        (ok?'<button class="save-btn" onclick="saveU('+t.id+',' + "'"+u+"'" + ')">Хадгалах</button><span class="saved-ok" id="sok-'+t.id+'-'+u+'">✓</span>':'<span style="font-size:10px;color:#9ca3af;flex-shrink:0">🔒</span>')+
+      '</div>';
     }).join('');
-
-    const myPct=cu.isAdmin?avg:getPct(t.id,cu.unit);
-    return`<div class="task-card ${ovd?'overdue-card':cls}" id="tc-${t.id}">
-      <div class="task-header">
-        <span class="badge bdept">🏢 ${t.dept}</span>
-        <span class="badge bdate">📅 ${t.date||''}</span>
-        ${t.dl?`<span class="badge ${ovd?'bovd':'bdl'}">🕐 ${t.dl}${ovd?' ⚠️':''}</span>`:''}
-        ${t.giver&&t.giver!==t.dept?`<span class="badge bgiver">📤 ${t.giver}</span>`:''}${cu.isAdmin?`<span style="margin-left:auto;display:flex;gap:4px"><button class="edit-btn" onclick="openEditTask(${t.id})">✏️</button><button class="del-btn" onclick="deleteTask(${t.id})">🗑</button></span>`:''}
-      </div>
-      <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px;line-height:1.4">${ovd?'🚨 ':''} ${t.name}</div>
-      <div style="font-size:12px;color:#888;margin-bottom:6px">Хариуцагч: ${t.person||'—'}</div>
-      <div class="unit-rows">${rows}</div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid #d4edda">
-        <span style="font-size:11px;color:#aaa;min-width:80px">${cu.isAdmin?'Нийт дундаж':'Миний биелэлт'}</span>
-        <div class="pbar" style="flex:1"><div class="pfill" id="pf-${t.id}" style="width:${myPct}%;background:${pColor(myPct)}"></div></div>
-        <span style="font-size:13px;font-weight:700;min-width:36px;text-align:right;color:${pColor(myPct)}" id="pv-${t.id}">${myPct}%</span>
-      </div>
-    </div>`;
+    var myPct=cu.isAdmin?avg:getPct(t.id,cu.unit);
+    return '<div class="task-card '+(ovd?'overdue-card':cls)+'" id="tc-'+t.id+'">'+
+      '<div class="task-header">'+
+        '<span class="badge bdept">🏢 '+t.dept+'</span>'+
+        '<span class="badge bdate">📅 '+(t.date||'')+'</span>'+
+        (t.dl?'<span class="badge '+(ovd?'bovd':'bdl')+'">🕐 '+t.dl+(ovd?' ⚠️':'')+'</span>':'')+
+        (cu.isAdmin?'<span style="margin-left:auto;display:flex;gap:4px"><button class="edit-btn" onclick="openEditTask('+t.id+')">✏️</button><button class="del-btn" onclick="deleteTask('+t.id+')">🗑</button></span>':'')+
+      '</div>'+
+      '<div style="font-size:14px;font-weight:600;color:#1a2e1a;margin-bottom:4px;line-height:1.4">'+(ovd?'🚨 ':'')+ t.name+'</div>'+
+      '<div style="font-size:12px;color:#6b7280;margin-bottom:6px">Хариуцагч: '+(t.person||'—')+'</div>'+
+      '<div class="unit-rows">'+rows+'</div>'+
+      '<div style="display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid #e5e7eb">'+
+        '<span style="font-size:11px;color:#6b7280;min-width:80px">'+(cu.isAdmin?'Нийт дундаж':'Миний биелэлт')+'</span>'+
+        '<div class="pbar" style="flex:1"><div class="pfill" id="pf-'+t.id+'" style="width:'+myPct+'%;background:'+pColor(myPct)+'"></div></div>'+
+        '<span style="font-size:13px;font-weight:700;min-width:36px;text-align:right;color:'+pColor(myPct)+'" id="pv-'+t.id+'">'+myPct+'%</span>'+
+      '</div>'+
+    '</div>';
   }).join('');
+}
+
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 async function saveU(tid,u){
