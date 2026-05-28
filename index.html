@@ -644,7 +644,7 @@ function showTab(name,el){
   } else if(name==='decisions'){
     document.getElementById('kpi-row').style.display='none';
     document.getElementById('month-section').style.display='none';
-    loadDecisions().then(renderDecisions);
+    loadDecisions().then(function(){renderDecisions();});
   }
 }
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderMyTasks();}
@@ -960,19 +960,47 @@ function showTab_decisions(){
   if(dc)renderDecisions();
 }
 
+function setDecFilter(f,btn){
+  decFilter=f;
+  document.querySelectorAll('#view-decisions .fpill').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  renderDecisions();
+}
+
 function renderDecisions(){
   var dc=document.getElementById('decision-list');
   if(!dc)return;
+  var ds=decisions.slice();
+  // Filter харгалзах
+  if(decFilter==='миний'){
+    ds=ds.filter(function(d){
+      return (d.rows||[]).some(function(r){
+        return (r.units||[]).indexOf(cu.unit)>=0||(r.resp||'')===(cu.unit)||(r.respUnits||[]).indexOf(cu.unit)>=0;
+      });
+    });
+  } else if(decFilter==='шинэ'){
+    var last=0;try{last=parseInt(localStorage.getItem('dec_last_view_'+cu.unit)||'0');}catch(e){}
+    ds=ds.filter(function(d){return (d.createdAt||0)>last;});
+  }
+  // Admin бус: зөвхөн өөрийн нэгжид шилжүүлсэн харна
+  if(!cu.isAdmin&&!cu.seeAll){
+    ds=ds.filter(function(d){
+      return (d.rows||[]).some(function(r){
+        return (r.units||[]).indexOf(cu.unit)>=0||(r.resp||'')===(cu.unit)||(r.respUnits||[]).indexOf(cu.unit)>=0;
+      });
+    });
+  }
+  if(!ds.length){
+    dc.innerHTML='<div class="empty">Хурлын шийдвэр байхгүй байна</div>';
+    return;
+  }
   var h='';
-  if(!decisions.length){
-    h+='<div class="empty">Хурлын шийдвэр байхгүй байна</div>';
-  } else {
-    decisions.sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
-    for(var i=0;i<decisions.length;i++){
-      h+=renderDecCard(decisions[i]);
-    }
+  for(var i=0;i<ds.length;i++){
+    try{h+=renderDecCard(ds[i]);}catch(e){console.error('renderDecCard error:',e);}
   }
   dc.innerHTML=h;
+  // Харсан цагийг тэмдэглэх
+  try{localStorage.setItem('dec_last_view_'+cu.unit,Date.now().toString());}catch(e){}
 }
 
 function renderDecCard(d){
@@ -1215,7 +1243,6 @@ function collectDecRows(){
 }
 
 async function saveDecision(){
-  // Текст оролтуудыг decRows-д хадгална
   saveDecRowInputs();
   var rows=collectDecRows();
   var editId=(document.getElementById('df-edit-id')||{}).value||'';
@@ -1223,28 +1250,46 @@ async function saveDecision(){
   var num=(document.getElementById('df-num')||{}).value||'';
   var title=(document.getElementById('df-title')||{}).value||'';
   var loc=(document.getElementById('df-loc')||{}).value||'';
-  if(!title){alert('Гарчиг оруулна уу');return;}
-  if(!rows.length){alert('Дор хаяж нэг шийдвэр оруулна уу');return;}
+  if(!title.trim()){alert('Гарчиг оруулна уу');return;}
+  // Хамгийн ихдээ шийдвэртэй row-ийг шалгах
+  var hasContent=rows.some(function(r){return (r.topic||'').trim()||(r.decision||'').trim();});
+  if(!hasContent){alert('Дор хаяж нэг асуудал оруулна уу');return;}
+
+  var btn=document.querySelector('#dec-add-modal .btn-primary');
+  if(btn){btn.disabled=true;btn.textContent='Хадгалж байна...';}
   syncUI('saving','Хадгалж байна...');
+
   try{
     if(editId){
-      // edit: createdAt-г хэвээр үлдээнэ
       var updateData={date:date,num:num,title:title,loc:loc,rows:rows,updatedAt:Date.now()};
       await DCOL().doc(editId).update(updateData);
       var idx=decisions.findIndex(function(d){return d.id===editId;});
       if(idx>=0)Object.assign(decisions[idx],updateData);
+      syncUI('ok','✓ Хадгалагдлаа');
+      closeModal('dec-add-modal');
+      renderDecisions();
     } else {
-      // new: createdAt шинэ тоо
-      var newData={date:date,num:num,title:title,loc:loc,rows:rows,createdBy:cu.name||'',createdAt:Date.now()};
+      var newData={
+        date:date,num:num,title:title,loc:loc,
+        rows:rows,
+        createdBy:cu&&cu.name?cu.name:'',
+        createdAt:Date.now()
+      };
       var ref=await DCOL().add(newData);
-      decisions.unshift(Object.assign({id:ref.id},newData));
+      // Firebase-ийн хариу авсны дараа л array-д нэмнэ
+      newData.id=ref.id;
+      decisions.unshift(newData);
+      syncUI('ok','✓ Шийдвэр хадгалагдлаа');
+      closeModal('dec-add-modal');
+      renderDecisions();
     }
-    syncUI('ok','✓ Хадгалагдлаа');
-    closeModal('dec-add-modal');
-    renderDecisions();
   }catch(e){
     console.error('saveDecision error:',e);
-    syncUI('err','⚠ Алдаа: '+(e.message||'Firebase error'));
+    var msg=e.message||'Firebase холболтын алдаа';
+    alert('⚠ Хадгалах үед алдаа гарлаа:\n'+msg+'\n\nFirebase rules болон сүлжээгээ шалгана уу.');
+    syncUI('err','⚠ Хадгалах алдаа');
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='✓ Хадгалах';}
   }
 }
 
@@ -1260,15 +1305,29 @@ async function deleteDecision(id){
 }
 
 async function loadDecisions(){
+  var el=document.getElementById('decision-list');
+  if(el)el.innerHTML='<div style="text-align:center;padding:2rem;color:#888;font-size:13px">⏳ Ачаалж байна...</div>';
   try{
     var snap=await DCOL().get();
-    decisions=snap.docs.map(function(doc){return Object.assign({id:doc.id},doc.data());});
-    decisions.sort(function(a,b){
-      var ta=typeof a.createdAt==='number'?a.createdAt:new Date(a.createdAt||0).getTime();
-      var tb=typeof b.createdAt==='number'?b.createdAt:new Date(b.createdAt||0).getTime();
-      return tb-ta;
+    decisions=snap.docs.map(function(doc){
+      var d=doc.data();
+      return Object.assign({id:doc.id},d);
     });
-  }catch(e){console.error('loadDecisions:',e);decisions=[];}
+    // createdAt-ийг тоо болгон normalize хийх
+    decisions.forEach(function(d){
+      if(d.createdAt&&typeof d.createdAt==='object'&&d.createdAt.toMillis){
+        d.createdAt=d.createdAt.toMillis();
+      } else if(typeof d.createdAt==='string'){
+        d.createdAt=new Date(d.createdAt).getTime()||0;
+      }
+    });
+    decisions.sort(function(a,b){return (b.createdAt||0)-(a.createdAt||0);});
+  }catch(e){
+    console.error('loadDecisions error:',e);
+    decisions=[];
+    if(el)el.innerHTML='<div style="text-align:center;padding:2rem;color:#e74c3c;font-size:13px">⚠ Firebase алдаа: '+escH(e.message||'')+'</div>';
+    return;
+  }
 }
 
 function printDecisionById(id){
