@@ -327,7 +327,17 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
 
       <!-- ХУРЛЫН ШИЙДВЭР -->
       <div class="view" id="view-decisions">
-        <div id="decisions-container"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+          <div class="filter-row" style="margin-bottom:0">
+            <button class="fpill active" onclick="setDecFilter('бүгд',this)">Бүгд</button>
+            <button class="fpill" onclick="setDecFilter('миний',this)">👤 Надад хамаарах</button>
+            <button class="fpill" onclick="setDecFilter('шинэ',this)">🔴 Шинэ</button>
+          </div>
+          <div id="dec-add-btn-wrap" style="display:none">
+            <button class="btn-primary" onclick="openDecModal()">＋ Шийдвэр нэмэх</button>
+          </div>
+        </div>
+        <div id="decision-list"></div>
       </div>
 
       <!-- НЭМЭХ -->
@@ -599,6 +609,8 @@ function showApp(){
   if(cu.isAdmin){
     const addRow=document.getElementById('admin-add-btn-row');
     if(addRow)addRow.style.display='block';
+    const decAddBtn=document.getElementById('dec-add-btn-wrap');
+    if(decAddBtn)decAddBtn.style.display='block';
     initUchk();
   }
   document.getElementById('sub-tabs-wrap').style.display=(cu.isAdmin||cu.seeAll)?'none':'flex';
@@ -612,12 +624,21 @@ function showTab(name,el){
   if(el)el.classList.add('active');
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',admin:'Нэмэх'};
+  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',admin:'Нэмэх',decisions:'Хурлын шийдвэр'};
   document.getElementById('topbar-title').textContent=t[name];
-  if(name==='dashboard'){updateKPI();renderDashboard();}
-  else if(name==='mine'){updateKPI();renderMyTasks();}
-  else if(name==='admin'){renderAdminPills();renderAdminList();updateEmpDatalist();}
-  else if(name==='decisions'){
+  if(name==='dashboard'){
+    document.getElementById('kpi-row').style.display='';
+    document.getElementById('month-section').style.display='flex';
+    updateKPI();renderDashboard();
+  } else if(name==='mine'){
+    document.getElementById('kpi-row').style.display='';
+    document.getElementById('month-section').style.display='flex';
+    updateKPI();renderMyTasks();
+  } else if(name==='admin'){
+    document.getElementById('kpi-row').style.display='';
+    document.getElementById('month-section').style.display='flex';
+    renderAdminPills();renderAdminList();updateEmpDatalist();
+  } else if(name==='decisions'){
     document.getElementById('kpi-row').style.display='none';
     document.getElementById('month-section').style.display='none';
     loadDecisions().then(renderDecisions);
@@ -936,7 +957,7 @@ function showTab_decisions(){
 }
 
 function renderDecisions(){
-  var dc=document.getElementById('decisions-container');
+  var dc=document.getElementById('decision-list');
   if(!dc)return;
   var h='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">';
   h+='<div style="font-size:15px;font-weight:700;color:#1a1a2e">Хурлын шийдвэр</div>';
