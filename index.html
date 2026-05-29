@@ -608,11 +608,11 @@ function showTab(name,el){
   if(name==='dashboard'){
     document.getElementById('kpi-row').style.display='';
     document.getElementById('month-section').style.display='flex';
-    updateKPI();renderDashboard();
+    renderTopPills();updateKPI();renderDashboard();
   } else if(name==='mine'){
     document.getElementById('kpi-row').style.display='';
     document.getElementById('month-section').style.display='flex';
-    renderMyTasks();
+    renderTopPills();renderMyTasks();
   } else if(name==='admin'){
     document.getElementById('kpi-row').style.display='none';
     document.getElementById('month-section').style.display='none';
@@ -640,10 +640,18 @@ function setTaskType(t,btn){
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderMyTasks();}
 function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
 
+
+function setMonthBtn(btn){
+  var m=btn.dataset.m;
+  setMonth(m,btn);
+}
+
 function setMonth(m,btn){
   actMonth=m;
   document.querySelectorAll('#top-month-pills .mpill').forEach(function(b){b.classList.remove('active');});
   if(btn)btn.classList.add('active');
+  var lbl=document.getElementById('topbar-month-label');
+  if(lbl)lbl.textContent=m?(ML[m]||m):'';
   updateKPI();
   if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
   else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
@@ -651,8 +659,30 @@ function setMonth(m,btn){
 
 function renderTopPills(){
   const ms=getMonths();
-  document.getElementById('top-month-pills').innerHTML=ms.map(m=>`<button class="mpill has${m===actMonth?' active':''}" onclick="setMonth('${m}',this)">${ML[m]}</button>`).join('');
+  if(!ms.length)return;
+  var pills='<button class="mpill'+((!actMonth)?' active':'')+'" onclick="setAllMonth(this)">Бүгд</button>';
+  pills+=ms.map(function(m){
+    return '<button class="mpill has'+(m===actMonth?' active':'')+'" data-m="'+m+'" onclick="setMonthBtn(this)">'+ML[m]+'</button>';
+  }).join('');
+  document.getElementById('top-month-pills').innerHTML=pills;
+  var lbl=document.getElementById('topbar-month-label');
+  if(lbl)lbl.textContent=actMonth?(ML[actMonth]||actMonth):'';
 }
+function setAllMonth(btn){
+  actMonth='';
+  document.querySelectorAll('#top-month-pills .mpill').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  var lbl=document.getElementById('topbar-month-label');if(lbl)lbl.textContent='';
+  updateKPI();
+  if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
+  else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
+}
+
+function setMonthBtn(btn){
+  var m=btn.dataset.m;
+  setMonth(m,btn);
+}
+
 function setMonth(m,btn){
   actMonth=m;document.querySelectorAll('#top-month-pills .mpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   updateKPI();
@@ -844,7 +874,7 @@ function updateTabCounts(){updateSubTabCounts();}
 
 function renderMyTasks(){
   if(!cu)return;
-  var base=actMonth?tasks.filter(function(t){return t.month===actMonth;}):tasks;
+  var base=(actMonth&&actMonth!=='')?tasks.filter(function(t){return t.month===actMonth;}):tasks;
 
   // Sub-tab шүүлт
   var tabTs;
@@ -1061,7 +1091,7 @@ function setAdminM(m,btn){
   document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
 }
 function renderAdminList(){
-  const ts=actMonth?tasks.filter(t=>t.month===actMonth):tasks;
+  const ts=(actMonth&&actMonth!=='')?tasks.filter(t=>t.month===actMonth):tasks;
   if(!ts.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
   document.getElementById('admin-task-list').innerHTML=ts.map(t=>{
     const p=calcAvg(t);const ovd=isOverdue(t);const soon=isDueSoon(t,7);
