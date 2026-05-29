@@ -658,15 +658,27 @@ function setMonth(m,btn){
 }
 
 function renderTopPills(){
-  const ms=getMonths();
-  if(!ms.length)return;
-  var pills='<button class="mpill'+((!actMonth)?' active':'')+'" onclick="setAllMonth(this)">Бүгд</button>';
-  pills+=ms.map(function(m){
-    return '<button class="mpill has'+(m===actMonth?' active':'')+'" data-m="'+m+'" onclick="setMonthBtn(this)">'+ML[m]+'</button>';
-  }).join('');
-  document.getElementById('top-month-pills').innerHTML=pills;
+  // tasks-с байгаа сарыг олох
+  var hasTasks=new Set(tasks.map(function(t){return t.month;}));
+  // Хамгийн эхний сар
+  if(!actMonth||actMonth===''){
+    for(var i=0;i<MALL.length;i++){if(hasTasks.has(MALL[i])){actMonth=MALL[i];break;}}
+  }
+  // Pill-ууд: tasks байгаа сарыг л харуулах
+  var months=MALL.filter(function(m){return hasTasks.has(m);});
+  if(!months.length){
+    // Tasks байхгүй ч default харуулах
+    months=MALL.slice(0,3);
+  }
+  var pills='';
+  months.forEach(function(m){
+    var isActive=(m===actMonth);
+    pills+='<button class="mpill has'+(isActive?' active':'')+'" data-m="'+m+'" onclick="setMonthBtn(this)">'+ML[m]+'</button>';
+  });
+  var el=document.getElementById('top-month-pills');
+  if(el)el.innerHTML=pills;
   var lbl=document.getElementById('topbar-month-label');
-  if(lbl)lbl.textContent=actMonth?(ML[actMonth]||actMonth):'';
+  if(lbl)lbl.textContent='';
 }
 function setAllMonth(btn){
   actMonth='';
