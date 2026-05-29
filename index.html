@@ -217,6 +217,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
       <div class="nav-item active" onclick="showTab('dashboard',this)"><div class="nav-dot" style="background:#e74c3c"></div>НҮҮ Р</div>
       <div class="nav-item" onclick="showTab('mine',this)"><div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР</div>
 
+      <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin',this)"><div class="nav-dot" style="background:#f39c12"></div>ЖАГСААЛТ</div>
       <div class="nav-item" onclick="showTab('decisions',this)"><div class="nav-dot" style="background:#27ae60"></div>ХУРЛЫН ШИЙДВЭР</div>
     </nav>
     <div class="sidebar-footer">
@@ -346,41 +347,12 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
         <div id="decision-list"></div>
       </div>
 
-      <!-- НЭМЭХ -->
+      <!-- ЖАГСААЛТ (ADMIN) -->
       <div class="view" id="view-admin">
-        <div class="admin-form">
-          <div class="form-title">➕ Шинэ үүрэг даалгавар нэмэх</div>
-          <div class="form-row">
-            <div class="form-field"><label>Сар</label>
-              <select id="a-month">
-                <option value="2026-01">1-р сар</option><option value="2026-02">2-р сар</option>
-                <option value="2026-03">3-р сар</option><option value="2026-04">4-р сар</option>
-                <option value="2026-05">5-р сар</option><option value="2026-06">6-р сар</option>
-                <option value="2026-07">7-р сар</option><option value="2026-08">8-р сар</option>
-                <option value="2026-09">9-р сар</option><option value="2026-10">10-р сар</option>
-                <option value="2026-11">11-р сар</option><option value="2026-12">12-р сар</option>
-              </select>
-            </div>
-            <div class="form-field"><label>Огноо</label><input type="date" id="a-date"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-field"><label>Хэлтэс/нэгж</label>
-              <select id="a-dept"><option>ДХХ</option><option>ББТХ</option><option>СЭЗХ</option><option>ХНХ</option><option>ХЭМАБА</option><option>ТБТХ</option><option>Ер.Инженер</option><option>Бусад</option></select>
-            </div>
-            <div class="form-field"><label>Ажилтны нэр</label>
-              <input type="text" id="a-person" placeholder="Нэр бичих..." list="emp-list" autocomplete="off">
-              <datalist id="emp-list"></datalist>
-            </div>
-          </div>
-          <div class="form-field" style="margin-bottom:10px"><label>Үүрэг даалгаварын нэр</label><textarea id="a-name" placeholder="Даалгавар..."></textarea></div>
-          <div class="form-field" style="margin-bottom:10px"><label>Дуусах хугацаа</label><input type="text" id="a-dl" placeholder="2026/01/31..."/></div>
-          <div class="form-field" style="margin-bottom:12px"><label>Биелэх нэгжүүд</label><div class="uchk-wrap" id="units-check"></div></div>
-          <div class="btn-row">
-            <button class="btn-outline" onclick="selectAllUnits()">Бүгд сонгох</button>
-            <button class="btn-primary" onclick="addTask()">✓ Нэмэх</button>
-          </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div class="section-title" id="admin-list-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0;font-size:14px;font-weight:700;color:#374151">Бүгд — даалгаварын жагсаалт</div>
+          <button class="btn-primary" onclick="openAddTaskModal()" style="font-size:12px">➕ Даалгавар нэмэх</button>
         </div>
-        <div class="section-title" id="admin-list-title">Даалгаварын жагсаалт</div>
         <div class="filter-row" id="admin-month-pills" style="margin-bottom:12px"></div>
         <div id="admin-task-list"></div>
       </div>
@@ -569,6 +541,7 @@ function doLogout(){
   try{localStorage.removeItem(SK);}catch(e){}
   cu=null;tasks=[];prog=[];decisions=[];
   document.getElementById('main-app').style.display='none';
+  const na2=document.getElementById('nav-admin');if(na2)na2.style.display='none';
   document.getElementById('login-page').style.display='flex';
   document.getElementById('login-user').value='';
   document.getElementById('login-pass').value='';
@@ -615,6 +588,7 @@ function showApp(){
   // Admin: нэмэх товч + шийдвэр нэмэх
   const ar=document.getElementById('admin-add-btn-row');
   if(ar)ar.style.display=cu.isAdmin?'block':'none';
+  const na=document.getElementById('nav-admin');if(na)na.style.display=cu.isAdmin?'flex':'none';
   const decAddBtn=document.getElementById('dec-add-btn-wrap');
   if(decAddBtn)decAddBtn.style.display=cu.isAdmin?'block':'none';
   if(cu.isAdmin)initUchk();
@@ -634,7 +608,7 @@ function showTab(name,el){
   if(el)el.classList.add('active');
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',admin:'Нэмэх',decisions:'Хурлын шийдвэр'};
+  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',admin:'Жагсаалт',decisions:'Хурлын шийдвэр'};
   document.getElementById('topbar-title').textContent=t[name];
   if(name==='dashboard'){
     document.getElementById('kpi-row').style.display='';
@@ -645,8 +619,8 @@ function showTab(name,el){
     document.getElementById('month-section').style.display='flex';
     renderMyTasks();
   } else if(name==='admin'){
-    document.getElementById('kpi-row').style.display='';
-    document.getElementById('month-section').style.display='flex';
+    document.getElementById('kpi-row').style.display='none';
+    document.getElementById('month-section').style.display='none';
     renderAdminPills();renderAdminList();updateEmpDatalist();
   } else if(name==='decisions'){
     document.getElementById('kpi-row').style.display='none';
@@ -1092,7 +1066,7 @@ function setAdminM(m,btn){
   document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
 }
 function renderAdminList(){
-  const ts=tasks.filter(t=>t.month===actMonth);
+  const ts=actMonth?tasks.filter(t=>t.month===actMonth):tasks;
   if(!ts.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
   document.getElementById('admin-task-list').innerHTML=ts.map(t=>{
     const p=calcAvg(t);const ovd=isOverdue(t);const soon=isDueSoon(t,7);
