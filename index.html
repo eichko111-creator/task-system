@@ -234,9 +234,10 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
     <div class="topbar">
       <div class="topbar-title" id="topbar-title">Нүүр</div>
       <div class="topbar-right">
-        <span style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
-        <div class="month-pills" id="top-month-pills"></div>
-
+        <div id="month-section" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
+          <div class="month-pills" id="top-month-pills"></div>
+        </div>
       </div>
     </div>
     <div class="container">
@@ -402,21 +403,31 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<!-- Firebase Auth removed; using USERS object -->
 <script>
-firebase.initializeApp({
-  apiKey:"AIzaSyCDBVVt_rEY7tb96ZBDY4a_FZEa_-q4cUw",
-  authDomain:"ichko-1ac04.firebaseapp.com",
-  projectId:"ichko-1ac04",
-  storageBucket:"ichko-1ac04.firebasestorage.app",
-  messagingSenderId:"934034525733",
-  appId:"1:934034525733:web:6ccf4b7f8c1cdca86839cc"
-});
-const db=firebase.firestore();
-// Firebase Auth removed
-const TDOC=db.collection('app_data').doc('tasks');
-const PDOC=db.collection('app_data').doc('progress');
-const EDOC=db.collection('app_data').doc('employees');
+// Firebase initialization with error handling
+var db;
+try{
+  if(typeof firebase==='undefined'){throw new Error('Firebase SDK not loaded');}
+  firebase.initializeApp({
+    apiKey:"AIzaSyCDBVVt_rEY7tb96ZBDY4a_FZEa_-q4cUw",
+    authDomain:"ichko-1ac04.firebaseapp.com",
+    projectId:"ichko-1ac04",
+    storageBucket:"ichko-1ac04.firebasestorage.app",
+    messagingSenderId:"934034525733",
+    appId:"1:934034525733:web:6ccf4b7f8c1cdca86839cc"
+  });
+  db=firebase.firestore();
+}catch(err){
+  console.error('Firebase init failed:',err);
+  document.addEventListener('DOMContentLoaded',function(){
+    var ls=document.getElementById('loading-screen');
+    if(ls)ls.innerHTML='<div style="color:#fff;padding:20px;text-align:center"><div style="font-size:40px;margin-bottom:16px">⚠️</div><div style="font-size:16px;font-weight:700;margin-bottom:8px">Firebase холбогдоогүй</div><div style="font-size:13px;opacity:.7;margin-bottom:16px">Интернэт холболтоо шалгаад хуудсыг дахин ачаална уу</div><button onclick="location.reload()" style="padding:10px 24px;background:#e74c3c;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-family:inherit">Дахин ачаалах</button></div>';
+    ls.style.opacity='1';ls.style.pointerEvents='auto';
+  });
+}
+var TDOC=db?db.collection('app_data').doc('tasks'):null;
+var PDOC=db?db.collection('app_data').doc('progress'):null;
+var EDOC=db?db.collection('app_data').doc('employees'):null;
 
 const AU=['ЖС','ХС','СС','ЗС','ХҮТ','СЭЗХ','ДХХ','ТБТХ','ХНХ','ББТХ','МТХ','ХЭМАБА','НАХ','ЗТТА','ДА','АЗА','АТА','ХТЛА'];
 const DEPTS={'ДХХ':'#2196F3','ББТХ':'#9c27b0','СЭЗХ':'#f44336','ХНХ':'#4caf50','ХЭМАБА':'#ff9800','ТБТХ':'#e91e63','Ер.Инженер':'#607d8b','Бусад':'#455a64'};
@@ -469,7 +480,7 @@ const INIT=[
 
 let cu=null,tasks=[],prog={},empList=[],nid=300;
 let decisions=[],decFilter='бүгд',decRows=[],fbLoaded=false;
-const DCOL=()=>db.collection('meeting_decisions');
+var DCOL=function(){return db?db.collection('meeting_decisions'):null;};
 let bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[],taskTypeFilter='шуурхай';
 let dC=null,uCC=null,trendC=null,saveT=null;
 
@@ -607,20 +618,19 @@ function showTab(name,el){
   document.getElementById('topbar-title').textContent=t[name];
   if(name==='dashboard'){
     document.getElementById('kpi-row').style.display='';
-    document.getElementById('month-section').style.display='flex';
+    var _ms=document.getElementById('month-section');if(_ms)_ms.style.display='flex';
     renderTopPills();updateKPI();renderDashboard();
   } else if(name==='mine'){
     document.getElementById('kpi-row').style.display='';
-    document.getElementById('month-section').style.display='flex';
+    var _ms=document.getElementById('month-section');if(_ms)_ms.style.display='flex';
     renderTopPills();renderMyTasks();
   } else if(name==='admin'){
     document.getElementById('kpi-row').style.display='none';
-    document.getElementById('month-section').style.display='none';
+    var _ms=document.getElementById('month-section');if(_ms)_ms.style.display='none';
     renderAdminPills();renderAdminList();updateEmpDatalist();
   } else if(name==='decisions'){
     document.getElementById('kpi-row').style.display='none';
-    var ms=document.getElementById('month-section');
-    if(ms)ms.style.display='none';
+    var ms=document.getElementById('month-section');if(ms)ms.style.display='none';
     decFilter='бүгд';
     // Шүүлтийн товчнуудыг reset хийх
     document.querySelectorAll('#view-decisions .fpill').forEach(function(b){b.classList.remove('active');});
