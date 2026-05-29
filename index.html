@@ -650,35 +650,32 @@ function setMonth(m,btn){
   actMonth=m;
   document.querySelectorAll('#top-month-pills .mpill').forEach(function(b){b.classList.remove('active');});
   if(btn)btn.classList.add('active');
-  var lbl=document.getElementById('topbar-month-label');
-  if(lbl)lbl.textContent=m?(ML[m]||m):'';
   updateKPI();
-  if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
-  else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
+  var active=document.querySelector('.view.active');
+  var activeId=active?active.id:'';
+  if(activeId==='view-dashboard')renderDashboard();
+  else if(activeId==='view-mine')renderMyTasks();
 }
 
 function renderTopPills(){
-  // tasks-с байгаа сарыг олох
   var hasTasks=new Set(tasks.map(function(t){return t.month;}));
-  // Хамгийн эхний сар
+  // actMonth-г зөв утгатай болгох
   if(!actMonth||actMonth===''){
-    for(var i=0;i<MALL.length;i++){if(hasTasks.has(MALL[i])){actMonth=MALL[i];break;}}
+    for(var i=0;i<MALL.length;i++){
+      if(hasTasks.has(MALL[i])){actMonth=MALL[i];break;}
+    }
+    if(!actMonth)actMonth='2026-01';
   }
-  // Pill-ууд: tasks байгаа сарыг л харуулах
-  var months=MALL.filter(function(m){return hasTasks.has(m);});
-  if(!months.length){
-    // Tasks байхгүй ч default харуулах
-    months=MALL.slice(0,3);
-  }
+  var el=document.getElementById('top-month-pills');
+  if(!el)return;
+  // Бүх MALL сарыг харуулах, tasks байгааг тод харуулах
   var pills='';
-  months.forEach(function(m){
+  MALL.forEach(function(m){
+    if(!hasTasks.has(m))return; // tasks байхгүй сарыг нуух
     var isActive=(m===actMonth);
     pills+='<button class="mpill has'+(isActive?' active':'')+'" data-m="'+m+'" onclick="setMonthBtn(this)">'+ML[m]+'</button>';
   });
-  var el=document.getElementById('top-month-pills');
-  if(el)el.innerHTML=pills;
-  var lbl=document.getElementById('topbar-month-label');
-  if(lbl)lbl.textContent='';
+  el.innerHTML=pills;
 }
 function setAllMonth(btn){
   actMonth='';
