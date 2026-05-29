@@ -673,6 +673,16 @@ function setTaskType(t,btn){
 
 function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpill').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderMyTasks();}
 function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
+
+function setMonth(m,btn){
+  actMonth=m;
+  document.querySelectorAll('#top-month-pills .mpill').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  updateKPI();
+  if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
+  else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
+}
+
 function renderTopPills(){
   const ms=getMonths();
   document.getElementById('top-month-pills').innerHTML=ms.map(m=>`<button class="mpill has${m===actMonth?' active':''}" onclick="setMonth('${m}',this)">${ML[m]}</button>`).join('');
@@ -683,8 +693,8 @@ function setMonth(m,btn){
   if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
   else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
 }
-function updateKPI(){
-  const ts=tasks.filter(t=>t.month===actMonth);
+function updateKPI(customTs){
+  const ts=customTs?customTs:tasks.filter(t=>t.month===actMonth);
   const done=ts.filter(t=>calcAvg(t)>=100).length;
   const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
   const none=ts.filter(t=>calcAvg(t)===0).length;
@@ -770,6 +780,9 @@ function renderDashboard(){
 }
 
 // ===== MY TASKS =====
+function getActTasks(){
+  return actMonth?tasks.filter(function(t){return t.month===actMonth;}):tasks;
+}
 function updateSubTabCounts(){
   if(!cu||(!cu.seeAll&&!cu.isAdmin))return;
   var all=getActTasks();
