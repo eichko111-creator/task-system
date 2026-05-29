@@ -41,6 +41,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
 .month-pills{display:flex;gap:6px;flex-wrap:wrap}
 .mpill{padding:5px 14px;border:1.5px solid #e0e0e0;border-radius:20px;font-size:12px;cursor:pointer;background:#fff;color:#888;font-weight:500;transition:all .15s;white-space:nowrap}
 .mpill.active{background:#0D7D3F;border-color:#0D7D3F;color:#fff;font-weight:700}
+.mpill.all-act{background:#0D7D3F;border-color:#0D7D3F;color:#fff;font-weight:700}
 .mpill.has{border-color:#0D7D3F;color:#0D7D3F}
 .container{padding:20px 24px;flex:1;overflow-y:auto}
 .kpi-row{display:grid;grid-template-columns:repeat(7,1fr);background:#fff;border-radius:12px;border:1px solid #eee;overflow:hidden;margin-bottom:16px}
@@ -481,7 +482,7 @@ const INIT=[
 let cu=null,tasks=[],prog={},empList=[],nid=300;
 let decisions=[],decFilter='бүгд',decRows=[],fbLoaded=false;
 var DCOL=function(){return db?db.collection('meeting_decisions'):null;};
-let bFilter='бүгд',actMonth='2026-01',subTab='received',selUnits=[],taskTypeFilter='шуурхай';
+let bFilter='бүгд',actMonth='2026-01',actMonths=[],subTab='received',selUnits=[],taskTypeFilter='шуурхай';
 let dC=null,uCC=null,trendC=null,saveT=null;
 
 // ===== UTILS =====
@@ -604,7 +605,7 @@ function showApp(){
   // Default subTab
   subTab=(cu.seeAll&&!cu.isAdmin)?'received':'all';
   // Сар
-  actMonth=getMonths().slice(-1)[0]||'2026-01';
+  actMonths=[];actMonth='';
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
   showDeadlineToast();
@@ -651,50 +652,100 @@ function setFilter(f,btn){bFilter=f;document.querySelectorAll('.filter-row .fpil
 function setSubTab(s,btn){subTab=s;document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMyTasks();}
 
 
+
+function toggleMonthPill(btn){
+  var m=btn.dataset.m;
+  var idx=actMonths.indexOf(m);
+  if(idx>=0){
+    actMonths.splice(idx,1);
+    btn.classList.remove('active');
+  } else {
+    actMonths.push(m);
+    btn.classList.add('active');
+  }
+  // Бүгд товчны active state
+  var allBtn=document.querySelector('#top-month-pills .mpill:first-child');
+  if(allBtn){
+    if(actMonths.length===0){allBtn.classList.add('all-act');}
+    else{allBtn.classList.remove('all-act');}
+  }
+  actMonth=actMonths.length>0?actMonths[actMonths.length-1]:'';
+  updateKPI();
+  var active=document.querySelector('.view.active');
+  if(active){
+    if(active.id==='view-dashboard')renderDashboard();
+    else if(active.id==='view-mine')renderMyTasks();
+  }
+}
+
 function setMonthBtn(btn){
   var m=btn.dataset.m;
   setMonth(m,btn);
 }
 
 function setMonth(m,btn){
-  actMonth=m;
-  document.querySelectorAll('#top-month-pills .mpill').forEach(function(b){b.classList.remove('active');});
-  if(btn)btn.classList.add('active');
+  actMonths=[m];actMonth=m;
+  renderTopPills();
   updateKPI();
   var active=document.querySelector('.view.active');
-  var activeId=active?active.id:'';
-  if(activeId==='view-dashboard')renderDashboard();
-  else if(activeId==='view-mine')renderMyTasks();
+  if(active){
+    if(active.id==='view-dashboard')renderDashboard();
+    else if(active.id==='view-mine')renderMyTasks();
+  }
 }
 
 function renderTopPills(){
   var hasTasks=new Set(tasks.map(function(t){return t.month;}));
-  // actMonth-г зөв утгатай болгох
-  if(!actMonth||actMonth===''){
-    for(var i=0;i<MALL.length;i++){
-      if(hasTasks.has(MALL[i])){actMonth=MALL[i];break;}
-    }
-    if(!actMonth)actMonth='2026-01';
+  var months=MALL.filter(function(m){return hasTasks.has(m);});
+  if(!months.length)return;
+  // Default: хамгийн сүүлийн сарыг сонгох
+  if(actMonths.length===0&&actMonth&&actMonth!==''){
+    // actMonth байвал actMonths-д нэмж initialize хийх
   }
-  var el=document.getElementById('top-month-pills');
-  if(!el)return;
-  // Бүх MALL сарыг харуулах, tasks байгааг тод харуулах
-  var pills='';
-  MALL.forEach(function(m){
-    if(!hasTasks.has(m))return; // tasks байхгүй сарыг нуух
-    var isActive=(m===actMonth);
-    pills+='<button class="mpill has'+(isActive?' active':'')+'" data-m="'+m+'" onclick="setMonthBtn(this)">'+ML[m]+'</button>';
+  var isAll=(actMonths.length===0);
+  var pills='<button class="mpill'+(isAll?' all-act':'')+'" onclick="setAllMonths()">✓ Бүгд</button>';
+  months.forEach(function(m){
+    var isActive=actMonths.indexOf(m)>=0;
+    pills+='<button class="mpill has'+(isActive?' active':'')+'" data-m="'+m+'" onclick="toggleMonthPill(this)">'+ML[m]+'</button>';
   });
-  el.innerHTML=pills;
+  var el=document.getElementById('top-month-pills');
+  if(el)el.innerHTML=pills;
 }
-function setAllMonth(btn){
-  actMonth='';
-  document.querySelectorAll('#top-month-pills .mpill').forEach(function(b){b.classList.remove('active');});
-  if(btn)btn.classList.add('active');
-  var lbl=document.getElementById('topbar-month-label');if(lbl)lbl.textContent='';
+function setAllMonths(){
+  actMonths=[];actMonth='';
+  renderTopPills();
   updateKPI();
-  if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
-  else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
+  var active=document.querySelector('.view.active');
+  if(active){
+    if(active.id==='view-dashboard')renderDashboard();
+    else if(active.id==='view-mine')renderMyTasks();
+  }
+}
+
+
+function toggleMonthPill(btn){
+  var m=btn.dataset.m;
+  var idx=actMonths.indexOf(m);
+  if(idx>=0){
+    actMonths.splice(idx,1);
+    btn.classList.remove('active');
+  } else {
+    actMonths.push(m);
+    btn.classList.add('active');
+  }
+  // Бүгд товчны active state
+  var allBtn=document.querySelector('#top-month-pills .mpill:first-child');
+  if(allBtn){
+    if(actMonths.length===0){allBtn.classList.add('all-act');}
+    else{allBtn.classList.remove('all-act');}
+  }
+  actMonth=actMonths.length>0?actMonths[actMonths.length-1]:'';
+  updateKPI();
+  var active=document.querySelector('.view.active');
+  if(active){
+    if(active.id==='view-dashboard')renderDashboard();
+    else if(active.id==='view-mine')renderMyTasks();
+  }
 }
 
 function setMonthBtn(btn){
@@ -709,7 +760,7 @@ function setMonth(m,btn){
   else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
 }
 function updateKPI(customTs){
-  const ts=customTs?customTs:tasks.filter(t=>t.month===actMonth);
+  const ts=customTs?customTs:(actMonths.length>0?tasks.filter(t=>actMonths.indexOf(t.month)>=0):tasks);
   const done=ts.filter(t=>calcAvg(t)>=100).length;
   const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
   const none=ts.filter(t=>calcAvg(t)===0).length;
@@ -728,7 +779,7 @@ function updateKPI(customTs){
 
 // ===== DASHBOARD =====
 function renderDashboard(){
-  const ts=tasks.filter(t=>t.month===actMonth);
+  const ts=actMonths.length>0?tasks.filter(t=>actMonths.indexOf(t.month)>=0):tasks;
   const done=ts.filter(t=>calcAvg(t)>=100).length;
   const par=ts.filter(t=>calcAvg(t)>0&&calcAvg(t)<100).length;
   const none=ts.filter(t=>calcAvg(t)===0).length;
@@ -875,7 +926,7 @@ function renderDashboard(){
 
 // ===== MY TASKS =====
 function getActTasks(){
-  return actMonth?tasks.filter(function(t){return t.month===actMonth;}):tasks;
+  return actMonths.length>0?tasks.filter(function(t){return actMonths.indexOf(t.month)>=0;}):tasks;
 }
 function updateSubTabCounts(){
   if(!cu||(!cu.seeAll&&!cu.isAdmin))return;
@@ -893,7 +944,7 @@ function updateTabCounts(){updateSubTabCounts();}
 
 function renderMyTasks(){
   if(!cu)return;
-  var base=(actMonth&&actMonth!=='')?tasks.filter(function(t){return t.month===actMonth;}):tasks;
+  var base=actMonths.length>0?tasks.filter(function(t){return actMonths.indexOf(t.month)>=0;}):tasks;
 
   // Sub-tab шүүлт
   var tabTs;
@@ -1110,7 +1161,7 @@ function setAdminM(m,btn){
   document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
 }
 function renderAdminList(){
-  const ts=(actMonth&&actMonth!=='')?tasks.filter(t=>t.month===actMonth):tasks;
+  const ts=actMonths.length>0?tasks.filter(t=>actMonths.indexOf(t.month)>=0):tasks;
   if(!ts.length){document.getElementById('admin-task-list').innerHTML='<div class="empty">Даалгавар байхгүй байна</div>';return;}
   document.getElementById('admin-task-list').innerHTML=ts.map(t=>{
     const p=calcAvg(t);const ovd=isOverdue(t);const soon=isDueSoon(t,7);
