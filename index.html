@@ -216,8 +216,6 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
       <div class="nav-section">Үндсэн цэс</div>
       <div class="nav-item active" onclick="showTab('dashboard',this)"><div class="nav-dot" style="background:#e74c3c"></div>НҮҮ Р</div>
       <div class="nav-item" onclick="showTab('mine',this)"><div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР</div>
-
-      <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin',this)"><div class="nav-dot" style="background:#f39c12"></div>ЖАГСААЛТ</div>
       <div class="nav-item" onclick="showTab('decisions',this)"><div class="nav-dot" style="background:#27ae60"></div>ХУРЛЫН ШИЙДВЭР</div>
     </nav>
     <div class="sidebar-footer">
@@ -347,7 +345,6 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
         <div id="decision-list"></div>
       </div>
 
-      <!-- ЖАГСААЛТ (ADMIN) -->
       <div class="view" id="view-admin">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
           <div class="section-title" id="admin-list-title" style="margin-bottom:0;border-bottom:none;padding-bottom:0;font-size:14px;font-weight:700;color:#374151">Бүгд — даалгаварын жагсаалт</div>
@@ -541,7 +538,6 @@ function doLogout(){
   try{localStorage.removeItem(SK);}catch(e){}
   cu=null;tasks=[];prog=[];decisions=[];
   document.getElementById('main-app').style.display='none';
-  const na2=document.getElementById('nav-admin');if(na2)na2.style.display='none';
   document.getElementById('login-page').style.display='flex';
   document.getElementById('login-user').value='';
   document.getElementById('login-pass').value='';
@@ -588,7 +584,6 @@ function showApp(){
   // Admin: нэмэх товч + шийдвэр нэмэх
   const ar=document.getElementById('admin-add-btn-row');
   if(ar)ar.style.display=cu.isAdmin?'block':'none';
-  const na=document.getElementById('nav-admin');if(na)na.style.display=cu.isAdmin?'flex':'none';
   const decAddBtn=document.getElementById('dec-add-btn-wrap');
   if(decAddBtn)decAddBtn.style.display=cu.isAdmin?'block':'none';
   if(cu.isAdmin)initUchk();
