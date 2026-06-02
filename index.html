@@ -2058,6 +2058,43 @@ function printReport(){
   w.document.close();
   setTimeout(function(){w.print();},500);
 }
+// ===== INITIALIZATION =====
+(async function init(){
+  // Loading screen харуулах
+  const ls=document.getElementById('loading-screen');
+  
+  // Firebase-ийн тохиргоо шалгах
+  if(!db){
+    if(ls){
+      ls.innerHTML='<div style="color:#fff;padding:20px;text-align:center"><div style="font-size:48px;margin-bottom:16px">⚠️</div><div style="font-size:16px;font-weight:700;margin-bottom:8px">Firebase холбогдоогүй</div><div style="font-size:13px;opacity:.7;margin-bottom:20px">Интернэт холболтоо шалгаад дахин ачаална уу</div><button onclick="location.reload()" style="padding:10px 28px;background:#fff;color:#0D7D3F;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🔄 Дахин ачаалах</button></div>';
+    }
+    return;
+  }
+
+  // Сессийг шалгах
+  try{
+    const saved=localStorage.getItem(SK);
+    if(saved){
+      const u=JSON.parse(saved);
+      // Хэрэглэгч байгаа эсэхийг шалгах
+      const validUser=Object.values(USERS).find(function(x){return x.person===u.name&&x.unit===u.unit;});
+      if(validUser||u.isAdmin){
+        cu=u;
+        await fbLoad();
+        if(ls){ls.style.opacity='0';setTimeout(()=>{ls.style.display='none';},400);}
+        showApp();
+        return;
+      }
+    }
+  }catch(e){console.log('Session restore failed:',e);}
+
+  // Сесс байхгүй бол login харуулах
+  setTimeout(()=>{
+    if(ls){ls.style.opacity='0';setTimeout(()=>{ls.style.display='none';},400);}
+    document.getElementById('login-page').style.display='flex';
+  },800);
+})();
+
 </script>
 </body>
 </html>
