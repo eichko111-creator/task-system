@@ -1908,8 +1908,8 @@ function toggleAllCheck(type,cb){
   var list=document.getElementById('rf-'+type+'-list');
   if(!list)return;
   list.querySelectorAll('input[type=checkbox]').forEach(function(inp){inp.checked=cb.checked;});
-  if(type==='giver')rfGivers=cb.checked?[]:Array.from(list.querySelectorAll('input:checked')).map(function(i){return i.value;});
-  else rfUnits=cb.checked?[]:Array.from(list.querySelectorAll('input:checked')).map(function(i){return i.value;});
+  if(type==='giver')rfGivers=[];
+  else rfUnits=[];
   updateDropLabel(type);
   renderReport();
 }
@@ -1931,7 +1931,6 @@ function updateDropLabel(type){
 }
 
 function initReportFilters(){
-  // Init date to today
   var today=new Date().toISOString().slice(0,10);
   rfDate=today.replace(/-/g,'/');
   var pick=document.getElementById('rf-date-pick');
@@ -1939,24 +1938,25 @@ function initReportFilters(){
   var txt=document.getElementById('rf-date-text');
   if(txt)txt.value=rfDate;
 
-  // Giver units
-  var givers=[...new Set(tasks.map(function(t){return t.giver||t.dept||'';}))].filter(Boolean).sort();
-  var gl=document.getElementById('rf-giver-list');
-  if(gl){
-    gl.innerHTML=givers.map(function(g){
-      return '<label style="display:flex;align-items:center;gap:6px;padding:4px 6px;cursor:pointer;font-size:12px;border-radius:5px"><input type="checkbox" value="'+g+'" checked onchange="onUnitCheck(\'giver\')"> '+g+'</label>';
-    }).join('');
-  }
+  buildCheckList('rf-giver-list',
+    [...new Set(tasks.map(function(t){return t.giver||t.dept||'';}))].filter(Boolean).sort(),
+    'giver'
+  );
   rfGivers=[];
-
-  // Receiver units - all AU
-  var ul=document.getElementById('rf-unit-list');
-  if(ul){
-    ul.innerHTML=AU.map(function(u){
-      return '<label style="display:flex;align-items:center;gap:6px;padding:4px 6px;cursor:pointer;font-size:12px;border-radius:5px"><input type="checkbox" value="'+u+'" checked onchange="onUnitCheck(\'unit\')"> '+u+'</label>';
-    }).join('');
-  }
+  buildCheckList('rf-unit-list', AU, 'unit');
   rfUnits=[];
+}
+
+function buildCheckList(listId, items, type){
+  var el=document.getElementById(listId);
+  if(!el)return;
+  el.innerHTML=items.map(function(v){
+    return '<label style="display:flex;align-items:center;gap:6px;padding:4px 8px;cursor:pointer;font-size:12px;border-radius:5px;white-space:nowrap">'+
+      '<input type="checkbox" class="rf-chk" data-type="'+type+'" value="'+v+'" checked> '+v+'</label>';
+  }).join('');
+  el.querySelectorAll('input.rf-chk').forEach(function(inp){
+    inp.addEventListener('change', function(){onUnitCheck(this.dataset.type);});
+  });
 }
 
 function setRF(s,btn){
@@ -2055,6 +2055,7 @@ function printReport(){
   w.document.write("th{background:#d1fae5;color:#166534;font-weight:bold;padding:6px 5px;border:1px solid #999;text-align:center;font-size:9px;white-space:nowrap}");
   w.document.write("td{border:1px solid #999;padding:5px;text-align:center;font-size:9px;vertical-align:top;word-break:break-word}");
   w.document.write("td:nth-child(2){text-align:left;min-width:120px;max-width:180px}");
+  w.document.write("td:last-child,th:last-child{display:none}");
   w.document.write("td:nth-child(5){text-align:left;min-width:80px}");
   w.document.write("tr:nth-child(even){background:#f9fafb}");
   w.document.write("tfoot tr{background:#f0fdf4}");
