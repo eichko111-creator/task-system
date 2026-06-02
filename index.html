@@ -239,6 +239,10 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
           <span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">Сар:</span>
           <div class="month-pills" id="top-month-pills"></div>
         </div>
+        <div id="report-date-wrap" style="display:none;align-items:center;gap:6px">
+          <span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap">📅 Огноо:</span>
+          <input type="date" id="report-date-inp" style="padding:4px 8px;border:1.5px solid #d1fae5;border-radius:8px;font-size:12px;color:#14532d;background:#fff;outline:none;font-family:inherit;cursor:pointer" onchange="setReportDate(this.value)">
+        </div>
       </div>
     </div>
     <div class="container">
@@ -483,6 +487,7 @@ let cu=null,tasks=[],prog={},empList=[],nid=300;
 let decisions=[],decFilter='бүгд',decRows=[],fbLoaded=false;
 var DCOL=function(){return db?db.collection('meeting_decisions'):null;};
 let bFilter='бүгд',actMonth='2026-01',actMonths=[],subTab='received',selUnits=[],taskTypeFilter='шуурхай';
+let reportDate=new Date().toISOString().slice(0,10).replace(/-/g,'/');
 let dC=null,uCC=null,trendC=null,saveT=null;
 
 // ===== UTILS =====
@@ -553,6 +558,7 @@ function doLogout(){
   document.getElementById('login-page').style.display='flex';
   document.getElementById('login-user').value='';
   document.getElementById('login-pass').value='';
+  var rdw=document.getElementById('report-date-wrap');if(rdw)rdw.style.display='none';
   document.getElementById('login-err').style.display='none';
   document.getElementById('login-btn').disabled=false;
   document.getElementById('login-btn').textContent='Нэвтрэх →';
@@ -560,10 +566,33 @@ function doLogout(){
 
 // ===== HELPERS =====
 function getMonths(){const ms=new Set(tasks.map(t=>t.month));return MALL.filter(m=>ms.has(m));}
-function getPct(tid,u){const p=prog[tid];return(p&&p[u]!==undefined)?p[u]:0;}
-function setPct(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid][u]=Math.max(0,Math.min(100,v));}
-function getNote(tid,u){const p=prog[tid];return(p&&p['n_'+u]!==undefined)?p['n_'+u]:'';}
-function setNote(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid]['n_'+u]=v;}
+function getPct(tid,u){
+  var rd=reportDate||'default';
+  var dp=prog[rd];
+  if(dp&&dp[tid]&&dp[tid][u]!==undefined)return dp[tid][u];
+  // Fallback: хуучин бүтэц (шилжилт)
+  if(prog[tid]&&prog[tid][u]!==undefined)return prog[tid][u];
+  return 0;
+}
+function setPct(tid,u,v){
+  var rd=reportDate||'default';
+  if(!prog[rd])prog[rd]={};
+  if(!prog[rd][tid])prog[rd][tid]={};
+  prog[rd][tid][u]=Math.max(0,Math.min(100,v));
+}
+function getNote(tid,u){
+  var rd=reportDate||'default';
+  var dp=prog[rd];
+  if(dp&&dp[tid]&&dp[tid]['n_'+u]!==undefined)return dp[tid]['n_'+u];
+  if(prog[tid]&&prog[tid]['n_'+u]!==undefined)return prog[tid]['n_'+u];
+  return '';
+}
+function setNote(tid,u,v){
+  var rd=reportDate||'default';
+  if(!prog[rd])prog[rd]={};
+  if(!prog[rd][tid])prog[rd][tid]={};
+  prog[rd][tid]['n_'+u]=v;
+}
 function calcAvg(t){if(!t.units.length)return 0;return Math.round(t.units.reduce((a,u)=>a+getPct(t.id,u),0)/t.units.length);}
 function pColor(p){return p>=100?'#27ae60':p>0?'#f39c12':'#e74c3c';}
 
@@ -609,6 +638,14 @@ function showApp(){
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
   document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
   showDeadlineToast();
+  // Set today's date as default reportDate
+  var today=new Date().toISOString().slice(0,10);
+  reportDate=today.replace(/-/g,'/');
+  // Show date picker only for admin
+  var rdw=document.getElementById('report-date-wrap');
+  if(rdw)rdw.style.display=cu.isAdmin?'flex':'none';
+  var rdi=document.getElementById('report-date-inp');
+  if(rdi)rdi.value=today;
 }
 function showTab(name,el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -925,6 +962,14 @@ function renderDashboard(){
 }
 
 // ===== MY TASKS =====
+
+function setReportDate(val){
+  reportDate=val?val.replace(/-/g,'/'):(new Date().toISOString().slice(0,10).replace(/-/g,'/'));
+  renderMyTasks();
+  updateKPI();
+  syncUI('ok','📅 '+reportDate+' огноо сонгогдлоо');
+}
+
 function getActTasks(){
   return actMonths.length>0?tasks.filter(function(t){return actMonths.indexOf(t.month)>=0;}):tasks;
 }
@@ -1057,6 +1102,10 @@ function saveUBtn(btn){
 }
 
 async function saveU(tid,u){
+  // Non-admin: always use today's date automatically
+  if(!cu.isAdmin){
+    reportDate=new Date().toISOString().slice(0,10).replace(/-/g,'/');
+  }
   const i=document.getElementById('inp-'+tid+'-'+u);
   const v=Math.max(0,Math.min(100,parseInt(i.value)||0));
   i.value=v;i.style.borderColor=pColor(v);
