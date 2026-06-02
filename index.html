@@ -217,6 +217,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
       <div class="nav-section">Үндсэн цэс</div>
       <div class="nav-item active" onclick="showTab('dashboard',this)"><div class="nav-dot" style="background:#e74c3c"></div>НҮҮ Р</div>
       <div class="nav-item" onclick="showTab('mine',this)"><div class="nav-dot" style="background:#27ae60"></div>ҮҮРЭГ ДААЛГАВАР</div>
+      <div class="nav-item" onclick="showTab('report',this)"><div class="nav-dot" style="background:#3b82f6"></div>ТАЙЛАН</div>
       <div class="nav-item" onclick="showTab('decisions',this)"><div class="nav-dot" style="background:#27ae60"></div>ХУРЛЫН ШИЙДВЭР</div>
     </nav>
     <div class="sidebar-footer">
@@ -333,6 +334,44 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
           <button class="fpill" onclick="setFilter('хэтэрсэн',this)">🚨 Хэтэрсэн</button>
         </div>
         <div id="my-tasks"></div>
+      </div>
+
+      <!-- ТАЙЛАН -->
+      <div class="view" id="view-report">
+        <div class="report-filters" id="report-filters">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+            <div>
+              <label style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Он сар</label>
+              <select id="rf-month" style="width:100%;padding:7px 9px;border:1.5px solid #d1d5db;border-radius:8px;font-size:12px;color:#1a2e1a;background:#fff;outline:none" onchange="renderReport()">
+                <option value="">Бүгд</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Өгсөн нэгж</label>
+              <select id="rf-giver" style="width:100%;padding:7px 9px;border:1.5px solid #d1d5db;border-radius:8px;font-size:12px;color:#1a2e1a;background:#fff;outline:none" onchange="renderReport()">
+                <option value="">Бүгд</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Биелүүлэх нэгж</label>
+              <select id="rf-unit" style="width:100%;padding:7px 9px;border:1.5px solid #d1d5db;border-radius:8px;font-size:12px;color:#1a2e1a;background:#fff;outline:none" onchange="renderReport()">
+                <option value="">Бүгд</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="fpill active" onclick="setRF('',this)">Бүгд</button>
+              <button class="fpill" onclick="setRF('done',this)">✅ Бүрэн</button>
+              <button class="fpill" onclick="setRF('partial',this)">⏳ Дутуу</button>
+              <button class="fpill" onclick="setRF('none',this)">📌 Хийгдээгүй</button>
+              <button class="fpill" onclick="setRF('over',this)">🚨 Хэтэрсэн</button>
+            </div>
+            <button onclick="printReport()" style="padding:7px 16px;background:#0D7D3F;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🖨 Хэвлэх</button>
+          </div>
+        </div>
+        <div id="report-stats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px"></div>
+        <div id="report-table-wrap"></div>
       </div>
 
       <!-- ХУРЛЫН ШИЙДВЭР -->
@@ -652,7 +691,7 @@ function showTab(name,el){
   if(el)el.classList.add('active');
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',admin:'Жагсаалт',decisions:'Хурлын шийдвэр'};
+  const t={dashboard:'Нүүр',mine:'Үүрэг даалгавар',admin:'Жагсаалт',report:'Тайлан',decisions:'Хурлын шийдвэр'};
   document.getElementById('topbar-title').textContent=t[name];
   if(name==='dashboard'){
     document.getElementById('kpi-row').style.display='';
@@ -1817,6 +1856,146 @@ async function addTaskModal(){
   closeAddTask();
   renderTopPills();renderMyTasks();updateKPI();
   syncUI('ok','✓ Даалгавар нэмэгдлээ');
+}
+
+
+// ===== ТАЙЛАН =====
+var rfStatus='';
+
+function initReportFilters(){
+  var months=getMonths();
+  var ms=document.getElementById('rf-month');
+  if(ms){
+    ms.innerHTML='<option value="">Бүгд</option>'+months.map(function(m){return '<option value="'+m+'">'+ML[m]+'</option>';}).join('');
+    if(actMonths.length===1)ms.value=actMonths[0];
+    else if(actMonth)ms.value=actMonth;
+  }
+  var givers=[...new Set(tasks.map(function(t){return t.giver||t.dept;}))].sort();
+  var rg=document.getElementById('rf-giver');
+  if(rg)rg.innerHTML='<option value="">Бүгд</option>'+givers.map(function(g){return '<option value="'+g+'">'+g+'</option>';}).join('');
+  var runits=[...new Set(tasks.flatMap(function(t){return t.units||[]}))].sort();
+  var ru=document.getElementById('rf-unit');
+  if(ru)ru.innerHTML='<option value="">Бүгд</option>'+runits.map(function(u){return '<option value="'+u+'">'+u+'</option>';}).join('');
+}
+
+function setRF(s,btn){
+  rfStatus=s;
+  document.querySelectorAll('#report-filters .fpill').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  renderReport();
+}
+
+function getReportTasks(){
+  var rfMonth=(document.getElementById('rf-month')||{}).value||'';
+  var rfGiver=(document.getElementById('rf-giver')||{}).value||'';
+  var rfUnit=(document.getElementById('rf-unit')||{}).value||'';
+  var ts=tasks.filter(function(t){
+    if(rfMonth&&t.month!==rfMonth)return false;
+    if(rfGiver&&(t.giver||t.dept)!==rfGiver)return false;
+    if(rfUnit&&(!t.units||t.units.indexOf(rfUnit)<0))return false;
+    var avg=calcAvg(t);
+    if(rfStatus==='done')return avg>=100;
+    if(rfStatus==='partial')return avg>0&&avg<100;
+    if(rfStatus==='none')return avg===0;
+    if(rfStatus==='over')return isOverdue(t)&&avg<100;
+    return true;
+  });
+  return ts;
+}
+
+function renderReport(){
+  var ts=getReportTasks();
+  var rfMonth=(document.getElementById('rf-month')||{}).value||'';
+  var rfUnit=(document.getElementById('rf-unit')||{}).value||'';
+  // Stats
+  var done=ts.filter(function(t){return calcAvg(t)>=100;}).length;
+  var part=ts.filter(function(t){var a=calcAvg(t);return a>0&&a<100;}).length;
+  var none=ts.filter(function(t){return calcAvg(t)===0;}).length;
+  var over=ts.filter(function(t){return isOverdue(t)&&calcAvg(t)<100;}).length;
+  var avgPct=ts.length?Math.round(ts.reduce(function(s,t){return s+calcAvg(t);},0)/ts.length):0;
+  var statsEl=document.getElementById('report-stats');
+  if(statsEl)statsEl.innerHTML=
+    '<div style="background:#f9fafb;border-radius:8px;padding:10px 12px"><div style="font-size:22px;font-weight:500;color:#1a2e1a">'+ts.length+'</div><div style="font-size:11px;color:#6b7280;margin-top:2px">Нийт</div></div>'+
+    '<div style="background:#f0fdf4;border-radius:8px;padding:10px 12px"><div style="font-size:22px;font-weight:500;color:#0D7D3F">'+done+'</div><div style="font-size:11px;color:#6b7280;margin-top:2px">Бүрэн биелэсэн</div></div>'+
+    '<div style="background:#fefce8;border-radius:8px;padding:10px 12px"><div style="font-size:22px;font-weight:500;color:#d97706">'+part+'</div><div style="font-size:11px;color:#6b7280;margin-top:2px">Дутуу биелэсэн</div></div>'+
+    '<div style="background:#fef2f2;border-radius:8px;padding:10px 12px"><div style="font-size:22px;font-weight:500;color:#dc2626">'+none+'</div><div style="font-size:11px;color:#6b7280;margin-top:2px">Хийгдээгүй</div></div>'+
+    '<div style="background:#f0f9ff;border-radius:8px;padding:10px 12px"><div style="font-size:22px;font-weight:500;color:#0284c7">'+avgPct+'%</div><div style="font-size:11px;color:#6b7280;margin-top:2px">Дундаж биелэлт</div></div>';
+  // Table
+  var monthLabel=rfMonth?ML[rfMonth]:'Бүгд сар';
+  var title='2026 ОНЫ '+monthLabel.toUpperCase()+' ҮҮРЭГ ДААЛГАВРЫН ТАЙЛАН';
+  var h='<div id="report-print-area">';
+  h+='<div style="text-align:center;font-size:13px;font-weight:700;color:#14532d;padding:12px;background:#f0fdf4;border-radius:8px 8px 0 0;border:1px solid #d1fae5">'+title+'</div>';
+  h+='<div style="overflow-x:auto;border:1px solid #d1fae5;border-top:none;border-radius:0 0 8px 8px">';
+  h+='<table style="width:100%;border-collapse:collapse;font-size:11px">';
+  h+='<thead><tr style="background:#f0fdf4">';
+  h+='<th style="padding:8px 10px;border:1px solid #d1fae5;color:#166534;font-weight:700;width:36px">№</th>';
+  h+='<th style="padding:8px 10px;border:1px solid #d1fae5;color:#166534;font-weight:700;text-align:left">Үүрэг даалгаврын утга</th>';
+  h+='<th style="padding:8px 10px;border:1px solid #d1fae5;color:#166534;font-weight:700">Сар өдөр</th>';
+  h+='<th style="padding:8px 10px;border:1px solid #d1fae5;color:#166534;font-weight:700">Өгсөн нэгж</th>';
+  h+='<th style="padding:8px 10px;border:1px solid #d1fae5;color:#166634;font-weight:700">Биелүүлэх нэгж</th>';
+  h+='<th style="padding:8px 10px;border:1px solid #d1fae5;color:#166534;font-weight:700">Хариуцагч</th>';
+  h+='<th style="padding:8px 10px;border:1px solid #d1fae5;color:#166534;font-weight:700">Хугацаа</th>';
+  h+='<th style="padding:8px 10px;border:1px solid #d1fae5;color:#166534;font-weight:700">Биелэлт</th>';
+  h+='<th style="padding:8px 10px;border:1px solid #d1fae5;color:#166534;font-weight:700">Тайлбар</th>';
+  h+='</tr></thead><tbody>';
+  for(var i=0;i<ts.length;i++){
+    var t=ts[i];
+    var avg=calcAvg(t);
+    var ovd=isOverdue(t)&&avg<100;
+    var showUnits=rfUnit&&rfUnit!==''?[rfUnit]:(t.units||[]);
+    var unitStr=showUnits.join(', ')||'—';
+    var notesArr=showUnits.map(function(u){return getNote(t.id,u);}).filter(Boolean);
+    var noteStr=notesArr.join('; ')||'—';
+    var pctDisplay=rfUnit&&rfUnit!==''?getPct(t.id,rfUnit):avg;
+    var bg=i%2===0?'#fff':'#f9fafb';
+    var pctColor=pctDisplay>=100?'color:#0D7D3F;font-weight:700':pctDisplay>0?'color:#d97706;font-weight:700':'color:#dc2626;font-weight:700';
+    if(ovd)pctColor='color:#7c3aed;font-weight:700';
+    h+='<tr style="background:'+bg+'">';
+    h+='<td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;color:#6b7280">'+(i+1)+'</td>';
+    h+='<td style="padding:7px 10px;border:1px solid #e5e7eb;color:#1a2e1a">'+escH(t.name||'')+'</td>';
+    h+='<td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;color:#6b7280;white-space:nowrap">'+escH(t.date||'')+'</td>';
+    h+='<td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;color:#1a2e1a">'+escH(t.giver||t.dept||'')+'</td>';
+    h+='<td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;color:#1a2e1a">'+escH(unitStr)+'</td>';
+    h+='<td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;color:#1a2e1a">'+escH(t.person||'—')+'</td>';
+    h+='<td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;white-space:nowrap;'+(ovd?'color:#dc2626;font-weight:700':'color:#6b7280')+'">'+escH(t.dl||'—')+'</td>';
+    h+='<td style="padding:7px 10px;border:1px solid #e5e7eb;text-align:center;'+pctColor+'">'+pctDisplay+'%</td>';
+    h+='<td style="padding:7px 10px;border:1px solid #e5e7eb;color:#6b7280;font-size:10px">'+escH(noteStr==='—'?'':noteStr)+'</td>';
+    h+='</tr>';
+  }
+  if(!ts.length){
+    h+='<tr><td colspan="9" style="padding:24px;text-align:center;color:#9ca3af;border:1px solid #e5e7eb">Тайлан байхгүй байна</td></tr>';
+  }
+  h+='</tbody>';
+  // Average footer
+  h+='<tfoot><tr style="background:#f0fdf4">';
+  h+='<td colspan="7" style="padding:8px 10px;border:1px solid #d1fae5;text-align:right;font-weight:700;color:#14532d">Дундаж биелэлт:</td>';
+  h+='<td style="padding:8px 10px;border:1px solid #d1fae5;text-align:center;font-weight:700;color:#0D7D3F;font-size:13px">'+avgPct+'%</td>';
+  h+='<td style="border:1px solid #d1fae5"></td>';
+  h+='</tr></tfoot>';
+  h+='</table></div></div>';
+  var tw=document.getElementById('report-table-wrap');
+  if(tw)tw.innerHTML=h;
+}
+
+function printReport(){
+  var area=document.getElementById('report-print-area');
+  if(!area){renderReport();area=document.getElementById('report-print-area');}
+  var ts=getReportTasks();
+  var avgPct=ts.length?Math.round(ts.reduce(function(s,t){return s+calcAvg(t);},0)/ts.length):0;
+  var w=window.open('','_blank','width=900,height=700');
+  w.document.write('<html><head><title>Тайлан</title><style>');
+  w.document.write('body{font-family:Arial,sans-serif;margin:20px;font-size:11px}');
+  w.document.write('table{width:100%;border-collapse:collapse}');
+  w.document.write('th,td{border:1px solid #999;padding:6px 8px;text-align:center}');
+  w.document.write('th{background:#d1fae5;color:#166534;font-weight:bold}');
+  w.document.write('.title{text-align:center;font-size:14px;font-weight:bold;margin-bottom:14px;color:#14532d}');
+  w.document.write('.avg{text-align:right;font-weight:bold;color:#0D7D3F;margin-top:8px;font-size:13px}');
+  w.document.write('tr:nth-child(even){background:#f9fafb}');
+  w.document.write('</style></head><body>');
+  w.document.write(area.innerHTML);
+  w.document.write('</body></html>');
+  w.document.close();
+  w.print();
 }
 
 // ===== INIT =====
