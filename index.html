@@ -1268,37 +1268,90 @@ function renderDecisions(){
 }
 
 function renderDecCard(d){
-  var myRows=[];
-  if(cu&&cu.isAdmin){myRows=d.rows||[];}
-  else{myRows=(d.rows||[]).filter(function(r){return (r.units||[]).indexOf(cu&&cu.unit)>=0;});}
-  var rowCount=(d.rows||[]).length;
-  var isNew=d.createdAt&&(Date.now()-d.createdAt<7*86400000);
-  var h='<div class="task-card" style="cursor:pointer;margin-bottom:10px" onclick="openDecDetail(\''+d.id+'\')">';
-  h+='<div class="task-header" style="flex-wrap:wrap">';
-  h+='<span class="badge" style="background:#1a1a2e;color:#fff">'+escH(d.date||'')+'</span>';
-  if(d.num){h+='<span class="badge" style="background:#27ae60;color:#fff">'+escH(d.num)+'</span>';}
-  if(isNew){h+='<span class="badge" style="background:#e74c3c;color:#fff">ШИНЭ</span>';}
-  if(d.loc){h+='<span style="font-size:11px;color:#888">📍 '+escH(d.loc)+'</span>';}
-  if(cu&&cu.isAdmin){
-    h+='<button onclick="event.stopPropagation();deleteDecision(\''+d.id+'\')" class="del-btn" style="margin-left:auto">🗑</button>';
+  var allRows=d.rows||[];
+  var myRows=cu.isAdmin||cu.seeAll?allRows:allRows.filter(function(r){
+    return (r.units||[]).indexOf(cu.unit)>=0||(r.resp||'')===(cu.unit)||(r.respUnits||[]).indexOf(cu.unit)>=0;
+  });
+  var last=0;try{last=parseInt(localStorage.getItem('dec_last_view_'+cu.unit)||'0');}catch(e){}
+  var isNew=(d.createdAt||0)>last;
+  var h='<div id="dc-'+d.id+'" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;margin-bottom:10px;overflow:hidden;transition:border-color .2s">';
+  // ===== HEADER (click to expand) =====
+  h+='<div style="padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none" data-dcid="'+d.id+'" onclick="toggleDecCard(this.dataset.dcid)">';
+  h+='<div style="flex:1">';
+  h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px">';
+  if(d.num)h+='<span style="background:#0D7D3F;color:#fff;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:700">'+escH(d.num)+'</span>';
+  if(isNew)h+='<span style="background:rgba(231,76,60,.15);color:#e74c3c;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700">ШИНЭ</span>';
+  h+='<span style="background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:6px;font-size:11px">📅 '+escH(d.date||'')+'</span>';
+  if(d.loc)h+='<span style="background:#f0fdf4;color:#166534;padding:2px 8px;border-radius:6px;font-size:11px">📍 '+escH(d.loc)+'</span>';
+  h+='</div>';
+  h+='<div style="font-size:14px;font-weight:700;color:#14532d;line-height:1.4">'+escH(d.title||'')+'</div>';
+  h+='<div style="font-size:11px;color:#9ca3af;margin-top:3px">Нийт '+allRows.length+' шийдвэр'+(myRows.length&&!cu.isAdmin?' | Миний: '+myRows.length:'')+'</div>';
+  h+='</div>';
+  // Buttons (stop propagation)
+  h+='<div style="display:flex;gap:6px;align-items:center;flex-shrink:0" onclick="event.stopPropagation()">';
+  h+='<button data-id="'+d.id+'" onclick="printDecisionById(this.dataset.id)" style="padding:5px 10px;background:#f0fdf4;color:#0D7D3F;border:1px solid #86efac;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">🖨</button>';
+  if(cu.isAdmin){
+    h+='<button class="edit-btn" data-id="'+d.id+'" onclick="openDecEdit(this.dataset.id)">✏️</button>';
+    h+='<button class="del-btn" data-id="'+d.id+'" onclick="deleteDecision(this.dataset.id)">🗑</button>';
   }
+  h+='<span id="dc-arrow-'+d.id+'" style="color:#9ca3af;font-size:14px;transition:transform .2s;display:inline-block">▼</span>';
   h+='</div>';
-  h+='<div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;line-height:1.4">'+escH(d.title||'')+'</div>';
-  h+='<div style="font-size:12px;color:#aaa;margin-bottom:8px">Нийт '+rowCount+' шийдвэр';
-  if(myRows.length&&!cu.isAdmin){h+=' | Миний: '+myRows.length;}
   h+='</div>';
-  if(myRows.length&&!cu.isAdmin){
-    h+='<div style="display:flex;flex-wrap:wrap;gap:4px">';
-    for(var i=0;i<Math.min(myRows.length,3);i++){
+  // ===== BODY (collapsed by default) =====
+  h+='<div id="dc-body-'+d.id+'" style="display:none;border-top:1px solid #e5e7eb;overflow-x:auto">';
+  if(!myRows.length){
+    h+='<div style="padding:16px;text-align:center;color:#9ca3af;font-size:13px">Таны нэгжид хамаарах шийдвэр байхгүй</div>';
+  } else {
+    h+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+    h+='<thead><tr style="background:#f9fafb">';
+    h+='<th style="padding:8px 12px;text-align:left;border-bottom:1px solid #e5e7eb;color:#6b7280;font-weight:700;width:36px">№</th>';
+    h+='<th style="padding:8px 12px;text-align:left;border-bottom:1px solid #e5e7eb;color:#6b7280;font-weight:700;width:25%">Хэлэлцсэн асуудал</th>';
+    h+='<th style="padding:8px 12px;text-align:left;border-bottom:1px solid #e5e7eb;color:#6b7280;font-weight:700">Гарсан шийдвэр</th>';
+    h+='<th style="padding:8px 12px;text-align:left;border-bottom:1px solid #e5e7eb;color:#6b7280;font-weight:700;width:130px">Хариуцагч</th>';
+    h+='<th style="padding:8px 12px;text-align:left;border-bottom:1px solid #e5e7eb;color:#6b7280;font-weight:700;width:140px">Шилжүүлсэн нэгж</th>';
+    h+='</tr></thead><tbody>';
+    for(var i=0;i<myRows.length;i++){
       var r=myRows[i];
-      h+='<div style="font-size:11px;background:#f0f4ff;color:#3a5fc8;padding:2px 8px;border-radius:4px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escH(r.decision||r.topic||'')+'</div>';
+      var isMyUnit=(r.units||[]).indexOf(cu.unit)>=0;
+      var bg=isMyUnit?'background:rgba(13,125,63,.05)':'background:'+(i%2===0?'#fff':'#fafafa');
+      h+='<tr style="'+bg+';border-bottom:1px solid #f0f0f0">';
+      h+='<td style="padding:8px 12px;color:#9ca3af;font-weight:600">'+(i+1)+'</td>';
+      h+='<td style="padding:8px 12px;color:#6b7280;vertical-align:top;line-height:1.4">'+escH(r.topic||'')+'</td>';
+      h+='<td style="padding:8px 12px;color:#14532d;font-weight:500;vertical-align:top;line-height:1.5">'+escH(r.decision||'')+'</td>';
+      h+='<td style="padding:8px 12px;vertical-align:top">';
+      var ru=(r.respUnits&&r.respUnits.length)?r.respUnits:(r.resp?[r.resp]:[]);
+      for(var j=0;j<ru.length;j++){
+        h+='<div style="padding:2px 7px;background:#f0fdf4;color:#0D7D3F;border-radius:5px;font-size:10px;font-weight:700;margin-bottom:2px;display:inline-block">'+escH(ru[j])+'</div>';
+      }
+      if(r.person)h+='<div style="font-size:11px;color:#374151;margin-top:2px">👤 '+escH(r.person)+'</div>';
+      h+='</td>';
+      h+='<td style="padding:8px 12px;vertical-align:top"><div style="display:flex;flex-wrap:wrap;gap:3px">';
+      var units=r.units||[];
+      for(var k=0;k<units.length;k++){
+        var isMe=units[k]===cu.unit;
+        h+='<span style="padding:2px 6px;background:'+(isMe?'rgba(13,125,63,.15)':'#f3f4f6')+';color:'+(isMe?'#0D7D3F':'#6b7280')+';border-radius:4px;font-size:10px;font-weight:'+(isMe?'700':'400')+'">'+units[k]+'</span>';
+      }
+      h+='</div></td></tr>';
     }
-    if(myRows.length>3){h+='<div style="font-size:11px;color:#aaa">+'+( myRows.length-3)+'</div>';}
-    h+='</div>';
+    h+='</tbody></table>';
   }
-  h+='</div>';
+  h+='</div></div>';
   return h;
 }
+
+function toggleDecCard(id){
+  var body=document.getElementById('dc-body-'+id);
+  var arrow=document.getElementById('dc-arrow-'+id);
+  var card=document.getElementById('dc-'+id);
+  if(!body)return;
+  var isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'block';
+  if(arrow)arrow.style.transform=isOpen?'rotate(0deg)':'rotate(180deg)';
+  if(card)card.style.borderColor=isOpen?'#e5e7eb':'#0D7D3F';
+}
+
+function openDecDetail(id){toggleDecCard(id);}
+
 
 function escH(s){
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
