@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Үүрэг даалгавар</title>
+<title>Үүрэг даалгаврын хяналтын систем</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-height:100vh;display:flex;flex-direction:column}
@@ -209,12 +209,9 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
 <!-- MAIN APP -->
 <div id="main-app" class="app-wrap" style="display:none">
   <div class="sidebar">
-    <div class="sidebar-logo" style="display:flex;align-items:center;gap:10px">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 178" width="36" height="32"><polygon points="100,5 55,88 145,88" fill="#FFD700"/><polygon points="55,88 10,172 100,172" fill="#CC1111"/><polygon points="145,88 100,172 190,172" fill="#1B7D3B"/><polygon points="55,88 145,88 100,172" fill="#FFFFFF"/></svg>
-      <div>
-        <div class="sidebar-logo-title">DSEDN</div>
-        <div class="sidebar-logo-sub">ДСЦТС ХК</div>
-      </div>
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-title">ДСЦТС ХК</div>
+      <div class="sidebar-logo-sub">Үүрэг даалгаврын хяналт</div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section">Үндсэн цэс</div>
@@ -2114,7 +2111,7 @@ function printReport(){
   w.document.write("  font-size:9px;color:#666;");
   w.document.write("}");
   w.document.write(".ph{display:flex;align-items:center;gap:14px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #0D7D3F}");
-  w.document.write(".po{font-size:11px;font-weight:bold;color:#14532d;line-height:1.5}");
+  w.document.write(".po{font-size:13px;font-weight:bold;color:#14532d;line-height:1.5}");
   w.document.write(".pt{text-align:center;font-size:12px;font-weight:bold;color:#14532d;padding:8px;background:#f0fdf4;border:1px solid #d1fae5;margin-bottom:10px}");
   w.document.write("table{width:100%;border-collapse:collapse}");
   w.document.write("th{background:#d1fae5;color:#166534;font-weight:bold;padding:6px 5px;border:1px solid #999;text-align:center;font-size:9px;white-space:nowrap}");
@@ -2129,8 +2126,7 @@ function printReport(){
   w.document.write("</style></head><body>");
   w.document.write('<div class="page">');
   // Толгой хэсэг
-  w.document.write('<div class="ph"><div>'+logo+'</div>');
-  w.document.write('<div class="po">ДСЦТС ХК</div></div>');
+  w.document.write('<div class="ph"><div><div class="po">ДСЦТС ХК</div><div style="font-size:10px;color:#166534;margin-top:2px">Үүрэг даалгаврын хяналтын систем</div></div></div>');
   // Гарчиг
   if(titleEl)w.document.write('<div class="pt">'+titleEl.innerHTML+'</div>');
   // Хүснэгт
