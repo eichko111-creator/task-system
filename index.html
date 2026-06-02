@@ -1996,8 +1996,8 @@ function renderReport(){
   var h='<div id="report-print-area">';
   h+='<div style="text-align:center;font-size:13px;font-weight:700;color:#14532d;padding:12px 16px;background:#f0fdf4;border-radius:8px 8px 0 0;border:1px solid #d1fae5;line-height:1.4">'+escH(title)+'</div>';
   h+='<div style="overflow-x:auto;border:1px solid #d1fae5;border-top:none;border-radius:0 0 8px 8px">';
-  h+='<table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed">';
-  h+='<colgroup><col style="width:36px"><col style="width:20%"><col style="width:80px"><col style="width:70px"><col style="width:120px"><col style="width:110px"><col style="width:85px"><col style="width:55px"><col></colgroup>';
+  h+='<table style="width:100%;border-collapse:collapse;font-size:11px">';
+  h+='<colgroup><col style="width:32px"><col><col style="width:75px"><col style="width:65px"><col style="width:140px"><col style="width:110px"><col style="width:80px"><col style="width:55px"><col style="width:100px"></colgroup>';
   h+='<thead><tr style="background:#f0fdf4">';
   h+='<th style="padding:8px 6px;border:1px solid #d1fae5;color:#166534;font-weight:700">№</th>';
   h+='<th style="padding:8px 8px;border:1px solid #d1fae5;color:#166534;font-weight:700;text-align:left">Үүрэг даалгаврын утга</th>';
@@ -2047,20 +2047,28 @@ function printReport(){
   var area=document.getElementById('report-print-area');
   if(!area){renderReport();area=document.getElementById('report-print-area');}
   if(!area)return;
-  var w=window.open("","_blank","width=1000,height=700");
-  w.document.write("<html><head><title>Тайлан</title><style>");
-  w.document.write("body{font-family:Arial,sans-serif;margin:20px;font-size:11px}");
-  w.document.write("table{width:100%;border-collapse:collapse;table-layout:fixed}");
-  w.document.write("th,td{border:1px solid #999;padding:5px 7px;text-align:center;word-break:break-word}");
-  w.document.write("th{background:#d1fae5;color:#166534;font-weight:bold}");
-  w.document.write("td:nth-child(2){text-align:left}");
+  var w=window.open("","_blank","width=1100,height=750");
+  w.document.write("<!DOCTYPE html><html><head><title>Тайлан</title><style>");
+  w.document.write("@page{size:A4 landscape;margin:12mm 10mm}");
+  w.document.write("body{font-family:'Arial Unicode MS',Arial,sans-serif;margin:0;font-size:10px;color:#000}");
+  w.document.write("table{width:100%;border-collapse:collapse;table-layout:auto}");
+  w.document.write("th{background:#d1fae5;color:#166534;font-weight:bold;padding:6px 5px;border:1px solid #999;text-align:center;font-size:9px;white-space:nowrap}");
+  w.document.write("td{border:1px solid #999;padding:5px;text-align:center;font-size:9px;vertical-align:top;word-break:break-word}");
+  w.document.write("td:nth-child(2){text-align:left;min-width:120px;max-width:180px}");
+  w.document.write("td:nth-child(5){text-align:left;min-width:80px}");
   w.document.write("tr:nth-child(even){background:#f9fafb}");
-  w.document.write("tfoot tr{background:#f0fdf4;font-weight:bold}");
+  w.document.write("tfoot tr{background:#f0fdf4}");
+  w.document.write("tfoot td{font-weight:bold;font-size:10px}");
+  w.document.write(".print-title{text-align:center;font-size:12px;font-weight:bold;color:#14532d;padding:8px;background:#f0fdf4;border:1px solid #d1fae5;border-bottom:none;margin:0}");
   w.document.write("</style></head><body>");
-  w.document.write(area.innerHTML);
+  // Extract title and table separately
+  var titleEl=area.querySelector('[style*="border-radius:8px 8px 0 0"]');
+  var tableEl=area.querySelector('table');
+  if(titleEl)w.document.write('<div class="print-title">'+titleEl.innerHTML+'</div>');
+  if(tableEl)w.document.write(tableEl.outerHTML);
   w.document.write("</body></html>");
   w.document.close();
-  setTimeout(function(){w.print();},400);
+  setTimeout(function(){w.print();},500);
 }
 
 // ===== INIT =====
