@@ -424,6 +424,7 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
   </div>
 </div>
 
+<datalist id="emp-list"></datalist>
 <!-- ADD TASK MODAL -->
 <div class="modal-bg" id="add-task-modal">
   <div class="modal" style="max-width:640px">
@@ -676,7 +677,7 @@ function showApp(){
   // Сар
   actMonths=[];actMonth='';
   renderTopPills();updateKPI();renderDashboard();updateEmpDatalist();
-  document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
+  // a-date is in modal only
   showDeadlineToast();
   // Set today's date as default reportDate
   var today=new Date().toISOString().slice(0,10);
@@ -1134,7 +1135,7 @@ async function saveU(tid,u){
 
 
 // ===== ADMIN =====
-function initUchk(){document.getElementById('units-check').innerHTML=AU.map(u=>`<div class="uchk" onclick="tu('${u}',this)">${u}</div>`).join('');selUnits=[];}
+function initUchk(){var uc=document.getElementById('units-check');if(!uc)return;uc.innerHTML=AU.map(u=>`<div class="uchk" onclick="tu('${u}',this)">${u}</div>`).join('');selUnits=[];}
 function tu(u,el){el.classList.toggle('sel');selUnits=selUnits.includes(u)?selUnits.filter(x=>x!==u):[...selUnits,u];}
 function selectAllUnits(){selUnits=[...AU];document.querySelectorAll('.uchk').forEach(el=>el.classList.add('sel'));}
 
@@ -1152,7 +1153,7 @@ async function addTask(){
   saveTasks();
   ['a-name','a-dl'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('a-person').value='';
-  document.getElementById('a-date').value=new Date().toISOString().slice(0,10);
+  // a-date is in modal only
   selUnits=[];document.querySelectorAll('.uchk').forEach(el=>el.classList.remove('sel'));
   renderAdminPills();renderAdminList();renderTopPills();
   alert('✓ Үүрэг даалгавар амжилттай нэмэгдлээ!');
@@ -1212,7 +1213,7 @@ function renderAdminPills(){
   document.getElementById('admin-list-title').textContent=`${ML[actMonth]||actMonth} — даалгаварын жагсаалт`;
 }
 function setAdminM(m,btn){
-  actMonth=m;document.getElementById('a-month').value=m;
+  actMonth=m;
   document.querySelectorAll('#admin-month-pills .fpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   document.getElementById('admin-list-title').textContent=`${ML[m]||m} — даалгаварын жагсаалт`;renderAdminList();
 }
