@@ -2026,9 +2026,27 @@ function printReport(){
   var w=window.open("","_blank","width=1100,height=800");
   w.document.open();
   w.document.write("<!DOCTYPE html><html><head><title></title><style>");
-  w.document.write("@page{size:A4 landscape;margin:2cm 2cm 1.5cm 2cm}");
+  // @page-д margin:0 тавьж browser header/footer-ийг нуух
+  w.document.write("@page{size:A4 landscape;margin:0}");
   w.document.write("html,body{margin:0;padding:0}");
-  w.document.write("body{font-family:'Arial Unicode MS',Arial,sans-serif;font-size:10px;color:#000}");
+  // Хуудасны тоо CSS counter-оор
+  w.document.write("body{counter-reset:page}");
+  w.document.write(".page{");
+  w.document.write("  font-family:'Arial Unicode MS',Arial,sans-serif;font-size:10px;color:#000;");
+  w.document.write("  padding:2cm 2cm 1.8cm 2cm;");
+  w.document.write("  min-height:calc(100vh - 4cm);");
+  w.document.write("  box-sizing:border-box;");
+  w.document.write("  position:relative;");
+  w.document.write("}");
+  // Хуудасны тоо - хуудас бүрийн доод хэсэгт
+  w.document.write("@media print{");
+  w.document.write("  .page{page-break-after:always}");
+  w.document.write("  .page:last-child{page-break-after:avoid}");
+  w.document.write("}");
+  w.document.write(".page-num{");
+  w.document.write("  position:absolute;bottom:0.6cm;right:2cm;");
+  w.document.write("  font-size:9px;color:#666;");
+  w.document.write("}");
   w.document.write(".ph{display:flex;align-items:center;gap:14px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #0D7D3F}");
   w.document.write(".po{font-size:11px;font-weight:bold;color:#14532d;line-height:1.5}");
   w.document.write(".pt{text-align:center;font-size:12px;font-weight:bold;color:#14532d;padding:8px;background:#f0fdf4;border:1px solid #d1fae5;margin-bottom:10px}");
@@ -2039,14 +2057,19 @@ function printReport(){
   w.document.write("tr:nth-child(even) td{background:#f9fafb}");
   w.document.write("tfoot tr td{background:#f0fdf4;font-weight:bold;font-size:10px}");
   w.document.write("td:last-child,th:last-child{display:none}");
-  w.document.write(".fs{margin-top:24px;display:flex;justify-content:space-between;align-items:flex-end}");
+  w.document.write(".fs{margin-top:20px;display:flex;justify-content:space-between;align-items:flex-end}");
   w.document.write(".sl{width:180px;border-bottom:1px solid #000;height:18px;margin-top:4px}");
   w.document.write(".sl-lbl{font-size:8px;color:#555;margin-top:3px}");
   w.document.write("</style></head><body>");
+  w.document.write('<div class="page">');
+  // Толгой хэсэг
   w.document.write('<div class="ph"><div>'+logo+'</div>');
   w.document.write('<div class="po">МОНГОЛ УЛС<br>ДОРНОГОВЬ АЙМГИЙН ЗАСАГ ДАРГЫН ТАМГЫН ГАЗАР</div></div>');
+  // Гарчиг
   if(titleEl)w.document.write('<div class="pt">'+titleEl.innerHTML+'</div>');
+  // Хүснэгт
   w.document.write(tableEl.outerHTML);
+  // Гарын үсэг
   w.document.write('<div class="fs"><div><b>Тайлан гаргасан:</b>');
   w.document.write('<div style="display:flex;gap:16px;margin-top:6px">');
   w.document.write('<div><div class="sl"></div><div class="sl-lbl">Албан тушаал</div></div>');
@@ -2054,10 +2077,24 @@ function printReport(){
   w.document.write('<div><div class="sl"></div><div class="sl-lbl">Гарын үсэг</div></div>');
   w.document.write('</div></div>');
   w.document.write('<div style="font-size:10px">'+todayStr+'</div></div>');
+  // Хуудасны тоо
+  w.document.write('<div class="page-num" id="pg-num">1</div>');
+  w.document.write('</div>');
+  w.document.write('<script>');
+  w.document.write('window.onload=function(){');
+  // Хуудасны нийт тоог тооцох
+  w.document.write('  var body=document.body;');
+  w.document.write('  var pageH=body.scrollHeight;');
+  w.document.write('  var printH=842;// A4 landscape pt');
+  w.document.write('  var pages=Math.max(1,Math.ceil(pageH/printH));');
+  w.document.write('  document.getElementById("pg-num").textContent="1 / "+pages;');
+  w.document.write('  setTimeout(function(){window.print();},400);');
+  w.document.write('};');
+  w.document.write('<\/script>');
   w.document.write('</body></html>');
   w.document.close();
-  setTimeout(function(){w.print();},500);
 }
+
 // ===== INITIALIZATION =====
 (async function init(){
   // Loading screen харуулах
