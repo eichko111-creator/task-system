@@ -570,6 +570,7 @@ function setDelay(tid,u,v){if(!prog[tid])prog[tid]={};prog[tid]['d_'+u]=v;}
 
 // ===== FIREBASE =====
 async function fbLoad(){
+  if(!TDOC||!PDOC||!EDOC){tasks=[...INIT];prog={};empList=[...new Set(INIT.map(t=>t.person))];nid=301;return;}
   try{
     const[ts,ps,es]=await Promise.all([TDOC.get(),PDOC.get(),EDOC.get()]);
     if(ts.exists&&ts.data().list&&ts.data().list.length>0){
@@ -720,6 +721,10 @@ function showTab(name,el){
     document.getElementById('kpi-row').style.display='none';
     var _ms=document.getElementById('month-section');if(_ms)_ms.style.display='none';
     renderAdminPills();renderAdminList();updateEmpDatalist();
+  } else if(name==='report'){
+    document.getElementById('kpi-row').style.display='none';
+    var _ms=document.getElementById('month-section');if(_ms)_ms.style.display='none';
+    initReportFilters();renderReport();
   } else if(name==='decisions'){
     document.getElementById('kpi-row').style.display='none';
     var ms=document.getElementById('month-section');if(ms)ms.style.display='none';
@@ -813,43 +818,6 @@ function setAllMonths(){
   }
 }
 
-
-function toggleMonthPill(btn){
-  var m=btn.dataset.m;
-  var idx=actMonths.indexOf(m);
-  if(idx>=0){
-    actMonths.splice(idx,1);
-    btn.classList.remove('active');
-  } else {
-    actMonths.push(m);
-    btn.classList.add('active');
-  }
-  // Бүгд товчны active state
-  var allBtn=document.querySelector('#top-month-pills .mpill:first-child');
-  if(allBtn){
-    if(actMonths.length===0){allBtn.classList.add('all-act');}
-    else{allBtn.classList.remove('all-act');}
-  }
-  actMonth=actMonths.length>0?actMonths[actMonths.length-1]:'';
-  updateKPI();
-  var active=document.querySelector('.view.active');
-  if(active){
-    if(active.id==='view-dashboard')renderDashboard();
-    else if(active.id==='view-mine')renderMyTasks();
-  }
-}
-
-function setMonthBtn(btn){
-  var m=btn.dataset.m;
-  setMonth(m,btn);
-}
-
-function setMonth(m,btn){
-  actMonth=m;document.querySelectorAll('#top-month-pills .mpill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  updateKPI();
-  if(document.getElementById('view-dashboard').classList.contains('active'))renderDashboard();
-  else if(document.getElementById('view-mine').classList.contains('active'))renderMyTasks();
-}
 function updateKPI(customTs){
   const ts=customTs?customTs:(actMonths.length>0?tasks.filter(t=>actMonths.indexOf(t.month)>=0):tasks);
   const done=ts.filter(t=>calcAvg(t)>=100).length;
