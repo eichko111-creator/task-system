@@ -2047,50 +2047,46 @@ function printReport(){
   var area=document.getElementById('report-print-area');
   if(!area){renderReport();area=document.getElementById('report-print-area');}
   if(!area)return;
-  var w=window.open("","_blank","width=1100,height=750");
-  w.document.write("<!DOCTYPE html><html><head><title>Тайлан</title><style>");
-  w.document.write("@page{size:A4 landscape;margin:12mm 10mm}");
-  w.document.write("body{font-family:'Arial Unicode MS',Arial,sans-serif;margin:0;font-size:10px;color:#000}");
-  w.document.write("table{width:100%;border-collapse:collapse;table-layout:auto}");
-  w.document.write("th{background:#d1fae5;color:#166534;font-weight:bold;padding:6px 5px;border:1px solid #999;text-align:center;font-size:9px;white-space:nowrap}");
-  w.document.write("td{border:1px solid #999;padding:5px;text-align:center;font-size:9px;vertical-align:top;word-break:break-word}");
-  w.document.write("td:nth-child(2){text-align:left;min-width:120px;max-width:180px}");
-  w.document.write("td:last-child,th:last-child{display:none}");
-  w.document.write("td:nth-child(5){text-align:left;min-width:80px}");
-  w.document.write("tr:nth-child(even){background:#f9fafb}");
-  w.document.write("tfoot tr{background:#f0fdf4}");
-  w.document.write("tfoot td{font-weight:bold;font-size:10px}");
-  w.document.write(".print-title{text-align:center;font-size:12px;font-weight:bold;color:#14532d;padding:8px;background:#f0fdf4;border:1px solid #d1fae5;border-bottom:none;margin:0}");
-  w.document.write("</style></head><body>");
-  // Extract title and table separately
   var titleEl=area.querySelector('[style*="border-radius:8px 8px 0 0"]');
   var tableEl=area.querySelector('table');
-  if(titleEl)w.document.write('<div class="print-title">'+titleEl.innerHTML+'</div>');
-  if(tableEl)w.document.write(tableEl.outerHTML);
-  w.document.write("</body></html>");
+  if(!tableEl)return;
+  var today=new Date();
+  var dd=today.getDate()<10?'0'+today.getDate():''+today.getDate();
+  var mm=(today.getMonth()+1)<10?'0'+(today.getMonth()+1):''+(today.getMonth()+1);
+  var todayStr=today.getFullYear()+'/'+mm+'/'+dd;
+  var logo='<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 60 60"><polygon points="30,2 58,55 2,55" fill="#e8b84b"/><polygon points="30,14 51,50 9,50" fill="#27ae60"/><polygon points="30,26 44,46 16,46" fill="#e74c3c"/></svg>';
+  var w=window.open("","_blank","width=1100,height=800");
+  w.document.open();
+  w.document.write("<!DOCTYPE html><html><head><title></title><style>");
+  w.document.write("@page{size:A4 landscape;margin:2cm 2cm 1.5cm 2cm}");
+  w.document.write("html,body{margin:0;padding:0}");
+  w.document.write("body{font-family:'Arial Unicode MS',Arial,sans-serif;font-size:10px;color:#000}");
+  w.document.write(".ph{display:flex;align-items:center;gap:14px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #0D7D3F}");
+  w.document.write(".po{font-size:11px;font-weight:bold;color:#14532d;line-height:1.5}");
+  w.document.write(".pt{text-align:center;font-size:12px;font-weight:bold;color:#14532d;padding:8px;background:#f0fdf4;border:1px solid #d1fae5;margin-bottom:10px}");
+  w.document.write("table{width:100%;border-collapse:collapse}");
+  w.document.write("th{background:#d1fae5;color:#166534;font-weight:bold;padding:6px 5px;border:1px solid #999;text-align:center;font-size:9px;white-space:nowrap}");
+  w.document.write("td{border:1px solid #999;padding:5px 4px;text-align:center;font-size:9px;vertical-align:middle;word-break:break-word}");
+  w.document.write("td:nth-child(2){text-align:left}td:nth-child(5){text-align:left}");
+  w.document.write("tr:nth-child(even) td{background:#f9fafb}");
+  w.document.write("tfoot tr td{background:#f0fdf4;font-weight:bold;font-size:10px}");
+  w.document.write("td:last-child,th:last-child{display:none}");
+  w.document.write(".fs{margin-top:24px;display:flex;justify-content:space-between;align-items:flex-end}");
+  w.document.write(".sl{width:180px;border-bottom:1px solid #000;height:18px;margin-top:4px}");
+  w.document.write(".sl-lbl{font-size:8px;color:#555;margin-top:3px}");
+  w.document.write("</style></head><body>");
+  w.document.write('<div class="ph"><div>'+logo+'</div>');
+  w.document.write('<div class="po">МОНГОЛ УЛС<br>ДОРНОГОВЬ АЙМГИЙН ЗАСАГ ДАРГЫН ТАМГЫН ГАЗАР</div></div>');
+  if(titleEl)w.document.write('<div class="pt">'+titleEl.innerHTML+'</div>');
+  w.document.write(tableEl.outerHTML);
+  w.document.write('<div class="fs"><div><b>Тайлан гаргасан:</b>');
+  w.document.write('<div style="display:flex;gap:16px;margin-top:6px">');
+  w.document.write('<div><div class="sl"></div><div class="sl-lbl">Албан тушаал</div></div>');
+  w.document.write('<div><div class="sl"></div><div class="sl-lbl">Овог нэр</div></div>');
+  w.document.write('<div><div class="sl"></div><div class="sl-lbl">Гарын үсэг</div></div>');
+  w.document.write('</div></div>');
+  w.document.write('<div style="font-size:10px">'+todayStr+'</div></div>');
+  w.document.write('</body></html>');
   w.document.close();
   setTimeout(function(){w.print();},500);
 }
-
-// ===== INIT =====
-(async function init(){
-  const ls=document.getElementById('loading-screen');
-  const hideLS=()=>{ls.classList.add('hide');setTimeout(()=>ls.style.display='none',400);}
-  const timer=setTimeout(()=>{hideLS();document.getElementById('login-page').style.display='flex';},3000);
-  try{
-    const saved=localStorage.getItem(SK);
-    if(saved){
-      const p=JSON.parse(saved);
-      if(p&&p.unit&&p.name){
-        cu=p;
-        try{await fbLoad();}catch(e){}
-        clearTimeout(timer);hideLS();showApp();return;
-      }
-    }
-  }catch(e){}
-  clearTimeout(timer);hideLS();
-  document.getElementById('login-page').style.display='flex';
-})();
-</script>
-</body>
-</html>
