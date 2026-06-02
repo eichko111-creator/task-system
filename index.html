@@ -209,9 +209,12 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
 <!-- MAIN APP -->
 <div id="main-app" class="app-wrap" style="display:none">
   <div class="sidebar">
-    <div class="sidebar-logo">
-      <div class="sidebar-logo-title">DSEDN</div>
-      <div class="sidebar-logo-sub">2026 он · Firebase</div>
+    <div class="sidebar-logo" style="display:flex;align-items:center;gap:10px">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 178" width="36" height="32"><polygon points="100,5 55,88 145,88" fill="#FFD700"/><polygon points="55,88 10,172 100,172" fill="#CC1111"/><polygon points="145,88 100,172 190,172" fill="#1B7D3B"/><polygon points="55,88 145,88 100,172" fill="#FFFFFF"/></svg>
+      <div>
+        <div class="sidebar-logo-title">DSEDN</div>
+        <div class="sidebar-logo-sub">ДСЦТС ХК</div>
+      </div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section">Үндсэн цэс</div>
@@ -383,7 +386,10 @@ body{font-family:'Segoe UI',sans-serif;background:#f0fdf4;color:#1a2e1a;min-heig
               <button class="fpill" onclick="setRF(\'none\',this)">📌 Хийгдээгүй</button>
               <button class="fpill" onclick="setRF(\'over\',this)">🚨 Хэтэрсэн</button>
             </div>
-            <button onclick="printReport()" style="padding:7px 16px;background:#0D7D3F;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🖨 Хэвлэх</button>
+            <div style="display:flex;gap:6px">
+              <button onclick="exportReportExcel()" style="padding:7px 16px;background:#1d6f42;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">📊 Excel</button>
+              <button onclick="printReport()" style="padding:7px 16px;background:#0D7D3F;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">🖨 Хэвлэх</button>
+            </div>
           </div>
         </div>
         <div id="report-table-wrap"></div>
@@ -2011,6 +2017,66 @@ function renderReport(){
   if(tw)tw.innerHTML=h;
 }
 
+
+function exportReportExcel(){
+  var ts=getReportTasks();
+  if(!ts.length){alert('Тайланд өгөгдөл байхгүй байна');return;}
+  var rfDateLabel=(document.getElementById('rf-date-text')||{}).value||'';
+  var sheetName=rfDateLabel?rfDateLabel.replace(/\//g,'-'):'Тайлан';
+
+  // Header мөр
+  var headers=['№','Үүрэг даалгаврын утга','Сар өдөр','Өгсөн нэгж','Биелүүлэх нэгж','Албан тушаалтны нэр','Биелүүлэх хугацаа','Биелэлт %','Тайлбар'];
+  var rows=[headers];
+
+  // Өгөгдлийн мөрүүд
+  for(var i=0;i<ts.length;i++){
+    var t=ts[i];
+    var avg=calcAvg(t);
+    var showUnits=rfUnits.length>0?t.units.filter(function(u){return rfUnits.indexOf(u)>=0;}):(t.units||[]);
+    var pctDisplay=rfUnits.length===1?getPct(t.id,rfUnits[0]):avg;
+    var note=showUnits.map(function(u){return getNote(t.id,u);}).filter(Boolean).join('; ');
+    rows.push([
+      i+1,
+      t.name||'',
+      t.date||'',
+      t.giver||t.dept||'',
+      showUnits.join(', '),
+      t.person||'',
+      t.dl||'',
+      pctDisplay+'%',
+      note
+    ]);
+  }
+
+  // Дундаж мөр
+  var avgPct=ts.length?Math.round(ts.reduce(function(s,t){return s+calcAvg(t);},0)/ts.length):0;
+  rows.push(['','','','','','','Дундаж биелэлт:',avgPct+'%','']);
+
+  // Worksheet үүсгэх
+  var wb=XLSX.utils.book_new();
+  var ws=XLSX.utils.aoa_to_sheet(rows);
+
+  // Баганы өргөн тохируулах
+  ws['!cols']=[
+    {wch:4},{wch:40},{wch:12},{wch:10},{wch:25},{wch:18},{wch:14},{wch:10},{wch:20}
+  ];
+
+  // Гарчиг мөрийн өнгө (bold)
+  var range=XLSX.utils.decode_range(ws['!ref']);
+  for(var C=range.s.c;C<=range.e.c;C++){
+    var cell=ws[XLSX.utils.encode_cell({r:0,c:C})];
+    if(cell){
+      cell.s={font:{bold:true},fill:{fgColor:{rgb:'D1FAE5'}},alignment:{horizontal:'center',wrapText:true}};
+    }
+  }
+
+  // Sheet нэр болон файл нэр
+  var today=new Date();
+  var fname='Тайлан_'+today.getFullYear()+(today.getMonth()+1<10?'0':'')+(today.getMonth()+1)+(today.getDate()<10?'0':'')+today.getDate()+'.xlsx';
+  XLSX.utils.book_append_sheet(wb,ws,sheetName.slice(0,31));
+  XLSX.writeFile(wb,fname);
+}
+
 function printReport(){
   var area=document.getElementById('report-print-area');
   if(!area){renderReport();area=document.getElementById('report-print-area');}
@@ -2022,7 +2088,7 @@ function printReport(){
   var dd=today.getDate()<10?'0'+today.getDate():''+today.getDate();
   var mm=(today.getMonth()+1)<10?'0'+(today.getMonth()+1):''+(today.getMonth()+1);
   var todayStr=today.getFullYear()+'/'+mm+'/'+dd;
-  var logo='<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 60 60"><polygon points="30,2 58,55 2,55" fill="#e8b84b"/><polygon points="30,14 51,50 9,50" fill="#27ae60"/><polygon points="30,26 44,46 16,46" fill="#e74c3c"/></svg>';
+  var logo='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 178" width="64" height="58"><polygon points="100,5 55,88 145,88" fill="#FFD700"/><polygon points="55,88 10,172 100,172" fill="#CC1111"/><polygon points="145,88 100,172 190,172" fill="#1B7D3B"/><polygon points="55,88 145,88 100,172" fill="#FFFFFF"/></svg>';
   var w=window.open("","_blank","width=1100,height=800");
   w.document.open();
   w.document.write("<!DOCTYPE html><html><head><title></title><style>");
@@ -2064,7 +2130,7 @@ function printReport(){
   w.document.write('<div class="page">');
   // Толгой хэсэг
   w.document.write('<div class="ph"><div>'+logo+'</div>');
-  w.document.write('<div class="po">МОНГОЛ УЛС<br>ДОРНОГОВЬ АЙМГИЙН ЗАСАГ ДАРГЫН ТАМГЫН ГАЗАР</div></div>');
+  w.document.write('<div class="po">ДСЦТС ХК</div></div>');
   // Гарчиг
   if(titleEl)w.document.write('<div class="pt">'+titleEl.innerHTML+'</div>');
   // Хүснэгт
