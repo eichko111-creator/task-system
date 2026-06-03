@@ -1309,28 +1309,40 @@ function setDecFilter(f,btn){
   renderDecisions();
 }
 
+// Бүх шийдвэр харах эрхтэй нэгжүүд
+var DEC_SEE_ALL_UNITS=['СЭЗХ','ТБТХ','ХНХ','ББТХ','НАХ','МТХ'];
+
+function canSeeAllDecisions(){
+  if(!cu)return false;
+  if(cu.isAdmin)return true;
+  return DEC_SEE_ALL_UNITS.indexOf(cu.unit)>=0;
+}
+
+function isDecRelatedToMe(d){
+  return (d.rows||[]).some(function(r){
+    return (r.units||[]).indexOf(cu.unit)>=0||
+           (r.resp||'')===(cu.unit)||
+           (r.respUnits||[]).indexOf(cu.unit)>=0;
+  });
+}
+
 function renderDecisions(){
   var dc=document.getElementById('decision-list');
   if(!dc)return;
   var ds=decisions.slice();
-  // Filter харгалзах
+  var seeAll=canSeeAllDecisions();
+
+  // Admin бус, тусгай нэгж биш: зөвхөн өөрийнхийг харна
+  if(!seeAll){
+    ds=ds.filter(function(d){return isDecRelatedToMe(d);});
+  }
+
+  // Шүүлтүүр
   if(decFilter==='миний'){
-    ds=ds.filter(function(d){
-      return (d.rows||[]).some(function(r){
-        return (r.units||[]).indexOf(cu.unit)>=0||(r.resp||'')===(cu.unit)||(r.respUnits||[]).indexOf(cu.unit)>=0;
-      });
-    });
+    ds=ds.filter(function(d){return isDecRelatedToMe(d);});
   } else if(decFilter==='шинэ'){
     var last=0;try{last=parseInt(localStorage.getItem('dec_last_view_'+cu.unit)||'0');}catch(e){}
     ds=ds.filter(function(d){return (d.createdAt||0)>last;});
-  }
-  // Admin бус: зөвхөн өөрийн нэгжид шилжүүлсэн харна
-  if(!cu.isAdmin&&!cu.seeAll){
-    ds=ds.filter(function(d){
-      return (d.rows||[]).some(function(r){
-        return (r.units||[]).indexOf(cu.unit)>=0||(r.resp||'')===(cu.unit)||(r.respUnits||[]).indexOf(cu.unit)>=0;
-      });
-    });
   }
   if(!ds.length){
     dc.innerHTML='<div class="empty">Хурлын шийдвэр байхгүй байна</div>';
@@ -1347,7 +1359,7 @@ function renderDecisions(){
 
 function renderDecCard(d){
   var allRows=d.rows||[];
-  var myRows=cu.isAdmin||cu.seeAll?allRows:allRows.filter(function(r){
+  var myRows=canSeeAllDecisions()?allRows:allRows.filter(function(r){
     return (r.units||[]).indexOf(cu.unit)>=0||(r.resp||'')===(cu.unit)||(r.respUnits||[]).indexOf(cu.unit)>=0;
   });
   var last=0;try{last=parseInt(localStorage.getItem('dec_last_view_'+cu.unit)||'0');}catch(e){}
